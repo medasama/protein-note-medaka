@@ -256,7 +256,7 @@ async function deleteViewedPhoto() {
 
 /* ---------- 保存期間 ---------- */
 async function cleanupPhotos() {
-  const keep = state.photoKeepDays == null ? 30 : Number(state.photoKeepDays);
+  const keep = state.photoKeepDays == null ? 90 : Number(state.photoKeepDays);
   if (!keep) return; // 0 = 無期限
   const limit = addDays(todayStr(), -keep);
   try {

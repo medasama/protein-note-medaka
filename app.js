@@ -170,7 +170,7 @@ let viewDate = todayStr();
 let currentTab = 'today';
 
 function defaultState() {
-  return { profile: null, days: {}, myList: [], recent: {}, photoKeepDays: 30 };
+  return { profile: null, days: {}, myList: [], recent: {}, photoKeepDays: 90 };
 }
 function loadState() {
   try {
@@ -643,7 +643,7 @@ function renderSettings() {
     <p class="small muted" style="margin-top:0">食べたものを思い出すための写真です。縮小してこの端末の中だけに保存し、外部には送りません。バックアップには含まれません。</p>
     <div class="field"><label for="keepDays">写真を残す期間</label>
       <select id="keepDays">
-        ${[[7, '7日'], [30, '30日'], [90, '90日'], [0, '無期限（自分で削除）']].map(([v, l]) => `<option value="${v}" ${Number(state.photoKeepDays == null ? 30 : state.photoKeepDays) === v ? 'selected' : ''}>${l}</option>`).join('')}
+        ${[[7, '7日'], [30, '30日'], [90, '90日'], [0, '無期限（自分で削除）']].map(([v, l]) => `<option value="${v}" ${Number(state.photoKeepDays == null ? 90 : state.photoKeepDays) === v ? 'selected' : ''}>${l}</option>`).join('')}
       </select>
       <div class="hint">期間を過ぎた写真は、次に開いたときに自動で消えます（記録は消えません）</div></div>
     <div class="small muted" id="photoCountLabel"></div>
