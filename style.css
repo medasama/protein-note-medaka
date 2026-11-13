@@ -336,11 +336,11 @@ body{
 .past-bar span{flex:1;min-width:0}
 .past-bar .btn{flex:none;padding:6px 10px;font-size:.8rem}
 html.not-today{
-  --bg:#faf5ec;--bg-deep:#efe6d4;--card:#fffdf8;--card-soft:#f6efe2;--ink:#33362e;--muted:#7a7566;
-  --line:#e6dcc8;--primary:#b5652b;--primary-soft:#f7e6d2;--accent:#8a5a14;--accent-soft:#fbeccd;
-  --track:#efe6d4;--seg-bg:#f0e8d8;--chip-bg:#f3e9d6;--bar-soft:#e6c9a0;--toast-bg:#4a3b2a;
-  --w1:#e6b27a;--w2:#f3d5b0;
-  --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='8' viewBox='0 0 48 8'%3E%3Cpath d='M0 4 Q12 0 24 4 T48 4 V8 H0Z' fill='%23ecdcc0'/%3E%3C/svg%3E");
+  --bg:#fff4ec;--bg-deep:#fbe0d2;--card:#fffaf6;--card-soft:#fdeee3;--ink:#3a3030;--muted:#8a6a66;
+  --line:#f2d6c8;--primary:#c85a30;--primary-soft:#fde3d3;--accent:#b5472a;--accent-soft:#ffeccb;
+  --track:#fbe6da;--seg-bg:#fae6da;--chip-bg:#fde8da;--bar-soft:#f3b79a;--toast-bg:#5a3a30;
+  --w1:#f4a77f;--w2:#fbd2b8;
+  --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='8' viewBox='0 0 48 8'%3E%3Cpath d='M0 4 Q12 0 24 4 T48 4 V8 H0Z' fill='%23fbd9c6'/%3E%3C/svg%3E");
 }
 body.not-today{background-image:none}
 body.not-today .appbar h1::before{background-image:url(characters/medaka-ojigi.png)}
@@ -349,11 +349,11 @@ body.not-today .ring .unit{color:var(--muted)}
 body.not-today .welcome{background:var(--primary-soft)}
 @media (prefers-color-scheme:dark){
   html.not-today{
-    --bg:#241d15;--bg-deep:#1a140e;--card:#33291d;--card-soft:#3b3023;--ink:#f6ead6;--muted:#c2ae8c;
-    --line:#5a4a33;--primary:#f0a867;--primary-soft:#4a3a26;--accent:#f2c14e;--accent-soft:#4a3a1c;
-    --track:#4a3b28;--seg-bg:#3b3023;--chip-bg:#4a3a26;--bar-soft:#7a5f3a;--toast-bg:#1a140e;
-    --w1:#8a5f2c;--w2:#6a4a24;
-    --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='8' viewBox='0 0 48 8'%3E%3Cpath d='M0 4 Q12 0 24 4 T48 4 V8 H0Z' fill='%235a4a33'/%3E%3C/svg%3E");
+    --bg:#2a1c22;--bg-deep:#1e1318;--card:#3a2630;--card-soft:#432c37;--ink:#fbe9e0;--muted:#cfa9a4;
+    --line:#5e3f4c;--primary:#ffb08a;--primary-soft:#54343f;--accent:#f2c14e;--accent-soft:#4f3a2a;
+    --track:#52353f;--seg-bg:#432c37;--chip-bg:#54343f;--bar-soft:#8a5a58;--toast-bg:#1e1318;
+    --w1:#a8523a;--w2:#7e3f34;
+    --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='8' viewBox='0 0 48 8'%3E%3Cpath d='M0 4 Q12 0 24 4 T48 4 V8 H0Z' fill='%235e3f4c'/%3E%3C/svg%3E");
   }
 }
 .hito-ojigi img,.hito-thanks2 img{width:54px}

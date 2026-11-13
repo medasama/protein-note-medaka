@@ -422,8 +422,16 @@ function ringSvg(ratio) {
 // めだかのひとこと（1画面に1つ）
 function hitokoto(ratio) {
   const past = viewDate !== todayStr();
+  const md = viewDate.split('-');
+  const day = `${Number(md[1])}月${Number(md[2])}日`;
   let m;
-  if (past) m = ratio >= 1 ? ['この日は達成していたよ！', 'thanks2'] : ['この日の記録だよ。', 'ojigi'];
+  if (past) {
+    if (ratio <= 0) m = [`${day}の記録だよ。`, 'ojigi'];
+    else if (ratio < 0.5) m = [`${day}の記録だよ。まずは一歩だったね。`, 'kihon'];
+    else if (ratio < 0.85) m = [`${day}の記録だよ。いい調子だったね！`, 'smile'];
+    else if (ratio < 1) m = [`${day}の記録だよ。もう少しだったね！`, 'jump'];
+    else m = [`${day}は達成していたよ！おつかれさま！`, 'thanks2'];
+  }
   else if (ratio <= 0) m = ['今日もよろしくね。', 'ojigi'];
   else if (ratio < 0.5) m = ['まずは一歩。いいね！', 'kihon'];
   else if (ratio < 0.85) m = ['いい調子！！', 'smile'];
