@@ -398,18 +398,29 @@ function ringSvg(ratio) {
   const v = Math.max(0, Math.min(1, ratio));
   const y = v >= 1 ? -8 : 124 - 116 * v;
   const wave = (c) => `<path d="M0 6 Q16.5 0 33 6 T66 6 T99 6 T132 6 T165 6 T198 6 T231 6 T264 6 V140 H0Z" fill="${c}"/>`;
-  const fish = v >= 0.3
-    ? `<image class="fishy" href="characters/medaka-kihon.png" x="76" y="92" width="34" height="23"/>` : '';
+  // たんぱく質がたまるほど、水の中のめだかが増える（届くと4匹）
+  const spots = [[0.3, 74, 93, 30], [0.45, 22, 99, 26], [0.6, 48, 106, 22], [1, 86, 104, 20]];
+  const fish = spots.filter(s => v >= s[0]).map((s, i) =>
+    `<image class="fishy" style="animation-delay:-${i * 0.9}s" href="characters/medaka-kihon.png" x="${s[1]}" y="${s[2]}" width="${s[3]}" height="${(s[3] * 0.664).toFixed(1)}"/>`).join('');
   return `<svg viewBox="0 0 132 132" aria-hidden="true">
     <defs><clipPath id="pnClip"><circle cx="66" cy="66" r="59"/></clipPath></defs>
     <circle cx="66" cy="66" r="59" fill="var(--track)" opacity=".45"/>
     <g clip-path="url(#pnClip)">
-      <g transform="translate(0,${(y - 3).toFixed(1)})"><g class="wv2">${wave('#9fd6e4')}</g></g>
-      <g transform="translate(0,${y.toFixed(1)})"><g class="wv">${wave('#5cbdd0')}</g></g>
+      <g transform="translate(0,${(y - 3).toFixed(1)})"><g class="wv2">${wave('var(--w2)')}</g></g>
+      <g transform="translate(0,${y.toFixed(1)})"><g class="wv">${wave('var(--w1)')}</g></g>
       ${fish}
     </g>
     <circle cx="66" cy="66" r="62" fill="none" stroke="${ratio >= 1 ? 'var(--gold)' : 'var(--primary)'}" stroke-width="5"/>
   </svg>`;
+}
+
+// めだかのひとこと（1画面に1つ）
+function hitokoto(ratio) {
+  const m = ratio <= 0 ? ['まずは ひと口から。', 'kihon']
+    : ratio < 0.5 ? ['いい調子。ゆっくりいこうね。', 'kihon']
+    : ratio < 1 ? ['もうすこし。ぷくぷく。', 'smile']
+    : ['届いたよ。おつかれさま。', 'jump'];
+  return `<div class="hito"><img src="characters/medaka-${m[1]}.png" alt=""><span>${m[0]}</span></div>`;
 }
 
 function renderToday() {
@@ -451,6 +462,7 @@ function renderToday() {
       </div>
       <div class="bar"><div class="fill" style="width:${(total / maxV) * 100}%"></div>${marks}</div>
       <div style="height:14px"></div>
+      ${hitokoto(total / target)}
       ${remain > 0
         ? `<div class="remain">推奨量まで あと <span style="color:var(--accent)">${fmt(remain)}g</span></div>`
         : `<div class="remain done">推奨量に届きました（+${fmt(-remain)}g）</div>`}
