@@ -314,3 +314,18 @@ body{
   .sheet{background:var(--card)}
   .tabbar,.appbar{background-color:var(--card)}
 }
+
+/* 狭い端末・文字拡大でも「今日へ」が切れないよう、日付ラベルを縮める */
+.appbar{gap:4px;padding-left:12px;padding-right:10px}
+.appbar h1{flex:none}
+.datenav{min-width:0;flex:0 1 auto}
+.date-label{min-width:0;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto}
+.today-btn{flex:none;padding:6px 9px}
+@media (max-width:340px){
+  .icon-btn{width:24px}
+  .date-label{padding:6px 6px;font-size:.78rem}
+  .today-btn{font-size:.76rem;padding:6px 7px}
+}
+@media (prefers-color-scheme:dark){
+  body.not-today .date-label{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+}
