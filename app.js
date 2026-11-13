@@ -398,6 +398,9 @@ function render() {
   if (currentTab === 'settings') renderSettings();
 }
 
+// めだかの筋肉段階：〜50%=1／〜85%=2／〜100%=3／達成=4
+function stageOf(r) { return r < 0.5 ? 1 : r < 0.85 ? 2 : r < 1 ? 3 : 4; }
+
 function ringSvg(ratio) {
   // 水位で見せる：丸い水槽にたんぱく質の量だけ水がたまる。届くと満水（金の縁）
   const v = Math.max(0, Math.min(1, ratio));
@@ -406,7 +409,7 @@ function ringSvg(ratio) {
   // たんぱく質がたまるほど、水の中のめだかが増える（届くと4匹）
   const spots = [[0.3, 74, 93, 30], [0.45, 22, 99, 26], [0.6, 48, 106, 22], [1, 86, 104, 20]];
   const fish = spots.filter(s => v >= s[0]).map((s, i) =>
-    `<image class="fishy" style="animation-delay:-${i * 0.9}s" href="characters/medaka-kihon.png" x="${s[1]}" y="${s[2]}" width="${s[3]}" height="${(s[3] * 0.664).toFixed(1)}"/>`).join('');
+    `<image class="fishy" style="animation-delay:-${i * 0.9}s" href="characters/medaka-m${stageOf(ratio)}.png" x="${s[1]}" y="${s[2]}" width="${s[3]}" height="${(s[3] * 0.8).toFixed(1)}"/>`).join('');
   return `<svg viewBox="0 0 132 132" aria-hidden="true">
     <defs><clipPath id="pnClip"><circle cx="66" cy="66" r="59"/></clipPath></defs>
     <circle cx="66" cy="66" r="59" fill="var(--track)" opacity=".45"/>
@@ -425,19 +428,20 @@ function hitokoto(ratio) {
   const md = viewDate.split('-');
   const day = `${Number(md[1])}月${Number(md[2])}日`;
   let m;
+  const st = ratio <= 0 ? 1 : stageOf(ratio);
   if (past) {
-    if (ratio <= 0) m = [`${day}の記録だよ。`, 'ojigi'];
-    else if (ratio < 0.5) m = [`${day}の記録だよ。もう一歩だったね。`, 'kihon'];
-    else if (ratio < 0.85) m = [`${day}の記録だよ。いい調子だったね！`, 'smile'];
-    else if (ratio < 1) m = [`${day}の記録だよ。もう少しだったね！`, 'jump'];
-    else m = [`${day}は達成していたよ！おつかれさま！`, 'thanks2'];
+    if (ratio <= 0) m = `${day}の記録だよ。`;
+    else if (ratio < 0.5) m = `${day}の記録だよ。もう一歩だったね。`;
+    else if (ratio < 0.85) m = `${day}の記録だよ。いい調子だったね！`;
+    else if (ratio < 1) m = `${day}の記録だよ。もう少しだったね！`;
+    else m = `${day}は達成していたよ！おつかれさま！`;
   }
-  else if (ratio <= 0) m = ['今日もよろしくね。', 'ojigi'];
-  else if (ratio < 0.5) m = ['まずは一歩。いいね！', 'kihon'];
-  else if (ratio < 0.85) m = ['いい調子！！', 'smile'];
-  else if (ratio < 1) m = ['もう少し！', 'jump'];
-  else m = ['達成！！おつかれさま！', 'thanks2'];
-  return `<div class="hito hito-${m[1]}"><img src="characters/medaka-${m[1]}.png" alt=""><span>${m[0]}</span></div>`;
+  else if (ratio <= 0) m = '今日もよろしくね。';
+  else if (ratio < 0.5) m = 'まずは一歩。いいね！';
+  else if (ratio < 0.85) m = 'いい調子！！';
+  else if (ratio < 1) m = 'もう少し！';
+  else m = '達成！！おつかれさま！';
+  return `<div class="hito hito-m${st}"><img src="characters/medaka-m${st}.png" alt=""><span>${m}</span></div>`;
 }
 
 function renderToday() {

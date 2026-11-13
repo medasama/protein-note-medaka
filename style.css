@@ -257,9 +257,9 @@ html,body{background:var(--bg)}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 .welcome{background:var(--primary-soft);color:var(--ink);border:1px solid var(--line);position:relative;padding-right:110px}
 .welcome .btn.ghost{background:#fff !important}
-.welcome::after{content:"";position:absolute;right:10px;bottom:8px;width:92px;height:62px;background:url(characters/medaka-kihon.png) center/contain no-repeat;animation:bob 3.6s ease-in-out infinite}
+.welcome::after{content:"";position:absolute;right:10px;bottom:8px;width:92px;height:62px;background:url(characters/medaka-m1.png) center/contain no-repeat;animation:bob 3.6s ease-in-out infinite}
 .remain.done{display:flex;align-items:center;gap:6px}
-.remain.done::after{content:"";width:54px;height:38px;background:url(characters/medaka-thanks2.png) center/contain no-repeat;animation:bob 2.8s ease-in-out infinite}
+.remain.done::after{content:"";width:54px;height:38px;background:url(characters/medaka-m4.png) center/contain no-repeat;animation:bob 2.8s ease-in-out infinite}
 .tabbar{background:var(--card);border-top:1px solid var(--line);border-radius:0;box-shadow:none}
 .sheet{border-radius:18px 18px 0 0}
 .close-x{background:var(--chip-bg)}
@@ -356,8 +356,10 @@ body.not-today .welcome{background:var(--primary-soft)}
     --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='8' viewBox='0 0 48 8'%3E%3Cpath d='M0 4 Q12 0 24 4 T48 4 V8 H0Z' fill='%235e3f4c'/%3E%3C/svg%3E");
   }
 }
-.hito-ojigi img,.hito-thanks2 img{width:54px}
-.hito-jump img,.hito-smile img{width:50px}
+.hito-m1 img{width:54px}
+.hito-m2 img{width:58px}
+.hito-m3 img{width:62px}
+.hito-m4 img{width:66px}
 /* 過去の日は専用の帯に「今日へもどる」があるので、ヘッダー側は隠してタイトルを戻す */
 body.not-today .today-btn{display:none}
 body.not-today .appbar h1{font-size:.92rem;gap:4px}
