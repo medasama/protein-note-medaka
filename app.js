@@ -394,13 +394,21 @@ function render() {
 }
 
 function ringSvg(ratio) {
-  const r = 56, c = 2 * Math.PI * r;
+  // 水位で見せる：丸い水槽にたんぱく質の量だけ水がたまる。届くと満水（金の縁）
   const v = Math.max(0, Math.min(1, ratio));
-  const color = ratio >= 1 ? 'var(--primary)' : 'var(--accent)';
+  const y = v >= 1 ? -8 : 124 - 116 * v;
+  const wave = (c) => `<path d="M0 6 Q16.5 0 33 6 T66 6 T99 6 T132 6 T165 6 T198 6 T231 6 T264 6 V140 H0Z" fill="${c}"/>`;
+  const fish = v >= 0.3
+    ? `<image class="fishy" href="characters/medaka-kihon.png" x="76" y="92" width="34" height="23"/>` : '';
   return `<svg viewBox="0 0 132 132" aria-hidden="true">
-    <circle cx="66" cy="66" r="${r}" fill="none" stroke="var(--track)" stroke-width="12"/>
-    <circle cx="66" cy="66" r="${r}" fill="none" stroke="${color}" stroke-width="12" stroke-linecap="round"
-      stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - v)}"/>
+    <defs><clipPath id="pnClip"><circle cx="66" cy="66" r="59"/></clipPath></defs>
+    <circle cx="66" cy="66" r="59" fill="var(--track)" opacity=".45"/>
+    <g clip-path="url(#pnClip)">
+      <g transform="translate(0,${(y - 3).toFixed(1)})"><g class="wv2">${wave('#9fd6e4')}</g></g>
+      <g transform="translate(0,${y.toFixed(1)})"><g class="wv">${wave('#5cbdd0')}</g></g>
+      ${fish}
+    </g>
+    <circle cx="66" cy="66" r="62" fill="none" stroke="${ratio >= 1 ? 'var(--gold)' : 'var(--primary)'}" stroke-width="5"/>
   </svg>`;
 }
 

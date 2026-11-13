@@ -1,7 +1,7 @@
 # たんぱく質ノート（めだかさま版）
 
 > 元の版（緑のデザイン）を、めだかさまの水の世界の見た目に着せ替えたもの。機能・操作・データ（localStorageのキー）は元の版と同じ。
-> 元の版は別リポジトリ medasama/protein-note（タグ original-v1.3.1）に残してある。見た目の変更は style.css の末尾「めだかさま世界観」ブロックと index.html のヘッダー飾りだけ。
+> 元の版は別リポジトリ medasama/protein-note（タグ original-v1.3.1）に残してある。見た目の変更は style.css の末尾「めだかさま世界観」ブロック、app.js の ringSvg（水位表示）、index.html のみ。
 
 
 1日のたんぱく質量を記録するスマホ向けWebツール（PWA）です。
