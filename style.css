@@ -201,7 +201,7 @@ main{max-width:560px;margin:0 auto;padding:12px 14px}
 .stepper .cnt span{font-size:.85rem;color:var(--muted)}
 
 /* 写真 */
-.photo-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 2px 12px}
+.photo-bar{display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin:0 2px 12px;text-align:right}
 .pstrip{display:flex;gap:6px;overflow-x:auto;margin:0 0 4px}
 .pstrip:empty{display:none}
 .pthumb{position:relative;flex:none;border:none;padding:0;background:var(--track);border-radius:8px;overflow:hidden}

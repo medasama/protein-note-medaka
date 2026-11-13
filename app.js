@@ -496,8 +496,8 @@ function renderToday() {
 
   // 写真
   html += `<div class="photo-bar">
-    <button class="btn ghost small" id="photoAddBtn">📷 食べたものの写真を入れる</button>
-    <span class="tiny muted">撮った時間で朝・昼・夕・間食に振り分けます</span>
+    <button class="btn ghost small" id="photoAddBtn" aria-label="食べたものの写真を入れる">📷 写真</button>
+    <span class="tiny muted">撮った日時で朝・昼・夕・間食に振り分けます</span>
   </div>`;
 
   // 食事
