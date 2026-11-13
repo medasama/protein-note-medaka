@@ -387,7 +387,12 @@ function render() {
   $('#datenav').hidden = currentTab !== 'today';
   $('#dateLabel').textContent = dateLabel(viewDate);
   $('#todayBtn').hidden = viewDate === todayStr();
-  document.body.classList.toggle('not-today', viewDate !== todayStr());
+  const past = viewDate !== todayStr();
+  document.body.classList.toggle('not-today', past);
+  document.documentElement.classList.toggle('not-today', past);
+  $('#pastBar').hidden = !past || currentTab !== 'today';
+  $('#pastBarText').textContent = dateLabel(viewDate) + ' の記録を見ています';
+  const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = past ? '#fffdf8' : '#f4fbfd';
   if (currentTab === 'today') renderToday();
   if (currentTab === 'history') renderHistory();
   if (currentTab === 'settings') renderSettings();
@@ -416,11 +421,15 @@ function ringSvg(ratio) {
 
 // めだかのひとこと（1画面に1つ）
 function hitokoto(ratio) {
-  const m = ratio <= 0 ? ['まずは ひと口から。', 'kihon']
-    : ratio < 0.5 ? ['いい調子。ゆっくりいこうね。', 'kihon']
-    : ratio < 1 ? ['もうすこし。ぷくぷく。', 'smile']
-    : ['届いたよ。おつかれさま。', 'jump'];
-  return `<div class="hito"><img src="characters/medaka-${m[1]}.png" alt=""><span>${m[0]}</span></div>`;
+  const past = viewDate !== todayStr();
+  let m;
+  if (past) m = ratio >= 1 ? ['この日は達成していたよ！', 'thanks2'] : ['この日の記録だよ。', 'ojigi'];
+  else if (ratio <= 0) m = ['今日もよろしくね。', 'ojigi'];
+  else if (ratio < 0.5) m = ['まずは一歩。いいね！', 'kihon'];
+  else if (ratio < 0.85) m = ['いい調子！！', 'smile'];
+  else if (ratio < 1) m = ['もう少し！', 'jump'];
+  else m = ['達成！！おつかれさま！', 'thanks2'];
+  return `<div class="hito hito-${m[1]}"><img src="characters/medaka-${m[1]}.png" alt=""><span>${m[0]}</span></div>`;
 }
 
 function renderToday() {
@@ -428,6 +437,7 @@ function renderToday() {
   const t = computeTargets(state.profile);
   const total = dayTotal(viewDate);
   let html = '';
+  let suggestHtml = '';
 
   if (!t) {
     html += `<div class="card welcome">
@@ -469,7 +479,7 @@ function renderToday() {
       ${t.frail && total >= target && total < t.frail ? `<div class="small muted">フレイル予防の参考量（${t.frail}g）まで あと ${fmt(t.frail - total)}g</div>` : ''}
     </div>`;
 
-    if (remain > 0 && foodsReady) html += renderSuggestions(remain);
+    if (remain > 0 && foodsReady) suggestHtml = renderSuggestions(remain);
   }
 
   // 写真
@@ -494,6 +504,7 @@ function renderToday() {
       </div>
     </div>`;
   }
+  html += suggestHtml; // 記録のあとに「あとなんgをとるなら」
   html += `<p class="tiny muted" style="text-align:center">食品の値：日本食品標準成分表（八訂）増補2023年から引用</p>`;
   el.innerHTML = html;
   fillPhotoStrips();
@@ -1298,6 +1309,7 @@ document.addEventListener('click', ev => {
     case 'prevDay': viewDate = addDays(viewDate, -1); render(); break;
     case 'nextDay': viewDate = addDays(viewDate, 1); render(); break;
     case 'dateLabel': viewDate = todayStr(); render(); break;
+    case 'pastTodayBtn':
     case 'todayBtn': viewDate = todayStr(); render(); window.scrollTo(0, 0); break;
     case 'saveAmt': {
       const f = foodByCode.get(sheetCtx.code);

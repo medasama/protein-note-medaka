@@ -1,10 +1,10 @@
 // たんぱく質ノート service worker
 // ファイルを更新したら VERSION を上げる（古いキャッシュが消えて新しい版が配られる）
-const VERSION = 'pnm-v1.2.1';
+const VERSION = 'pnm-v1.3.0';
 const ASSETS = [
   './', 'index.html', 'style.css', 'app.js', 'photos.js', 'foods.json', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png', 'icons/icon-maskable-512.png',
-  'characters/medaka-kihon.png', 'characters/medaka-thanks2.png', 'characters/medaka-jump.png', 'characters/medaka-smile.png',
+  'characters/medaka-kihon.png', 'characters/medaka-thanks2.png', 'characters/medaka-jump.png', 'characters/medaka-smile.png', 'characters/medaka-ojigi.png',
 ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));

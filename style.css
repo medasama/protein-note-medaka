@@ -329,3 +329,36 @@ body{
 @media (prefers-color-scheme:dark){
   body.not-today .date-label{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
 }
+
+/* ===== 今日／過去をひと目で：過去の日は「紙の世界」に切り替わる ===== */
+.past-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--accent-soft);border-bottom:2px dashed var(--accent);color:var(--ink);font-size:.86rem;font-weight:700}
+.past-bar img{width:30px;height:auto;flex:none}
+.past-bar span{flex:1;min-width:0}
+.past-bar .btn{flex:none;padding:6px 10px;font-size:.8rem}
+html.not-today{
+  --bg:#faf5ec;--bg-deep:#efe6d4;--card:#fffdf8;--card-soft:#f6efe2;--ink:#33362e;--muted:#7a7566;
+  --line:#e6dcc8;--primary:#b5652b;--primary-soft:#f7e6d2;--accent:#8a5a14;--accent-soft:#fbeccd;
+  --track:#efe6d4;--seg-bg:#f0e8d8;--chip-bg:#f3e9d6;--bar-soft:#e6c9a0;--toast-bg:#4a3b2a;
+  --w1:#e6b27a;--w2:#f3d5b0;
+  --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='8' viewBox='0 0 48 8'%3E%3Cpath d='M0 4 Q12 0 24 4 T48 4 V8 H0Z' fill='%23ecdcc0'/%3E%3C/svg%3E");
+}
+body.not-today{background-image:none}
+body.not-today .appbar h1::before{background-image:url(characters/medaka-ojigi.png)}
+body.not-today .date-label{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+body.not-today .ring .unit{color:var(--muted)}
+body.not-today .welcome{background:var(--primary-soft)}
+@media (prefers-color-scheme:dark){
+  html.not-today{
+    --bg:#241d15;--bg-deep:#1a140e;--card:#33291d;--card-soft:#3b3023;--ink:#f6ead6;--muted:#c2ae8c;
+    --line:#5a4a33;--primary:#f0a867;--primary-soft:#4a3a26;--accent:#f2c14e;--accent-soft:#4a3a1c;
+    --track:#4a3b28;--seg-bg:#3b3023;--chip-bg:#4a3a26;--bar-soft:#7a5f3a;--toast-bg:#1a140e;
+    --w1:#8a5f2c;--w2:#6a4a24;
+    --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='8' viewBox='0 0 48 8'%3E%3Cpath d='M0 4 Q12 0 24 4 T48 4 V8 H0Z' fill='%235a4a33'/%3E%3C/svg%3E");
+  }
+}
+.hito-ojigi img,.hito-thanks2 img{width:54px}
+.hito-jump img,.hito-smile img{width:50px}
+/* 過去の日は専用の帯に「今日へもどる」があるので、ヘッダー側は隠してタイトルを戻す */
+body.not-today .today-btn{display:none}
+body.not-today .appbar h1{font-size:.92rem;gap:4px}
+body.not-today .appbar h1::before{width:24px;height:16px}
