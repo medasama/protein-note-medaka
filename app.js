@@ -470,8 +470,30 @@ const DISHES = [
   { id: 'daigakuimo', name: '大学いも', unit: '1人前', keys: 'だいがくいも さつまいも', items: [['02006', 100, 'さつまいも'], ['03003', 15, '砂糖'], ['14006', 5, '油'], ['05018', 2, 'ごま']] },
   { id: 'ohagi', name: 'おはぎ', unit: '1個', keys: 'おはぎ ぼたもち', items: [['01154', 50, 'もち米'], ['04101', 50, 'あん']] },
   { id: 'crepe', name: 'クレープ（バナナ・クリーム）', unit: '1個', keys: 'くれーぷ', items: [['01015', 20, '小麦粉'], ['12004', 15, '卵'], ['13003', 30, '牛乳'], ['13017', 20, 'ホイップ'], ['03003', 5, '砂糖'], ['07107', 30, 'バナナ']] },
+  // 外食（公式発表値）：ケンタッキーフライドチキン「栄養成分表」2026/3/25現在（配合に基づく標準値）。fixed＝1単位あたりのたんぱく質g、g＝可食部重量
+  { id: 'kfc-original', name: 'ケンタッキー オリジナルチキン', unit: '1本', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 16.5, g: 87, src: 'kfc' },
+  { id: 'kfc-boneless', name: 'ケンタッキー 骨なしケンタッキー', unit: '1個', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 20.3, g: 83, src: 'kfc' },
+  { id: 'kfc-redhot', name: 'ケンタッキー レッドホットチキン', unit: '1本', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 20.9, g: 102, src: 'kfc' },
+  { id: 'kfc-crispy', name: 'ケンタッキー カーネルクリスピー', unit: '1本', keys: 'けんたっきー KFC ケンタ チキン', fixed: 6.8, g: 42, src: 'kfc' },
+  { id: 'kfc-nugget', name: 'ケンタッキー ナゲット', unit: '1ピース', keys: 'けんたっきー KFC ケンタ なげっと チキン', fixed: 2.66, g: 18.8, src: 'kfc', srcNote: '5ピース（94g）13.3gを1ピースあたりに換算' },
+  { id: 'kfc-fillet', name: 'ケンタッキー チキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 24.3, g: 161, src: 'kfc' },
+  { id: 'kfc-fillet-hot', name: 'ケンタッキー 辛口チキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 24.4, g: 161, src: 'kfc' },
+  { id: 'kfc-fillet-cheese', name: 'ケンタッキー チーズチキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 26.8, g: 178, src: 'kfc' },
+  { id: 'kfc-fillet-double', name: 'ケンタッキー ダブルチキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 44.6, g: 248, src: 'kfc' },
+  { id: 'kfc-wafu', name: 'ケンタッキー 和風チキンカツバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 16.0, g: 165, src: 'kfc' },
+  { id: 'kfc-tatsuta', name: 'ケンタッキー ケンタの鶏竜田バーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー たつた', fixed: 18.0, g: 182, src: 'kfc' },
+  { id: 'kfc-twister-pm', name: 'ケンタッキー ペッパーマヨツイスター', unit: '1個', keys: 'けんたっきー KFC ケンタ ついすたー', fixed: 11.3, g: 143, src: 'kfc' },
+  { id: 'kfc-twister-teri', name: 'ケンタッキー てりやきツイスター', unit: '1個', keys: 'けんたっきー KFC ケンタ ついすたー', fixed: 11.6, g: 143, src: 'kfc' },
+  { id: 'kfc-potato-s', name: 'ケンタッキー フライドポテト S', unit: '1個', keys: 'けんたっきー KFC ケンタ ぽてと', fixed: 2.6, g: 80, src: 'kfc' },
+  { id: 'kfc-potato-l', name: 'ケンタッキー フライドポテト L', unit: '1個', keys: 'けんたっきー KFC ケンタ ぽてと', fixed: 5.3, g: 160, src: 'kfc' },
+  { id: 'kfc-coleslaw-s', name: 'ケンタッキー コールスロー S', unit: '1個', keys: 'けんたっきー KFC ケンタ こーるすろー さらだ', fixed: 1.0, g: 80, src: 'kfc' },
+  { id: 'kfc-coleslaw-m', name: 'ケンタッキー コールスロー M', unit: '1個', keys: 'けんたっきー KFC ケンタ こーるすろー さらだ', fixed: 1.6, g: 130, src: 'kfc' },
+  { id: 'kfc-biscuit', name: 'ケンタッキー ビスケット', unit: '1個', keys: 'けんたっきー KFC ケンタ びすけっと', fixed: 3.2, g: 56, src: 'kfc' },
+  { id: 'kfc-chocopie', name: 'ケンタッキー チョコパイ', unit: '1個', keys: 'けんたっきー KFC ケンタ ちょこぱい', fixed: 3.1, g: 53, src: 'kfc' },
 ];
+const DISH_SRC = { kfc: 'ケンタッキーフライドチキン公式「栄養成分表」（2026/3/25現在）の値です' };
 function dishItem(d) {
+  if (d.fixed != null) return { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: d.fixed, basis: 'unit', grams: d.g, brand: true, chips: [1, 2, 3, 4, 5] };
   let p = 0, g = 0, ok = true;
   for (const [c, w] of d.items) {
     const f = foodByCode.get(c);
@@ -484,11 +506,12 @@ function dishItem(d) {
 function dishNote(id) {
   const d = DISHES.find(x => x.id === id);
   if (!d) return '';
+  if (d.fixed != null) return `${DISH_SRC[d.src] || ''}（${d.unit}・可食部${d.g}g${d.srcNote ? '。' + d.srcNote : ''}）。店舗・時期により変わることがあります。`;
   return '材料の目安：' + d.items.map(([, w, l]) => `${l}${w}g`).join('、') + '。一般的な家庭の分量で、材料ごとに食品成分表から計算した目安です。';
 }
 function dishRow(it) {
   return `<button class="food" data-dishpick="${it.id}">
-    <span class="nm"><div>${esc(it.name)}</div><div class="sub">料理の目安・${esc(it.unit)}</div></span>
+    <span class="nm"><div>${esc(it.name)}</div><div class="sub">${it.brand ? '外食（公式発表値）' : '料理の目安'}・${esc(it.unit)}</div></span>
     <span class="p">${fmt(it.protein)}g<small>/${esc(it.unit.replace(/^1/, ''))}</small></span></button>`;
 }
 function searchDishes(q) {
@@ -576,6 +599,7 @@ const ALIASES = {
   '蛤': ['はまぐり'], '浅蜊': ['あさり'], '蜆': ['しじみ'], '帆立': ['ほたて'], 'ホタテ': ['ほたて'], '餃子': ['ぎょうざ'], '焼売': ['しゅうまい'], 'シュウマイ': ['しゅうまい'],
   'パスタ': ['スパゲッティ'], 'スパゲティ': ['スパゲッティ'], 'ラーメン': ['中華めん', '中華スタイル'], 'カップラーメン': ['カップめん'], 'カップ麺': ['カップめん'], 'インスタントラーメン': ['即席中華めん'],
   '蕎麦': ['そば'], '饂飩': ['うどん'], '素麺': ['そうめん'], 'カレーライス': ['カレー'], '焼き飯': ['チャーハン'], '炒飯': ['チャーハン'], '豚汁': ['とん汁'], 'お粥': ['かゆ'], 'おかゆ': ['かゆ'], '大豆': ['だいず'], 'きなこ': ['きな粉'], 'のり': ['のり'], '海苔': ['のり'], 'ポテト': ['ポテト', 'フライドポテト'],
+  '唐揚げ': ['から揚げ'], 'からあげ': ['から揚げ'], '唐揚': ['から揚げ'], 'フライドチキン': ['から揚げ', 'フライドチキン'], 'ケンタ': ['ケンタ'], 'KFC': ['ケンタ'], 'けんたっきー': ['ケンタッキー'],
   'ぜんざい': ['しるこ'], 'お汁粉': ['しるこ'], 'みたらし': ['みたらし'], 'サンドイッチ': ['サンド'], 'お寿司': ['寿司'], 'すし': ['すし'],
   'しょくぱん': ['食パン'], 'ちーず': ['チーズ'], '珈琲': ['コーヒー'], 'こーひー': ['コーヒー'],
 };
@@ -1143,6 +1167,7 @@ function renderSettings() {
     <p>飲み物のmL：成分表の備考に「100mL＝◯g」がある食品はその値で換算。記載がない飲み物（豆乳・お茶・コーヒーなど）は1mL＝1gの目安で換算し、記録に「約・目安」と表示（成分表の飲み物の換算値はほとんどが100mL＝97〜108gの範囲）。</p>
     <p>調理前の重さで入れる場合と「1本分」「乾めん100g分」など：日本食品標準成分表（八訂）増補2023年 第1章「調理方法の概要及び重量変化率表」の重量変化率を使って換算。</p>
     <p>ごはん茶碗1杯、食パン1枚、納豆1パック、豆腐1/2丁、トマト1個、レタス1人前、くだもの1個、刺身1切れ、調理前の量（ささみ1本50gなど）、かき1個・あじ1尾・薄切り肉1枚などの重さは、自治体の資料や管理栄養士の目安量一覧などを参考にした一般的な目安です。たんぱく質の値は、すべて食品成分表から計算しています。</p>
+    <p>「外食（公式発表値）」は、各社が公式に公表している栄養成分の値です（ケンタッキーフライドチキン「栄養成分表」2026/3/25現在）。</p>
     <p>「料理（目安）」は、成分表にない料理を一般的な家庭の分量で材料に分け、材料ごとに成分表の値から計算した目安です（材料と分量は各料理の記録画面に表示）。</p>
     <p>プロテイン（粉末）：成分表には載っていないため、市販品（明治 ザバス ソイプロテイン100など、1食分28gでたんぱく質20.0g）の栄養成分表示から、粉の約7割（71.4%）をたんぱく質として計算しています。商品によって6〜8割程度の差があるので、使っている商品はマイリストへの登録（100gあたり）をおすすめします。</p>
     <p class="tiny muted">たんぱく質ノート v1.3.1</p>
@@ -1327,12 +1352,12 @@ function renderResults() {
   const regBtn = `<div class="meal-actions"><button class="btn ghost small block" data-mlnew="${esc(q)}">「${esc(q)}」を市販品・メニューとしてマイリストに登録</button></div>`;
   box.innerHTML =
     (mine.length ? `<div class="list-label">マイリスト</div>${mine.map(mlRow).join('')}` : '') +
-    (dTop.length ? `<div class="list-label">料理（目安）</div>${dTop.map(dishRow).join('')}` : '') +
+    (dTop.length ? `<div class="list-label">料理・外食</div>${dTop.map(dishRow).join('')}` : '') +
     (gens.length ? `<div class="list-label">一般的な目安</div>${gens.map(genRow).join('')}` : '') +
     (mine.length || gens.length || dTop.length || dLow.length ? `<div class="list-label">食品成分表</div>` : '') +
     (res.length
       ? res.slice(0, 5).map(f => foodRow(f)).join('') +
-        (dLow.length ? `<div class="list-label">料理（目安）</div>${dLow.map(dishRow).join('')}` + (res.length > 5 ? `<div class="list-label">食品成分表（つづき）</div>` : '') : '') +
+        (dLow.length ? `<div class="list-label">料理・外食</div>${dLow.map(dishRow).join('')}` + (res.length > 5 ? `<div class="list-label">食品成分表（つづき）</div>` : '') : '') +
         res.slice(5).map(f => foodRow(f)).join('') + (res.length >= 60 ? '<div class="empty small">候補が多いので、言葉を足して絞り込んでください（例：「鶏 むね 皮なし」）</div>' : '') +
         `<div class="list-label">市販品・外食などで見つからないとき</div>${regBtn}`
       : `<div class="empty">成分表では見つかりませんでした。<br>ひらがなや別の言い方でも試してください（例：「とり」→「にわとり」、「ごはん」→「めし」）。</div>${regBtn}`);
