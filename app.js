@@ -519,8 +519,9 @@ function searchDishes(q) {
   if (!toks.length) return [];
   const alts = toks.map(t => [t].concat(NORM_ALIASES[t] || []));
   return DISHES.filter(d => {
-    const k = norm(d.name + ' ' + d.keys);
-    return alts.every(a => a.some(x => k.includes(norm(x))));
+    // 語ごとに調べる（つなげると「ケンタ」＋「こーるすろー」が「たこ」に当たってしまうため）
+    const words = [norm(d.name)].concat((d.name + ' ' + d.keys).split(/\s+/).map(norm));
+    return alts.every(a => a.some(x => words.some(w => w.includes(norm(x)))));
   }).map(dishItem).filter(Boolean);
 }
 
@@ -591,7 +592,7 @@ const ALIASES = {
   '牛肉': ['うし'], 'ぎゅうにく': ['うし'], 'ビーフ': ['うし', 'ビーフ'], '牛': ['うし', '牛'], '牛乳': ['牛乳'], '牛丼': ['牛丼'],
   'ごはん': ['めし'], 'ご飯': ['めし'], '白米': ['精白米'], 'お米': ['こめ'],
   '鮭': ['さけ'], 'しゃけ': ['さけ'], 'サーモン': ['さけ', 'サーモン'],
-  '鯖': ['さば'], '鮪': ['まぐろ'], '鰹': ['かつお'], 'たたき': ['かつお類)'], 'かつおのたたき': ['かつお類)'], '鰹のたたき': ['かつお類)'], '刺身': ['生'], 'さしみ': ['生'], 'お刺身': ['生'], 'ツナ': ['まぐろ類)缶詰', 'かつお類)缶詰'],
+  '鯖': ['さば'], '鮪': ['まぐろ'], '鰹': ['かつお'], 'たたき': ['かつお類)'], 'かつおのたたき': ['かつお類)'], '鰹のたたき': ['かつお類)'], '刺身': ['生'], 'さしみ': ['生'], 'お刺身': ['生'], 'ツナ': ['フレーク'],
   '鰯': ['いわし'], '鯵': ['あじ'], '鱈': ['たら'], '鰤': ['ぶり'], '海老': ['えび'], '烏賊': ['いか'], '蛸': ['たこ'],
   '胸': ['むね'], 'むね肉': ['むね'], 'もも肉': ['もも'],
   'とうふ': ['豆腐'], 'なっとう': ['納豆'], 'ぎゅうにゅう': ['牛乳'], 'ミルク': ['牛乳', 'ミルク'],
@@ -680,6 +681,45 @@ function norm(s) {
     .replace(/[\s\[\]<>・、,，。]/g, '');
 }
 // 括弧（ ）は残す（"まぐろ類)缶詰" のような言い換えに使うため）
+/* 漢字・別表記 → 成分表の表記（成分表はひらがな表記が多いため）。ALIASES に無いものだけ足す */
+const KANJI_READ = {
+  // 肉・鳥
+  'シーチキン': ['フレーク'], '鴨': ['かも'], '鴨肉': ['かも'], '合鴨': ['あいがも'], '合鴨肉': ['あいがも'], 'アヒル': ['あひる'], '家鴨': ['あひる'],
+  '羊': ['めんよう'], '羊肉': ['めんよう'], 'ラム肉': ['ラム'], 'マトン': ['マトン'], '馬': ['うま'], '馬肉': ['うま'], '馬刺し': ['うま'],
+  '猪': ['いのしし'], '猪肉': ['いのしし'], '鹿': ['あかしか', 'ほんじか', 'にほんじか'], '鹿肉': ['あかしか', 'ほんじか', 'にほんじか'],
+  '鯨': ['くじら'], '鯨肉': ['くじら'], '鶉': ['うずら'], '七面鳥': ['しちめんちょう'], 'ターキー': ['しちめんちょう'],
+  '砂肝': ['すなぎも'], 'ハツ': ['心臓'], 'レバー': ['肝臓', 'レバー'], 'とりにく': ['にわとり'], 'ぶたにく': ['ぶた'], 'ぎゅうにく': ['うし'],
+  // 魚
+  '鯛': ['たい'], '真鯛': ['まだい'], '金目鯛': ['きんめだい'], '秋刀魚': ['さんま'], '鰻': ['うなぎ'], '穴子': ['あなご'], '鮎': ['あゆ'],
+  '鰈': ['かれい'], '鮃': ['ひらめ'], '鱚': ['きす'], '鰊': ['にしん'], '鱧': ['はも'], '河豚': ['ふぐ'], '鮟鱇': ['あんこう'],
+  '柳葉魚': ['ししゃも'], '鰆': ['さわら'], '鱸': ['すずき'], '太刀魚': ['たちうお'], '鰰': ['はたはた'], '公魚': ['わかさぎ'], '白魚': ['しらうお'],
+  '鯉': ['こい'], '鮒': ['ふな'], '鱒': ['ます'], '岩魚': ['いわな'], '山女魚': ['やまめ'], '鰍': ['かじか'], '飛魚': ['とびうお'], '鰺': ['あじ'],
+  '眼張': ['めばる'], '𩸽': ['ほっけ'], '鮖': ['かじか'], '鯰': ['なまず'], '鯱': ['しゃち'],
+  // 魚卵・魚介
+  '蝦': ['えび'], '伊勢海老': ['いせえび'], '甘海老': ['あまえび'], '蟹': ['かに'], 'ずわい蟹': ['ずわいがに'], '毛蟹': ['けがに'], 'たらば蟹': ['たらばがに'],
+  '雲丹': ['うに'], '海胆': ['うに'], '栄螺': ['さざえ'], '鮑': ['あわび'], '海鞘': ['ほや'], '海鼠': ['なまこ'], '赤貝': ['あかがい'], '北寄貝': ['ほっきがい'],
+  '数の子': ['かずのこ'], '明太子': ['めんたい'], '鱈子': ['たらこ'], '筋子': ['すじこ'], '白子': ['しらこ'], 'イクラ': ['イクラ'],
+  '蒲鉾': ['かまぼこ'], '竹輪': ['竹輪', 'ちくわ'], 'ちくわ': ['竹輪', 'ちくわ'], '半平': ['はんぺん'], '薩摩揚げ': ['さつま揚げ'],
+  // 大豆・豆・種実
+  '厚揚げ': ['生揚げ'], 'あつあげ': ['生揚げ'], '黒豆': ['黒大豆'], '枝豆': ['えだまめ'], '空豆': ['そらまめ'], '蚕豆': ['そらまめ'], '隠元': ['いんげん'],
+  '豌豆': ['えんどう'], 'とうふ': ['豆腐'], 'なっとう': ['納豆'], 'とうにゅう': ['豆乳'], '湯葉': ['湯葉', 'ゆば'], '高野豆腐': ['凍り豆腐'], '凍み豆腐': ['凍り豆腐'],
+  '胡麻': ['ごま'], '胡桃': ['くるみ'], '落花生': ['らっかせい', 'ピーナッツ'], '銀杏': ['ぎんなん'],
+  // 野菜・いも・きのこ・海藻
+  'ほうれん草': ['ほうれんそう'], 'ホウレン草': ['ほうれんそう'], '大根': ['だいこん'], '人参': ['にんじん'], '玉葱': ['たまねぎ'], '玉ねぎ': ['たまねぎ'], '葱': ['ねぎ'], '長葱': ['根深ねぎ'], '長ねぎ': ['根深ねぎ'],
+  '生姜': ['しょうが'], '大蒜': ['にんにく'], '茄子': ['なす'], '胡瓜': ['きゅうり'], '南瓜': ['かぼちゃ'], '牛蒡': ['ごぼう'], '蓮根': ['れんこん'],
+  '白菜': ['はくさい'], '菠薐草': ['ほうれんそう'], '小松菜': ['こまつな'], '春菊': ['しゅんぎく'], '水菜': ['みずな'], '韮': ['にら'], '萌やし': ['もやし'],
+  '椎茸': ['しいたけ'], '舞茸': ['まいたけ'], '占地': ['しめじ'], '榎茸': ['えのき'], '松茸': ['まつたけ'], '筍': ['たけのこ'], '竹の子': ['たけのこ'],
+  '蒟蒻': ['こんにゃく'], '若布': ['わかめ'], '鹿尾菜': ['ひじき'], '海雲': ['もずく'], '寒天': ['寒天', 'かんてん'],
+  '薩摩芋': ['さつまいも'], '里芋': ['さといも'], '長芋': ['ながいも'], '山芋': ['やまのいも'], '自然薯': ['じねんじょ'], '馬鈴薯': ['じゃがいも'], 'ジャガイモ': ['じゃがいも'],
+  // くだもの
+  '林檎': ['りんご'], '蜜柑': ['みかん'], '苺': ['いちご'], '葡萄': ['ぶどう'], '桃': ['白肉種', '黄肉種', 'もも類'], '梨': ['なし'], '栗': ['ぐり', 'くり'],
+  '檸檬': ['レモン'], '西瓜': ['すいか'], '無花果': ['いちじく'], '枇杷': ['びわ'], '柚子': ['ゆず'], '梅': ['うめ'], '梅干し': ['梅干し'], '杏': ['あんず'], '蜜柑缶': ['みかん'],
+  // 主食・その他
+  '餅': ['もち'], 'お餅': ['もち'], '麺': ['めん'], '片栗粉': ['じゃがいもでん粉'], 'かたくりこ': ['じゃがいもでん粉'], '麦酒': ['ビール'], '葡萄酒': ['ぶどう酒', 'ワイン'],
+  '蜂蜜': ['はちみつ'], '胡椒': ['こしょう'], '味噌': ['みそ'], '饅頭': ['まんじゅう'], '羊羹': ['ようかん'], '煎餅': ['せんべい'], '最中': ['もなか'],
+  'ぎゅうにゅう': ['牛乳'], '生クリーム': ['クリーム'], '玉子焼き': ['厚焼きたまご', 'だし巻きたまご'], '卵焼き': ['厚焼きたまご', 'だし巻きたまご'],
+};
+for (const [k, v] of Object.entries(KANJI_READ)) if (!ALIASES[k]) ALIASES[k] = v;
 const NORM_ALIASES = Object.fromEntries(
   Object.entries(ALIASES).map(([k, v]) => [norm(k), v.map(norm)])
 );
@@ -729,9 +769,21 @@ function computeTargets(p) {
     // 切上げ（食事摂取基準の丸め方に合わせる）
     t.weightRef = Math.ceil(w * ADULT_EAR_PER_KG * RDA_FACTOR) + add.rda;
   }
-  if (age >= 65 && w > 0) {
-    t.frail = Math.ceil(w * FRAIL_PER_KG);
+  // 高齢者の目安（1.2g/kg）。身長があれば標準体重（BMI22）を出し、
+  // 太り気味（BMI25以上）や体重未入力のときは標準体重で計算する（多く出すぎないように）
+  const h = Number(p.height) || 0;
+  if (h > 0) {
+    const hm = h / 100;
+    t.stdWeight = Math.round(22 * hm * hm * 10) / 10;
+    if (w > 0) t.bmi = Math.round(w / (hm * hm) * 10) / 10;
   }
+  if (age >= 65) {
+    let base = w, useStd = false;
+    if (t.stdWeight && (!w || t.bmi >= 25)) { base = t.stdWeight; useStd = true; }
+    if (base > 0) { t.frail = Math.ceil(base * FRAIL_PER_KG); t.frailBase = base; t.frailStd = useStd; }
+  }
+  // 体重からの参考値も、太り気味なら標準体重で
+  if (t.weightRef && t.stdWeight && t.bmi >= 25) { t.weightRef = Math.ceil(t.stdWeight * ADULT_EAR_PER_KG * RDA_FACTOR) + add.rda; t.weightRefStd = true; }
   return t;
 }
 
@@ -779,7 +831,7 @@ async function loadFoods() {
     const data = await res.json();
     foods = data.foods.map(([code, g, name, p, f, ml, rate]) => {
       const { main, sub, parts } = splitName(name);
-      return { code, g, name, p, f, ml, rate: rate || null, main, sub, parts, group: data.groups[g], key: norm(name) };
+      return { code, g, name, p, f, ml, rate: rate || null, main, sub, parts, group: data.groups[g], key: norm(name), kw: name.split(/\s+/).map(norm).filter(Boolean) };
     });
     foodByCode = new Map(foods.map(x => [x.code, x]));
     foodsReady = true;
@@ -821,7 +873,8 @@ function searchFoods(q) {
   for (const f of foods) {
     let ok = true;
     for (const a of alts) {
-      if (!a.some(x => f.key.includes(x))) { ok = false; break; }
+      // 語ごとに調べる（つなげると「…じか」＋「きゅうしゅう…」が「かき」に当たってしまうため）
+      if (!a.some(x => f.kw.some(w => w.includes(x)))) { ok = false; break; }
     }
     if (ok) res.push(f);
   }
@@ -859,9 +912,14 @@ function searchFoods(q) {
     // 生を優先
     if (/(^|\s)生(\s|$)/.test(f.main || '')) sc -= 6;
     // 加工品・料理は下げる
-    if (!qProcessed && (PROCESSED_RE.test(f.main || '') || PROCESSED_RE.test(f.sub || ''))) sc += 20;
+    if (!qProcessed && (PROCESSED_RE.test((f.main || '').replace('水産練り製品', '')) || PROCESSED_RE.test((f.sub || '').replace('水産練り製品', '')))) sc += 20;
     // 「ぎょうざの皮」などの材料は、皮と探したとき以外は下げる
     if (/の皮/.test(f.main || '') && !/皮/.test(q)) sc += 15;
+    // 「ちくわ」で「ちくわぶ」（小麦製品）が先に出ないように
+    if (/ちくわぶ/.test(f.main || '') && !/ぶ|麩/.test(q)) sc += 15;
+    if (/コーンフレーク/.test(f.main || '') && !/コーン|シリアル/.test(q)) sc += 30; // 「ツナ」（フレーク）で出ないように
+    // 皮だけの食品（「あひる 皮」など）は、皮と探したとき以外は少し下げる
+    if (/(^|\s)皮(\s|$)/.test(f.main || '') && !/皮/.test(q)) sc += 8;
     f._q = nq; f._score = sc;
     return sc;
   };
@@ -955,9 +1013,8 @@ function renderToday() {
     const target = t.rda;
     const remain = r1(target - total);
     let rows = `<div class="target-row main"><span>推奨量<span class="tiny muted">（${t.bracket}${t.sexLabel}${t.addLabel ? '・' + t.addLabel : ''}）</span></span><b>${target}g</b></div>`;
-    if (t.weightRef) rows += `<div class="target-row"><span>体重からの参考値<span class="tiny muted">（${fmt(t.weight)}kg）</span></span><b>${t.weightRef}g</b></div>`;
-    if (t.frail) rows += `<div class="target-row frail"><span>フレイル予防の参考<span class="tiny muted">（1.2g/kg）</span></span><b>${t.frail}g</b></div>`;
-    if (t.age >= 65 && !t.weight) rows += `<div class="target-row"><span class="small muted">体重を入れると、フレイル予防の参考量（1.2g/kg）も表示します</span></div>`;
+    if (t.frail) rows += `<div class="target-row frail"><span>＋高齢者の目安<span class="tiny muted">（1.2g/kg${t.frailStd ? '・標準体重' : ''}）</span></span><b>${t.frail}g</b></div>`;
+    if (t.age >= 65 && !t.frail) rows += `<div class="target-row"><span class="small muted">体重か身長を入れると、高齢者の目安（フレイル予防）も表示します</span></div>`;
 
     const maxV = Math.max(target, t.frail || 0, total) * 1.08 || 1;
     let marks = '';
@@ -977,7 +1034,7 @@ function renderToday() {
       ${remain > 0
         ? `<div class="remain">推奨量まで あと <span style="color:var(--accent)">${fmt(remain)}g</span></div>`
         : `<div class="remain done">推奨量に届きました（+${fmt(-remain)}g）</div>`}
-      ${t.frail && total >= target && total < t.frail ? `<div class="small muted">フレイル予防の参考量（${t.frail}g）まで あと ${fmt(t.frail - total)}g</div>` : ''}
+      ${t.frail && total >= target && total < t.frail ? `<div class="small muted">高齢者の目安（${t.frail}g）まで あと ${fmt(t.frail - total)}g</div>` : ''}
     </div>`;
 
     if (remain > 0 && foodsReady) suggestHtml = renderSuggestions(remain);
@@ -1085,16 +1142,19 @@ function renderSettings() {
   <div class="card">
     <h2>あなたの情報</h2>
     <form id="profileForm">
-      <div class="field"><label for="age">年齢</label>
-        <input id="age" name="age" type="number" inputmode="numeric" min="1" max="120" value="${esc(p.age || '')}" placeholder="例：45" required></div>
+      <div class="field"><label for="age">年齢（歳）</label>
+        <div style="display:flex;align-items:center;gap:8px"><input id="age" name="age" type="number" inputmode="numeric" min="1" max="120" value="${esc(p.age || '')}" placeholder="例：45" required><b style="flex:none">歳</b></div></div>
       <div class="field"><label>性別</label>
         <div class="radio-row">
           <label><input type="radio" name="sex" value="m" ${p.sex === 'm' ? 'checked' : ''} required>男性</label>
           <label><input type="radio" name="sex" value="f" ${p.sex === 'f' ? 'checked' : ''}>女性</label>
         </div></div>
-      <div class="field"><label for="weight">体重（任意）</label>
-        <input id="weight" name="weight" type="number" inputmode="decimal" step="0.1" min="10" max="250" value="${esc(p.weight || '')}" placeholder="例：55">
-        <div class="hint">18歳以上は体重からの参考値、65歳以上はフレイル予防の参考量（1.2g/kg）も表示します</div></div>
+      <div class="field"><label for="height">身長（cm・任意）</label>
+        <div style="display:flex;align-items:center;gap:8px"><input id="height" name="height" type="number" inputmode="decimal" step="0.1" min="80" max="230" value="${esc(p.height || '')}" placeholder="例：155"><b style="flex:none">cm</b></div></div>
+      <div class="field"><label for="weight">体重（kg・任意）</label>
+        <div style="display:flex;align-items:center;gap:8px"><input id="weight" name="weight" type="number" inputmode="decimal" step="0.1" min="10" max="250" value="${esc(p.weight || '')}" placeholder="例：55"><b style="flex:none">kg</b></div>
+        <div id="weightWarn" class="hint" style="color:#c0392b;font-weight:700" hidden></div>
+        <div class="hint">65歳以上は、推奨量に加えて「高齢者の目安（1.2g/kg）」も表示します。身長も入れると、太り気味のときは標準体重で計算します</div></div>
       <div class="field" id="statusField" ${p.sex === 'f' ? '' : 'hidden'}><label for="status">妊娠・授乳</label>
         <select id="status" name="status">
           ${Object.entries(ADD).map(([k, v]) => `<option value="${k}" ${p.status === k ? 'selected' : ''}>${k === 'none' ? '該当しない' : v.label}</option>`).join('')}
@@ -1107,14 +1167,14 @@ function renderSettings() {
     <h2>あなたの目安</h2>
     <div class="target-row main"><span>推奨量</span><b>${t.rda}g/日</b></div>
     <div class="target-row"><span>推定平均必要量</span><b>${t.ear}g/日</b></div>
-    ${t.weightRef ? `<div class="target-row"><span>体重からの参考値</span><b>${t.weightRef}g/日</b></div>` : ''}
-    ${t.frail ? `<div class="target-row frail"><span>フレイル予防の参考（1.2g/kg）</span><b>${t.frail}g/日</b></div>` : ''}
+    ${t.weightRef ? `<div class="target-row"><span>体重からの参考値${t.weightRefStd ? '（標準体重' + fmt(t.stdWeight) + 'kg）' : ''}</span><b>${t.weightRef}g/日</b></div>` : ''}
+    ${t.frail ? `<div class="target-row frail"><span>＋高齢者の目安（フレイル予防・1.2g/kg${t.frailStd ? '・標準体重' + fmt(t.frailBase) + 'kg' : ''}）</span><b>${t.frail}g/日</b></div>` : ''}
     <div class="target-row"><span>目標量（参考）</span><b>${t.goalPct}%エネルギー</b></div>
     <p class="small muted" style="margin-bottom:0">
       <b>推奨量</b>：ほとんどの人（97〜98%）が不足しない量。${t.bracket}・${t.sexLabel}の表の値${t.addRda ? `に${t.addLabel}の付加量 +${t.addRda}g を加えた値` : ''}です。<br>
       <b>推定平均必要量</b>：半数の人が必要量を満たす量。<br>
       ${t.weightRef ? `<b>体重からの参考値</b>：成人の推奨量の計算式（0.73g/kg × 1.25）をあなたの体重に当てはめた値です。表の値は「参照体重」で計算されています。<br>` : ''}
-      ${t.frail ? `<b>フレイル予防の参考</b>：食事摂取基準では、高齢者は推奨量より多め（1.2g/kg体重/日以上）にとるとフレイル・サルコペニアを予防できる可能性がある、とされています（確定した基準値ではありません）。<br>` : ''}
+      ${t.frail ? `<b>高齢者の目安</b>：食事摂取基準では、高齢者は推奨量より多め（1.2g/kg体重/日以上）にとるとフレイル・サルコペニアを予防できる可能性がある、とされています（確定した基準値ではありません）。基本は推奨量で、余裕があればここまで、という目安です。${t.frailStd ? '太り気味（BMI25以上）のため、実際の体重ではなく身長から出した標準体重（BMI22）で計算しています。' : ''}腎臓の病気などで食事の指導を受けている方は、医師の指示を優先してください。<br>` : ''}
       <b>目標量</b>：生活習慣病などの予防のため、1日のエネルギーのうちたんぱく質でとる割合です。
     </p>
   </div>` : ''}
@@ -1325,7 +1385,7 @@ function renderResults() {
     return;
   }
   if (!foodsReady) { box.innerHTML = '<div class="empty">食品データを読み込み中…</div>'; return; }
-  const q = sheetCtx.q.trim();
+  let q = sheetCtx.q.trim();
   if (!q) {
     const recent = Object.entries(state.recent)
       .filter(([k]) => foodByCode.has(k))
@@ -1341,6 +1401,10 @@ function renderResults() {
     box.innerHTML = html;
     return;
   }
+  // 見つからない言葉（例：「鴨鍋」）は、中に含まれる言葉（「鴨」）で探し直す
+  const orig = q;
+  q = widenQuery(q);
+  const widened = q !== orig;
   const res = searchFoods(q);
   const nq = norm(q);
   const mine = state.myList.filter(it => norm(it.name).includes(nq));
@@ -1349,8 +1413,9 @@ function renderResults() {
   // 料理名が探した言葉で始まる（3文字以上：「焼きそば」「カレー」など）料理は上に。それ以外（「卵」で卵かけごはん等）は素材の候補のあとに
   const dTop = res.length ? dishes.filter(d => nq.length >= 3 && norm(d.name).startsWith(nq)) : dishes;
   const dLow = dishes.filter(d => !dTop.includes(d));
-  const regBtn = `<div class="meal-actions"><button class="btn ghost small block" data-mlnew="${esc(q)}">「${esc(q)}」を市販品・メニューとしてマイリストに登録</button></div>`;
+  const regBtn = `<div class="meal-actions"><button class="btn ghost small block" data-mlnew="${esc(orig)}">「${esc(orig)}」を市販品・メニューとしてマイリストに登録</button></div>`;
   box.innerHTML =
+    (widened ? `<div class="empty small" style="padding:8px 4px">「${esc(orig)}」では見つからなかったので、「${esc(q)}」で探しました</div>` : '') +
     (mine.length ? `<div class="list-label">マイリスト</div>${mine.map(mlRow).join('')}` : '') +
     (dTop.length ? `<div class="list-label">料理・外食</div>${dTop.map(dishRow).join('')}` : '') +
     (gens.length ? `<div class="list-label">一般的な目安</div>${gens.map(genRow).join('')}` : '') +
@@ -1361,6 +1426,42 @@ function renderResults() {
         res.slice(5).map(f => foodRow(f)).join('') + (res.length >= 60 ? '<div class="empty small">候補が多いので、言葉を足して絞り込んでください（例：「鶏 むね 皮なし」）</div>' : '') +
         `<div class="list-label">市販品・外食などで見つからないとき</div>${regBtn}`
       : `<div class="empty">成分表では見つかりませんでした。<br>ひらがなや別の言い方でも試してください（例：「とり」→「にわとり」、「ごはん」→「めし」）。</div>${regBtn}`);
+}
+
+function hitsFor(t) {
+  return searchFoods(t).length + searchDishes(t).length + state.myList.filter(it => norm(it.name).includes(norm(t))).length;
+}
+let WIDEN_KEYS = null;
+function widenQuery(q) {
+  const toks = String(q).trim().split(/\s+/).filter(Boolean);
+  if (!toks.length || hitsFor(q) > 0) return q;
+  const isKanji = c => /[一-龠々]/.test(c);
+  if (!WIDEN_KEYS) WIDEN_KEYS = Object.keys(NORM_ALIASES).filter(k => k.length >= 2 || isKanji(k));
+  const out = toks.map(t => {
+    if (hitsFor(t) > 0) return t;
+    // 含まれる言葉のうち、見つかるものに点をつけて一番よいものを選ぶ
+    //  長いほど良い／食材として知っている言葉（鴨・牡蠣・茄子…）を含むと良い／先頭から始まると良い
+    //  （「鴨鍋」→「鴨」、「牡蠣フライ定食」→「牡蠣フライ」、「麻婆茄子」→「茄子」、「いかリング」→「いか」）
+    const chars = Array.from(t);
+    let best = null;
+    for (let len = chars.length - 1; len >= 1; len--) {
+      for (let i = 0; i + len <= chars.length; i++) {
+        const sub = chars.slice(i, i + len).join('');
+        if (len === 1 && !isKanji(sub)) continue;
+        if (/^の|の$/.test(sub)) continue;
+        // カタカナ語の途中で切らない（「豚キムチ」→「豚キ」、「いかリング」→「かリン」を防ぐ）
+        const kata = c => /[ァ-ヶー]/.test(c || '');
+        if ((i > 0 && kata(chars[i - 1]) && kata(chars[i])) || (kata(chars[i + len - 1]) && kata(chars[i + len]))) continue;
+        const ns = norm(sub);
+        const known = WIDEN_KEYS.some(k => ns.includes(k)) || t.split('の')[0] === sub;
+        const sc = len * 10 + (known ? 50 : 0) + (i === 0 ? 20 : 0) + (i + len === chars.length ? 5 : 0);
+        if (best && sc <= best.sc) continue;
+        if (hitsFor(sub) > 0) best = { sub, sc };
+      }
+    }
+    return best ? best.sub : t;
+  });
+  return out.join(' ');
 }
 
 /* --- 量を入れる（個数／g／調理前のg） --- */
@@ -1907,10 +2008,24 @@ document.addEventListener('submit', ev => {
   ev.preventDefault();
   const fd = new FormData(ev.target);
   const sex = fd.get('sex');
+  // 体重の入力ミス（年齢を入れてしまう等）を確認
+  const ageV = Number(fd.get('age')), wV = fd.get('weight') ? Number(fd.get('weight')) : 0;
+  const warn = $('#weightWarn');
+  let why = '';
+  if (wV && wV === ageV) why = `体重が年齢と同じ「${wV}」になっています。`;
+  else if (wV && ageV >= 18 && wV < 30) why = `体重${wV}kgは、大人としてはかなり軽い値です。`;
+  if (why && ev.target.dataset.weightOk !== String(wV)) {
+    ev.target.dataset.weightOk = String(wV);
+    if (warn) { warn.textContent = why + ' 体重（kg）で合っていれば、もう一度「保存」を押してください。'; warn.hidden = false; }
+    $('#weight').focus();
+    return;
+  }
+  if (warn) warn.hidden = true;
   state.profile = {
     age: Number(fd.get('age')),
     sex,
     weight: fd.get('weight') ? Number(fd.get('weight')) : null,
+    height: fd.get('height') ? Number(fd.get('height')) : null,
     status: sex === 'f' ? (fd.get('status') || 'none') : 'none',
   };
   saveState();
