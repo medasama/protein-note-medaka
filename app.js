@@ -387,11 +387,12 @@ const GENERIC_ITEMS = [
   { kind: 'gen', id: 'gen-protein', name: 'プロテイン（粉末）', unit: '100g', protein: 71.4, basis: '100g',
     keys: 'ぷろていん プロテイン ホエイ ソイ', chips: [10, 15, 20, 30], defVal: 28,
     note: '粉の重さ（g）を入れてください。' },
+  { kind: 'gen', id: 'gen-greek', name: 'ギリシャヨーグルト（水切り・無糖）', unit: '100g', protein: 10.2, basis: '100g', keys: 'ぎりしゃよーぐると ギリシャ オイコス パルテノ 高たんぱく 水切り', need: /ギリシャ|ぎりしゃ|オイコス|おいこす|パルテノ|ぱるての|高たんぱく|高タンパク|水切り/, chips: [100, 113, 200], defVal: 100, note: '米国農務省の食品データベース（USDA FoodData Central）の値。ふつうのヨーグルト（成分表 3.6g/100g）の約3倍です。商品で差があるので、袋の表示があればマイリストに登録するのがおすすめです。' },
 ];
 function genRow(it) {
   return `<button class="food" data-genpick="${it.id}">
-    <span class="nm"><div>${esc(it.name)}</div><div class="sub">一般的な目安・粉のgで入れる</div></span>
-    <span class="p">粉28gで${fmt(it.protein * 28 / 100)}g</span></button>`;
+    <span class="nm"><div>${esc(it.name)}</div><div class="sub">一般的な目安・${it.id === 'gen-protein' ? '粉のg' : 'g'}で入れる</div></span>
+    <span class="p">${it.id === 'gen-protein' ? `粉28gで${fmt(it.protein * 28 / 100)}g` : `${fmt(it.protein)}g<small>/100g</small>`}</span></button>`;
 }
 
 /* ---------- 料理（目安） ----------
@@ -431,7 +432,7 @@ const DISHES = [
   { id: 'yakiudon', name: '焼きうどん', unit: '1人前', keys: 'やきうどん うどん', items: [['01039', 200, 'うどん（ゆで）'], ['11129', 40, '豚ばら'], ['06061', 50, 'キャベツ'], ['17007', 10, 'しょうゆ']] },
   // パン
   { id: 'hamsand', name: 'ハムサンド', unit: '1人前', keys: 'はむさんど サンドイッチ', items: [['01026', 70, '食パン'], ['11176', 20, 'ハム'], ['14017', 4, 'バター'], ['06312', 10, 'レタス']] },
-  { id: 'tamagosand', name: 'たまごサンド', unit: '1人前', keys: 'たまごさんど サンドイッチ', items: [['01026', 70, '食パン'], ['12005', 50, 'ゆで卵'], ['17042', 10, 'マヨネーズ']] },
+  { id: 'tamagosand', name: 'たまごサンド', unit: '1人前', keys: 'たまごさんど 卵サンド タマゴサンド サンドイッチ', items: [['01026', 70, '食パン'], ['12005', 50, 'ゆで卵'], ['17042', 10, 'マヨネーズ']] },
   { id: 'tunasand', name: 'ツナサンド', unit: '1人前', keys: 'つなさんど サンドイッチ', items: [['01026', 70, '食パン'], ['10263', 30, 'ツナ'], ['17042', 10, 'マヨネーズ'], ['06065', 10, 'きゅうり']] },
   { id: 'pizzatoast', name: 'ピザトースト', unit: '1枚', keys: 'ぴざとーすと', items: [['01026', 60, '食パン6枚切'], ['13040', 20, 'チーズ'], ['11186', 15, 'ウインナー'], ['06245', 10, 'ピーマン'], ['17036', 15, 'ケチャップ']] },
   { id: 'frenchtoast', name: 'フレンチトースト', unit: '1枚', keys: 'ふれんちとーすと', items: [['01026', 60, '食パン6枚切'], ['12004', 50, '卵'], ['13003', 50, '牛乳'], ['03003', 8, '砂糖'], ['14017', 5, 'バター']] },
@@ -684,13 +685,18 @@ function norm(s) {
 /* 漢字・別表記 → 成分表の表記（成分表はひらがな表記が多いため）。ALIASES に無いものだけ足す */
 const KANJI_READ = {
   // 肉・鳥
-  'シーチキン': ['フレーク'], '鴨': ['かも'], '鴨肉': ['かも'], '合鴨': ['あいがも'], '合鴨肉': ['あいがも'], 'アヒル': ['あひる'], '家鴨': ['あひる'],
+  'シーチキン': ['フレーク'],
+  // 成分表に漢字・カタカナのまま載っている言葉（探し直しで「食材名」として扱うため）
+  '納豆': ['納豆'], '豆腐': ['豆腐'], '豆乳': ['豆乳'], '油揚げ': ['油揚げ'], '食パン': ['食パン'], '玄米': ['玄米'], '抹茶': ['抹茶'], '紅茶': ['紅茶'],
+  'ハム': ['ハム'], 'チーズ': ['チーズ'], 'ベーコン': ['ベーコン'], 'ソーセージ': ['ソーセージ'], 'ウインナー': ['ウインナー'], 'トマト': ['トマト'], 'バナナ': ['バナナ'],
+  'ミルク': ['普通牛乳'], 'ラテ': ['普通牛乳'], 'カフェラテ': ['普通牛乳'], 'カフェオレ': ['普通牛乳'], 'コーンスープ': ['コーンクリームスープ'], 'ポタージュ': ['ポタージュ'],
+  '冷奴': ['豆腐'], '冷や奴': ['豆腐'], '切り干し大根': ['切干しだいこん'], '切干大根': ['切干しだいこん'], 'しゃぶしゃぶ': ['しゃぶしゃぶ'], '鴨': ['かも'], '鴨肉': ['かも'], '合鴨': ['あいがも'], '合鴨肉': ['あいがも'], 'アヒル': ['あひる'], '家鴨': ['あひる'],
   '羊': ['めんよう'], '羊肉': ['めんよう'], 'ラム肉': ['ラム'], 'マトン': ['マトン'], '馬': ['うま'], '馬肉': ['うま'], '馬刺し': ['うま'],
   '猪': ['いのしし'], '猪肉': ['いのしし'], '鹿': ['あかしか', 'ほんじか', 'にほんじか'], '鹿肉': ['あかしか', 'ほんじか', 'にほんじか'],
   '鯨': ['くじら'], '鯨肉': ['くじら'], '鶉': ['うずら'], '七面鳥': ['しちめんちょう'], 'ターキー': ['しちめんちょう'],
   '砂肝': ['すなぎも'], 'ハツ': ['心臓'], 'レバー': ['肝臓', 'レバー'], 'とりにく': ['にわとり'], 'ぶたにく': ['ぶた'], 'ぎゅうにく': ['うし'],
   // 魚
-  '鯛': ['たい'], '真鯛': ['まだい'], '金目鯛': ['きんめだい'], '秋刀魚': ['さんま'], '鰻': ['うなぎ'], '穴子': ['あなご'], '鮎': ['あゆ'],
+  '鯛': ['たい類', 'まだい', 'きだい', 'ちだい', 'くろだい', 'きんめだい'], '真鯛': ['まだい'], '金目鯛': ['きんめだい'], '秋刀魚': ['さんま'], '鰻': ['うなぎ'], '穴子': ['あなご'], '鮎': ['あゆ'],
   '鰈': ['かれい'], '鮃': ['ひらめ'], '鱚': ['きす'], '鰊': ['にしん'], '鱧': ['はも'], '河豚': ['ふぐ'], '鮟鱇': ['あんこう'],
   '柳葉魚': ['ししゃも'], '鰆': ['さわら'], '鱸': ['すずき'], '太刀魚': ['たちうお'], '鰰': ['はたはた'], '公魚': ['わかさぎ'], '白魚': ['しらうお'],
   '鯉': ['こい'], '鮒': ['ふな'], '鱒': ['ます'], '岩魚': ['いわな'], '山女魚': ['やまめ'], '鰍': ['かじか'], '飛魚': ['とびうお'], '鰺': ['あじ'],
@@ -712,7 +718,7 @@ const KANJI_READ = {
   '蒟蒻': ['こんにゃく'], '若布': ['わかめ'], '鹿尾菜': ['ひじき'], '海雲': ['もずく'], '寒天': ['寒天', 'かんてん'],
   '薩摩芋': ['さつまいも'], '里芋': ['さといも'], '長芋': ['ながいも'], '山芋': ['やまのいも'], '自然薯': ['じねんじょ'], '馬鈴薯': ['じゃがいも'], 'ジャガイモ': ['じゃがいも'],
   // くだもの
-  '林檎': ['りんご'], '蜜柑': ['みかん'], '苺': ['いちご'], '葡萄': ['ぶどう'], '桃': ['白肉種', '黄肉種', 'もも類'], '梨': ['なし'], '栗': ['ぐり', 'くり'],
+  '林檎': ['りんご'], '蜜柑': ['みかん'], '苺': ['いちご'], '葡萄': ['ぶどう'], '桃': ['白肉種', '黄肉種', 'もも類'], '梨': ['なし'], '栗': ['ぐり', 'くり類'],
   '檸檬': ['レモン'], '西瓜': ['すいか'], '無花果': ['いちじく'], '枇杷': ['びわ'], '柚子': ['ゆず'], '梅': ['うめ'], '梅干し': ['梅干し'], '杏': ['あんず'], '蜜柑缶': ['みかん'],
   // 主食・その他
   '餅': ['もち'], 'お餅': ['もち'], '麺': ['めん'], '片栗粉': ['じゃがいもでん粉'], 'かたくりこ': ['じゃがいもでん粉'], '麦酒': ['ビール'], '葡萄酒': ['ぶどう酒', 'ワイン'],
@@ -1227,6 +1233,7 @@ function renderSettings() {
     <p>飲み物のmL：成分表の備考に「100mL＝◯g」がある食品はその値で換算。記載がない飲み物（豆乳・お茶・コーヒーなど）は1mL＝1gの目安で換算し、記録に「約・目安」と表示（成分表の飲み物の換算値はほとんどが100mL＝97〜108gの範囲）。</p>
     <p>調理前の重さで入れる場合と「1本分」「乾めん100g分」など：日本食品標準成分表（八訂）増補2023年 第1章「調理方法の概要及び重量変化率表」の重量変化率を使って換算。</p>
     <p>ごはん茶碗1杯、食パン1枚、納豆1パック、豆腐1/2丁、トマト1個、レタス1人前、くだもの1個、刺身1切れ、調理前の量（ささみ1本50gなど）、かき1個・あじ1尾・薄切り肉1枚などの重さは、自治体の資料や管理栄養士の目安量一覧などを参考にした一般的な目安です。たんぱく質の値は、すべて食品成分表から計算しています。</p>
+    <p>ギリシャヨーグルト（水切り・無糖）の値は、米国農務省の食品データベース（USDA FoodData Central）によります。</p>
     <p>「外食（公式発表値）」は、各社が公式に公表している栄養成分の値です（ケンタッキーフライドチキン「栄養成分表」2026/3/25現在）。</p>
     <p>「料理（目安）」は、成分表にない料理を一般的な家庭の分量で材料に分け、材料ごとに成分表の値から計算した目安です（材料と分量は各料理の記録画面に表示）。</p>
     <p>プロテイン（粉末）：成分表には載っていないため、市販品（明治 ザバス ソイプロテイン100など、1食分28gでたんぱく質20.0g）の栄養成分表示から、粉の約7割（71.4%）をたんぱく質として計算しています。商品によって6〜8割程度の差があるので、使っている商品はマイリストへの登録（100gあたり）をおすすめします。</p>
@@ -1354,7 +1361,7 @@ function historyItems(limit = 40) {
 }
 function entryAmountLabel(e) {
   if (e.desc) return e.desc;
-  if (e.kind === 'gen' && e.basis === '100g') return `粉${fmt(e.grams)}g`;
+  if (e.kind === 'gen' && e.basis === '100g') return (e.refId === 'gen-protein' || /プロテイン/.test(e.name || '') ? '粉' : '') + `${fmt(e.grams)}g`;
   if (e.code || e.basis === '100g') return `${fmt(e.grams)}g`;
   const u = e.unit || '1食';
   const m = u.match(/^1([^\d（()）]+)$/); // 「1杯」「1個」なら「2杯」「1.5個」のように（カッコ付きの単位は × 表記のまま）
@@ -1392,7 +1399,7 @@ function renderResults() {
       .sort((a, b) => b[1].t - a[1].t).slice(0, 8).map(([k]) => foodByCode.get(k));
     let html = '';
     if (recent.length) html += `<div class="list-label">最近使った食材</div>` + recent.map(f => foodRow(f)).join('');
-    html += `<div class="list-label">よく使う食材</div>` + GENERIC_ITEMS.map(genRow).join('') + STAPLES.map(s => {
+    html += `<div class="list-label">よく使う食材</div>` + GENERIC_ITEMS.filter(it => !it.need).map(genRow).join('') + STAPLES.map(s => {
       const f = foodByCode.get(s.code);
       return f ? `<button class="food" data-pick="${f.code}">
         <span class="nm"><div>${esc(s.label)}</div><div class="sub">${esc(f.main)}</div></span>
@@ -1403,19 +1410,31 @@ function renderResults() {
   }
   // 見つからない言葉（例：「鴨鍋」）は、中に含まれる言葉（「鴨」）で探し直す
   const orig = q;
-  q = widenQuery(q);
-  const widened = q !== orig;
-  const res = searchFoods(q);
+  const terms = widenTerms(q);
+  const widened = terms.join(' ') !== orig;
+  q = terms[0];
+  const extra = widened ? terms.slice(1) : [];
+  let res = searchFoods(q);
+  if (extra.length) {
+    // 2つの言葉で探したときは、それぞれの上位3件を先に並べる（「納豆」「ごはん」が両方すぐ見えるように）
+    const groups = [res].concat(extra.map(t => searchFoods(t)));
+    const merged = [];
+    const add = f => { if (!merged.includes(f)) merged.push(f); };
+    groups.forEach(g => g.slice(0, 3).forEach(add));
+    groups.forEach(g => g.slice(3).forEach(add));
+    res = merged;
+  }
   const nq = norm(q);
   const mine = state.myList.filter(it => norm(it.name).includes(nq));
-  const gens = GENERIC_ITEMS.filter(it => norm(it.name + ' ' + it.keys).includes(nq));
+  const gens = GENERIC_ITEMS.filter(it => (it.need ? it.need.test(orig) : norm(it.name + ' ' + it.keys).includes(nq)));
   const dishes = searchDishes(q);
+  for (const t of extra) for (const d of searchDishes(t)) if (!dishes.some(x => x.id === d.id)) dishes.push(d);
   // 料理名が探した言葉で始まる（3文字以上：「焼きそば」「カレー」など）料理は上に。それ以外（「卵」で卵かけごはん等）は素材の候補のあとに
   const dTop = res.length ? dishes.filter(d => nq.length >= 3 && norm(d.name).startsWith(nq)) : dishes;
   const dLow = dishes.filter(d => !dTop.includes(d));
   const regBtn = `<div class="meal-actions"><button class="btn ghost small block" data-mlnew="${esc(orig)}">「${esc(orig)}」を市販品・メニューとしてマイリストに登録</button></div>`;
   box.innerHTML =
-    (widened ? `<div class="empty small" style="padding:8px 4px">「${esc(orig)}」では見つからなかったので、「${esc(q)}」で探しました</div>` : '') +
+    (widened ? `<div class="empty small" style="padding:8px 4px">「${esc(orig)}」では見つからなかったので、${terms.map(t => '「' + esc(t) + '」').join('と')}で探しました</div>` : '') +
     (mine.length ? `<div class="list-label">マイリスト</div>${mine.map(mlRow).join('')}` : '') +
     (dTop.length ? `<div class="list-label">料理・外食</div>${dTop.map(dishRow).join('')}` : '') +
     (gens.length ? `<div class="list-label">一般的な目安</div>${gens.map(genRow).join('')}` : '') +
@@ -1429,40 +1448,66 @@ function renderResults() {
 }
 
 function hitsFor(t) {
-  return searchFoods(t).length + searchDishes(t).length + state.myList.filter(it => norm(it.name).includes(norm(t))).length;
+  return searchFoods(t).length + searchDishes(t).length + state.myList.filter(it => norm(it.name).includes(norm(t))).length
+    + GENERIC_ITEMS.filter(it => !it.need && norm(it.name + ' ' + it.keys).includes(norm(t))).length;
 }
-let WIDEN_KEYS = null;
-function widenQuery(q) {
+let WIDEN_KEYS = null, FOOD_WORDS = null;
+const COOK_WORDS = /^(焼き|焼|蒸し|蒸|ゆで|茹で|煮|煮物|揚げ|炒め|いため|油いため|生|水煮|干し|塩焼き|照り焼き|和え|あえ|漬け|定食|弁当|セット|大盛り|特盛|並|丼|鍋)$/;
+// 見つからない言葉の中から、探し直す言葉を最大2つ選ぶ（例：「納豆ごはん」→「納豆」「ごはん」、「鴨鍋」→「鴨」）
+function widenTerms(q) {
   const toks = String(q).trim().split(/\s+/).filter(Boolean);
-  if (!toks.length || hitsFor(q) > 0) return q;
-  const isKanji = c => /[一-龠々]/.test(c);
-  if (!WIDEN_KEYS) WIDEN_KEYS = Object.keys(NORM_ALIASES).filter(k => k.length >= 2 || isKanji(k));
-  const out = toks.map(t => {
-    if (hitsFor(t) > 0) return t;
-    // 含まれる言葉のうち、見つかるものに点をつけて一番よいものを選ぶ
-    //  長いほど良い／食材として知っている言葉（鴨・牡蠣・茄子…）を含むと良い／先頭から始まると良い
-    //  （「鴨鍋」→「鴨」、「牡蠣フライ定食」→「牡蠣フライ」、「麻婆茄子」→「茄子」、「いかリング」→「いか」）
+  if (!toks.length || hitsFor(q) > 0) return [q];
+  const script = c => /[一-龠々]/.test(c || '') ? 'k' : /[ぁ-ゖ]/.test(c || '') ? 'h' : /[ァ-ヶー]/.test(c || '') ? 'K' : 'o';
+  if (!FOOD_WORDS) FOOD_WORDS = new Set(foods.flatMap(f => f.kw).filter(w => w.length >= 2 && !/[0-9０-９()（）]/.test(w)));
+  if (!WIDEN_KEYS) WIDEN_KEYS = new Set(Object.keys(NORM_ALIASES).filter(k => k.length >= 2 || script(k) === 'k'));
+  const terms = [];
+  for (const t of toks) {
+    if (hitsFor(t) > 0) { terms.push(t); continue; }
     const chars = Array.from(t);
-    let best = null;
+    const cands = [];
     for (let len = chars.length - 1; len >= 1; len--) {
       for (let i = 0; i + len <= chars.length; i++) {
         const sub = chars.slice(i, i + len).join('');
-        if (len === 1 && !isKanji(sub)) continue;
+        if (len === 1 && script(sub) !== 'k') continue;
         if (/^の|の$/.test(sub)) continue;
-        // カタカナ語の途中で切らない（「豚キムチ」→「豚キ」、「いかリング」→「かリン」を防ぐ）
-        const kata = c => /[ァ-ヶー]/.test(c || '');
-        if ((i > 0 && kata(chars[i - 1]) && kata(chars[i])) || (kata(chars[i + len - 1]) && kata(chars[i + len]))) continue;
         const ns = norm(sub);
-        const known = WIDEN_KEYS.some(k => ns.includes(k)) || t.split('の')[0] === sub;
+        if (COOK_WORDS.test(sub)) continue; // 「焼き」「蒸し」など調理法だけの言葉では探さない
+        const word = WIDEN_KEYS.has(ns) || FOOD_WORDS.has(ns); // 食材名として知っている言葉
+        // ひらがな・カタカナの語の途中では切らない（「いちごミルク」→「ごミルク」、「焼きなす」→「焼き」を防ぐ）。知っている言葉ならよい
+        const cutHead = i > 0 && script(chars[i - 1]) === script(chars[i]) && script(chars[i]) !== 'k';
+        const cutTail = i + len < chars.length && script(chars[i + len - 1]) === script(chars[i + len]) && script(chars[i + len]) !== 'k';
+        // 知っている言葉でも、切った残りが1文字なら切らない（「ロースト」→「ロース」＋「ト」、「いかリング」→「かリン」を防ぐ）。ただし「ご飯」「お餅」の「ご」「お」は可
+        const runLen = (from, step) => { let n = 0, j = from; const sc0 = script(chars[from]); while (chars[j] && script(chars[j]) === sc0) { n++; j += step; } return n; };
+        const restHead = cutHead ? runLen(i - 1, -1) : 0, restTail = cutTail ? runLen(i + len, 1) : 0;
+        // 1文字の残りでも、漢字の送りがな（「焼き」の「き」）や「の」、「ご飯」「お餅」の「ご」「お」はよい
+        const okHead = restHead === 1 && script(chars[i - 2]) === 'k';
+        const okTail = restTail === 1 && (chars[i + len] === 'の' || script(chars[i + len + 1]) === 'k');
+        const tinyRest = (cutHead && restHead < 2 && !okHead) || (cutTail && restTail < 2 && !okTail);
+        const ss = new Set(Array.from(sub).map(script));
+        const mixed = ss.has('h') && ss.has('K') && (cutHead || cutTail); // ひらがなとカタカナがまざる切り方（「かリン」）
+        if ((cutHead || cutTail) && (!word || tinyRest || mixed)) continue;
+        // カタカナ語を切るとき、残りの先頭が知っている言葉でなければ弱い候補（「ロースト」チキン→「ロース」より「チキン」）
+        const restWord = rest => [...WIDEN_KEYS, ...FOOD_WORDS].some(w => w.length >= 3 && norm(rest).startsWith(w));
+        const weak = script(chars[i]) === 'K' && cutTail && !restWord(chars.slice(i + len).join(''));
+        const known = word || [...WIDEN_KEYS].some(k => script(k[0]) === 'k' && ns.includes(k)) || t.split('の')[0] === sub;
         const sc = len * 10 + (known ? 50 : 0) + (i === 0 ? 20 : 0) + (i + len === chars.length ? 5 : 0);
-        if (best && sc <= best.sc) continue;
-        if (hitsFor(sub) > 0) best = { sub, sc };
+        cands.push({ sub, i, len, sc: sc - (weak ? 30 : 0), known: known && !weak });
       }
     }
-    return best ? best.sub : t;
-  });
-  return out.join(' ');
+    cands.sort((a, b) => b.sc - a.sc);
+    let first = null;
+    for (const c of cands) if (hitsFor(c.sub) > 0) { first = c; break; }
+    if (!first) { terms.push(t); continue; }
+    terms.push(first.sub);
+    // 2つ目：重ならない位置にある、食材として知っている言葉（「納豆ごはん」の「ごはん」、「たらこスパゲッティ」の「スパゲッティ」）
+    for (const c of cands) {
+      if (!c.known || c.i < first.i + first.len && first.i < c.i + c.len) continue;
+      if (hitsFor(c.sub) > 0) { terms.push(c.sub); break; }
+    }
+  }
+  return terms;
 }
+function widenQuery(q) { return widenTerms(q).join(' '); }
 
 /* --- 量を入れる（個数／g／調理前のg） --- */
 function openAmount(code, opts = {}) {
