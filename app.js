@@ -1032,7 +1032,7 @@ function hitokoto(ratio) {
   else if (ratio < 0.85) m = 'いい調子！！';
   else if (ratio < 1) m = 'もう少し！';
   else m = '達成！！おつかれさま！';
-  return `<div class="hito hito-m${st}"><img src="characters/medaka-m${st}.png" alt=""><span>${m}</span></div>`;
+  return `<div class="hito hito-m${st}"><button class="hop" data-hop="1" aria-label="めだか"><img src="characters/medaka-m${st}.png" alt=""></button><span>${m}</span></div>`;
 }
 
 function renderToday() {
@@ -1343,7 +1343,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.19</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.20</p>
   </div>`;
 }
 
@@ -1385,6 +1385,7 @@ function closeSheet() {
   const sh = $('#sheet');
   sh.hidden = true;
   sh.classList.remove('tall');
+  multiCtx = null;
   ['bottom', 'paddingBottom', 'maxHeight', 'height'].forEach(k => { sh.style[k] = ''; });
   $('#sheetBackdrop').hidden = true;
   document.body.style.overflow = '';
@@ -1397,29 +1398,35 @@ function closeSheet() {
 let multiCtx = null;
 const MULTI_PH = ['ごはん', '納豆', 'みそ汁', 'ゆで卵', '牛乳', 'バナナ', 'ヨーグルト', 'サラダ'];
 function openMulti(meal) {
-  multiCtx = { meal, terms: ['', '', '', '', ''], open: {}, done: {}, added: [], cache: {} };
+  multiCtx = { meal, terms: ['', '', ''], open: {}, done: {}, added: [], cache: {}, mode: 'search' };
   openMultiInput();
 }
 function openMultiInput() {
   const c = multiCtx;
-  sheetCtx = { meal: c.meal, multi: 'input' };
-  while (c.terms.length < 5) c.terms.push('');
-  openSheet(`${mealLabel(c.meal)}にまとめて追加`, `
-    <div class="small muted" style="margin-bottom:8px">食べたものを1行に1つずつ入れて「探す」を押してください</div>
+  sheetCtx = { meal: c.meal, multi: 'input', mode: c.mode || 'search', q: '' };
+  while (c.terms.length < 3) c.terms.push('');
+  const segs = [['ml', 'マイリスト'], ['hist', '履歴'], ['search', 'よく使う']];
+  openSheet(`${mealLabel(c.meal)}に追加`, `
     <div id="mInputs">${c.terms.map((t, i) => multiInputRow(t, i)).join('')}</div>
-    <div class="meal-actions"><button class="btn ghost small" data-mrow="1">＋ 行を増やす</button></div>
-    <div class="mfoot"><button class="btn block" id="mGo">探す</button></div>
+    <div class="m-actions">
+      <button class="btn ghost small" data-mrow="1">＋ 行を増やす</button>
+      <button class="btn" id="mGo">探す</button>
+    </div>
+    <div class="tiny muted" style="margin:-2px 0 6px">いくつか食べたときは、1行に1つずつ入れて一度に探せます</div>
+    ${photoStripForSheet()}
+    <div class="seg" id="seg">${segs.map(([k, l]) => `<button data-mode="${k}" class="${k === sheetCtx.mode ? 'on' : ''}">${l}</button>`).join('')}</div>
+    <div id="results"></div>
   `, sh => {
     sh.querySelectorAll('.mterm').forEach(inp => inp.addEventListener('keydown', ev => {
       if (ev.key !== 'Enter') return;
-      ev.preventDefault();
-      const next = sh.querySelector(`.mterm[data-i="${Number(inp.dataset.i) + 1}"]`);
-      if (next && !next.value) next.focus(); else { inp.blur(); runMulti(); }
+      ev.preventDefault(); inp.blur(); runMulti();
     }));
+    renderResults();
   }, { tall: true });
 }
 function multiInputRow(t, i) {
-  return `<input class="search mterm" data-i="${i}" type="search" enterkeyhint="next" autocomplete="off" value="${esc(t)}" placeholder="（例）${esc(MULTI_PH[i % MULTI_PH.length])}" style="margin-bottom:8px">`;
+  const ph = i === 0 ? `食べたものを入力（例：${MULTI_PH[0]}）` : `（例）${MULTI_PH[i % MULTI_PH.length]}`;
+  return `<input class="search mterm" data-i="${i}" type="search" enterkeyhint="search" autocomplete="off" value="${esc(t)}" placeholder="${esc(ph)}" style="margin-bottom:8px">`;
 }
 function readMultiInputs() {
   multiCtx.terms = Array.from(document.querySelectorAll('.mterm')).map(x => x.value);
@@ -1495,7 +1502,8 @@ function openMultiResults() {
   const total = r1(c.added.reduce((a, x) => a + (Number(x.protein) || 0), 0));
   const groups = c.list.map((term, i) => {
     const { list, widened } = multiCands(term);
-    const n = c.open[i] ? 12 : 4;
+    const one = c.list.length === 1;
+    const n = c.open[i] ? 40 : one ? 12 : 4;
     const rows = list.slice(0, n).map((cand, j) => {
       const e = multiEntry(cand, false);
       if (!e) return '';
@@ -1517,7 +1525,7 @@ function openMultiResults() {
       ${list.length > n ? `<button class="btn ghost small block" data-mmore="${i}">もっと見る</button>` : ''}
     </div>`;
   }).join('');
-  openSheet(`${mealLabel(c.meal)}にまとめて追加`, `
+  openSheet(`${mealLabel(c.meal)}に追加`, `
     <div class="small muted" style="margin-bottom:4px">＋を押すと、表示の量で記録します。量を変えたいときは名前をタップ</div>
     <div class="meal-actions" style="margin:0 0 6px"><button class="btn ghost small" data-medit="1">← 言葉を直す・足す</button></div>
     ${groups}
@@ -1553,6 +1561,7 @@ function multiPick(key) {
   multiSaveScroll();
   multiCtx.done[key] = true; // 量を変えて記録したら ✓（記録しなかったときは戻すときに外す）
   multiCtx.pending = key;
+  multiCtx.returnTo = true;
   sheetCtx = { meal: multiCtx.meal };
   if (cand.k === 'ml') adjustMl(cand.id);
   else if (cand.k === 'dish') { const d = DISHES.find(x => x.id === cand.id); const it = d && dishItem(d); if (it) openItemAmount(it, null, (state.recent['dish:' + it.id] || {}).v || 1); }
@@ -1561,8 +1570,9 @@ function multiPick(key) {
 }
 /* ✕・背景・Esc：まとめて入力の途中で量の画面を開いていたら候補へ戻る */
 function closeOrBack() {
-  if (multiCtx && sheetCtx && !sheetCtx.multi && !sheetCtx.editing) {
+  if (multiCtx && multiCtx.returnTo && sheetCtx && !sheetCtx.multi && !sheetCtx.editing) {
     if (multiCtx.pending) { delete multiCtx.done[multiCtx.pending]; multiCtx.pending = null; }
+    multiCtx.returnTo = false;
     openMultiResults(); return;
   }
   const had = multiCtx && multiCtx.added.length;
@@ -1573,30 +1583,39 @@ function closeOrBack() {
   if (had) toast(`${n}品・たんぱく質 ${fmt(total)}g を記録しました`);
 }
 
+/* めだかをタップ：ぴょんと跳ねて画面の真ん中で大きく見せ、元の場所へ戻る */
+function hopMedaka(img) {
+  if (!img || hopMedaka.busy || !img.animate) return;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const r = img.getBoundingClientRect();
+  const big = Math.min(3, (Math.min(window.innerWidth, 560) * 0.62) / r.width);
+  const dx = window.innerWidth / 2 - (r.left + r.width / 2);
+  const dy = window.innerHeight * 0.42 - (r.top + r.height / 2);
+  const fly = img.cloneNode();
+  Object.assign(fly.style, { position: 'fixed', left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', margin: 0, zIndex: 50, pointerEvents: 'none', animation: 'none', filter: 'drop-shadow(0 10px 18px rgba(0,0,0,.18))' });
+  document.body.appendChild(fly);
+  img.style.visibility = 'hidden';
+  hopMedaka.busy = true;
+  const at = (x, y, s, rot = 0) => `translate(${x}px, ${y}px) scale(${s}) rotate(${rot}deg)`;
+  const a = fly.animate([
+    { transform: at(0, 0, 1), offset: 0 },
+    { transform: at(0, 6, 1.08, 0), offset: 0.06 },                                  // ちょっとしゃがんで
+    { transform: at(dx * 0.45, dy * 0.45 - 90, big * 0.6, -12), offset: 0.24 },      // ぴょん
+    { transform: at(dx, dy, big * 1.06, 4), offset: 0.38 },                           // 真ん中に着地
+    { transform: at(dx, dy, big * 0.97, -2), offset: 0.46 },
+    { transform: at(dx, dy, big, 0), offset: 0.54 },
+    { transform: at(dx, dy, big, 0), offset: 0.70 },                                  // 少し止まって見せる
+    { transform: at(dx * 0.5, dy * 0.5 - 60, big * 0.55, 10), offset: 0.86 },        // ぴょんと戻る
+    { transform: at(0, 0, 1, 0), offset: 1 },
+  ], { duration: 1700, easing: 'ease-in-out' });
+  const done = () => { fly.remove(); img.style.visibility = ''; hopMedaka.busy = false; };
+  a.onfinish = done; a.oncancel = done;
+}
+
 /* --- 食品を探す --- */
 function openAdd(meal) {
-  // いつも「食材」から始める（入力するとすぐ探せるように）。マイリストはこの画面の上のほうにも並べる
-  const mode = 'search';
-  sheetCtx = { meal, mode, q: '' };
-  const segs = [['ml', 'マイリスト'], ['hist', '履歴'], ['search', '食材']];
-  openSheet(`${mealLabel(meal)}に追加`, `
-    <div class="search-stick"><input class="search" id="q" type="search" placeholder="食材名で検索（例：鶏むね、納豆、さけ）" autocomplete="off"></div>
-    ${photoStripForSheet()}
-    <div class="seg" id="seg">${segs.map(([k, l]) => `<button data-mode="${k}" class="${k === mode ? 'on' : ''}">${l}</button>`).join('')}</div>
-    <div id="results"></div>`, sh => {
-    const q = $('#q', sh);
-    // スマホの日本語入力では確定まで input が来ないことがあるので、確定・検索キーでも探す（change は使わない：結果をタップした瞬間に描き直してしまうため）
-    const onQ = () => {
-      sheetCtx.q = q.value;
-      if (sheetCtx.mode !== 'search' && q.value.trim()) { sheetCtx.mode = 'search'; setSeg('search'); }
-      renderResults();
-      const body = $('.sheet-body', sh); if (body) body.scrollTop = 0;
-    };
-    ['input', 'compositionend', 'search'].forEach(ev => q.addEventListener(ev, onQ));
-    q.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); onQ(); q.blur(); } });
-    setSeg(mode);
-    renderResults();
-  }, { tall: true });
+  // 追加画面は「まとめて入力」と同じ形（1つだけなら1行目だけ入れて「探す」）
+  openMulti(meal);
 }
 function mealLabel(m) { return (MEALS.find(x => x[0] === m) || [, ''])[1]; }
 function setSeg(mode) {
@@ -1716,7 +1735,7 @@ function renderResults() {
     const recent = Object.entries(state.recent)
       .filter(([k]) => foodByCode.has(k))
       .sort((a, b) => b[1].t - a[1].t).slice(0, 8).map(([k]) => foodByCode.get(k));
-    let html = `<div class="meal-actions" style="margin-top:4px"><button class="btn ghost small block" data-multi="1">まとめて入力（いくつかの食品を一度に探す）</button></div>`;
+    let html = '';
     if (state.myList.length) {
       const mls = mlSorted();
       html += `<div class="list-label">マイリスト</div>` + mls.slice(0, 5).map(mlRow).join('') +
@@ -1983,9 +2002,10 @@ function itemEntryData(it, v, meal, mlId) {
 }
 /* 記録したあと：まとめて入力の途中なら候補の画面へ戻る */
 function afterSave(data) {
-  if (multiCtx && !(sheetCtx && sheetCtx.editing)) {
+  if (multiCtx && multiCtx.returnTo && !(sheetCtx && sheetCtx.editing)) {
     if (data) { multiCtx.added.push({ name: data.name, protein: data.protein }); }
     multiCtx.pending = null;
+    multiCtx.returnTo = false;
     render(); openMultiResults(); return;
   }
   closeSheet(); render();
@@ -2345,6 +2365,7 @@ document.addEventListener('click', ev => {
   }
   const ds = b.dataset;
 
+  if (ds.hop) { hopMedaka(b.querySelector('img')); return; }
   if (ds.tab) { switchTab(ds.tab); return; }
   if (ds.go) { switchTab(ds.go); return; }
   if (ds.close) { closeOrBack(); return; }
@@ -2353,7 +2374,7 @@ document.addEventListener('click', ev => {
   if (ds.madd) { if (!multiCtx.done[ds.madd]) multiAdd(ds.madd); return; }
   if (ds.mpick) { multiPick(ds.mpick); return; }
   if (ds.mmore) { multiSaveScroll(); multiCtx.open[ds.mmore] = true; openMultiResults(); return; }
-  if (ds.medit) { openMultiInput(); return; }
+  if (ds.medit) { multiCtx.returnTo = false; openMultiInput(); return; }
   if (ds.mfinish) { multiCtx.pending = null; sheetCtx = { multi: 'results' }; closeOrBack(); return; }
   if (ds.add) { openAdd(ds.add); return; }
   if (ds.copy) { copyPrevMeal(ds.copy); return; }
@@ -2378,7 +2399,7 @@ document.addEventListener('click', ev => {
     return;
   }
   if (ds.mledit) { sheetCtx = null; openMlForm(ds.mledit); return; }
-  if (ds.mode) { sheetCtx.mode = ds.mode; setSeg(ds.mode); renderResults(); return; }
+  if (ds.mode) { sheetCtx.mode = ds.mode; if (multiCtx) multiCtx.mode = ds.mode; setSeg(ds.mode); renderResults(); return; }
   if (ds.meal && sheetCtx) {
     sheetCtx.meal = ds.meal;
     document.querySelectorAll('.meal-pick .chip').forEach(c => c.classList.toggle('on', c.dataset.meal === ds.meal));
@@ -2440,7 +2461,7 @@ document.addEventListener('click', ev => {
       const data = foodEntryData(sheetCtx, sheetCtx.meal);
       if (!data) return;
       if (sheetCtx.editing) { updateEntry(viewDate, sheetCtx.editing.id, data); toast('修正しました'); }
-      else { addEntry(viewDate, data); if (!multiCtx) toast(`${data.name} ${fmt(data.protein)}g を記録しました`); }
+      else { addEntry(viewDate, data); if (!(multiCtx && multiCtx.returnTo)) toast(`${data.name} ${fmt(data.protein)}g を記録しました`); }
       afterSave(data);
       break;
     }
@@ -2450,7 +2471,7 @@ document.addEventListener('click', ev => {
       if (!(v > 0)) return;
       const data = itemEntryData(it, v, sheetCtx.meal, sheetCtx.mlId);
       if (sheetCtx.editing) { updateEntry(viewDate, sheetCtx.editing.id, data); toast('修正しました'); }
-      else { addEntry(viewDate, data); if (!multiCtx) toast(`${it.name} ${fmt(data.protein)}g を記録しました`); }
+      else { addEntry(viewDate, data); if (!(multiCtx && multiCtx.returnTo)) toast(`${it.name} ${fmt(data.protein)}g を記録しました`); }
       afterSave(data);
       break;
     }
