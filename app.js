@@ -384,10 +384,10 @@ const STAPLES = [
    根拠＝明治 ザバス ソイプロテイン100・BIOPRO ホエイプロテイン100 など 1食分28gで たんぱく質20.0g
    （同ブランドでも マルチビタミン&ミネラルは21gで12.5g＝約6割。商品差があるのでマイリスト登録を案内） */
 const GENERIC_ITEMS = [
-  { kind: 'gen', id: 'gen-protein', name: 'プロテイン（粉末）', unit: '100g', protein: 71.4, basis: '100g',
+  { kind: 'gen', id: 'gen-protein', name: 'プロテイン（粉末）', unit: '100g', protein: 71.4, kcal: 382, fat: 4.3, carb: 15.0, basis: '100g',
     keys: 'ぷろていん プロテイン ホエイ ソイ', chips: [10, 15, 20, 30], defVal: 28,
     note: '粉の重さ（g）を入れてください。' },
-  { kind: 'gen', id: 'gen-greek', name: 'ギリシャヨーグルト（水切り・無糖）', unit: '100g', protein: 10.2, basis: '100g', keys: 'ぎりしゃよーぐると ギリシャ オイコス パルテノ 高たんぱく 水切り', need: /ギリシャ|ぎりしゃ|オイコス|おいこす|パルテノ|ぱるての|高たんぱく|高タンパク|水切り/, chips: [100, 113, 200], defVal: 100, note: '米国農務省の食品データベース（USDA FoodData Central）の値。ふつうのヨーグルト（成分表 3.6g/100g）の約3倍です。商品で差があるので、袋の表示があればマイリストに登録するのがおすすめです。' },
+  { kind: 'gen', id: 'gen-greek', name: 'ギリシャヨーグルト（無脂肪・無糖）', unit: '100g', protein: 10.2, kcal: 59, fat: 0.7, carb: 3.6, basis: '100g', keys: 'ぎりしゃよーぐると ギリシャ オイコス パルテノ 高たんぱく 水切り', need: /ギリシャ|ぎりしゃ|オイコス|おいこす|パルテノ|ぱるての|高たんぱく|高タンパク|水切り/, chips: [100, 113, 200], defVal: 100, note: '米国農務省の食品データベース（USDA FoodData Central）の値。ふつうのヨーグルト（成分表 3.6g/100g）の約3倍です。商品で差があるので、袋の表示があればマイリストに登録するのがおすすめです。' },
 ];
 function genRow(it) {
   return `<button class="food" data-genpick="${it.id}">
@@ -402,7 +402,7 @@ function genRow(it) {
 const DISHES = [
   // ごはんもの
   { id: 'oyakodon', name: '親子丼', unit: '1人前', keys: 'おやこどん どんぶり 丼', items: [['01088', 250, 'ごはん'], ['11221', 70, '鶏もも'], ['12004', 50, '卵'], ['06153', 40, '玉ねぎ'], ['17007', 10, 'しょうゆ']] },
-  { id: 'gyudon', name: '牛丼', unit: '1人前', keys: 'ぎゅうどん どんぶり 丼', items: [['01088', 250, 'ごはん'], ['11046', 80, '牛ばら'], ['06153', 50, '玉ねぎ'], ['17007', 12, 'しょうゆ']] },
+  { id: 'gyudon', name: '牛丼', unit: '1人前', keys: 'ぎゅうどん どんぶり 丼', items: [['01088', 250, 'ごはん'], ['11046', 80, '牛ばら'], ['06153', 50, '玉ねぎ'], ['17007', 12, 'しょうゆ'], ['03003', 5, '砂糖']] },
   { id: 'katsudon', name: 'カツ丼', unit: '1人前', keys: 'かつどん どんぶり 丼 とんかつ', items: [['01088', 250, 'ごはん'], ['11276', 100, 'とんかつ'], ['12004', 50, '卵'], ['06153', 40, '玉ねぎ'], ['17007', 10, 'しょうゆ']] },
   { id: 'tendon', name: '天丼', unit: '1人前', keys: 'てんどん どんぶり 丼 天ぷら', items: [['01088', 250, 'ごはん'], ['10416', 50, 'えび天2尾'], ['02047', 30, 'さつまいも天'], ['06343', 30, 'なす天'], ['17007', 10, 'しょうゆ']] },
   { id: 'kaisendon', name: '海鮮丼', unit: '1人前', keys: 'かいせんどん どんぶり 丼 刺身 さしみ', items: [['01088', 250, 'ごはん'], ['10253', 30, 'まぐろ'], ['10130', 30, 'サーモン'], ['10345', 20, 'いか'], ['10319', 20, '甘えび'], ['10140', 10, 'いくら']] },
@@ -420,16 +420,16 @@ const DISHES = [
   { id: 'takikomi', name: '炊き込みごはん', unit: '茶碗1杯', keys: 'たきこみごはん 五目ごはん かやくご飯', items: [['01088', 150, 'ごはん'], ['11221', 15, '鶏もも'], ['06214', 10, 'にんじん'], ['06084', 10, 'ごぼう'], ['04040', 5, '油揚げ'], ['17007', 5, 'しょうゆ']] },
   // めん
   { id: 'ramen', name: 'ラーメン（しょうゆ・具込み）', unit: '1杯', keys: 'らーめん 中華そば しょうゆらーめん 醤油ラーメン', items: [['01048', 230, '中華めん（ゆで）'], ['11195', 30, '焼き豚2枚'], ['12005', 25, 'ゆで卵1/2個'], ['06226', 10, 'ねぎ'], ['09004', 1, 'のり'], ['17025', 300, 'スープ']] },
-  { id: 'yakisoba', name: '焼きそば', unit: '1人前', keys: 'やきそば ソース焼きそば', items: [['01049', 150, '蒸し中華めん'], ['11129', 40, '豚ばら'], ['06061', 50, 'キャベツ'], ['06291', 30, 'もやし'], ['17002', 20, 'ソース']] },
+  { id: 'yakisoba', name: '焼きそば', unit: '1人前', keys: 'やきそば ソース焼きそば', items: [['01049', 150, '蒸し中華めん'], ['11129', 40, '豚ばら'], ['06061', 50, 'キャベツ'], ['06291', 30, 'もやし'], ['17002', 20, 'ソース'], ['14006', 8, '油']] },
   { id: 'meatsauce', name: 'ミートソーススパゲッティ', unit: '1人前', keys: 'みーとそーす ぱすた スパゲティ ボロネーゼ', items: [['01064', 240, 'スパゲッティ（ゆで）'], ['17033', 150, 'ミートソース'], ['13038', 3, '粉チーズ']] },
-  { id: 'napolitan', name: 'ナポリタン', unit: '1人前', keys: 'なぽりたん ぱすた スパゲティ', items: [['01064', 240, 'スパゲッティ（ゆで）'], ['11186', 30, 'ウインナー'], ['06153', 30, '玉ねぎ'], ['06245', 20, 'ピーマン'], ['17036', 40, 'ケチャップ']] },
-  { id: 'carbonara', name: 'カルボナーラ', unit: '1人前', keys: 'かるぼなーら ぱすた スパゲティ', items: [['01064', 240, 'スパゲッティ（ゆで）'], ['11183', 30, 'ベーコン'], ['12004', 50, '卵'], ['13038', 10, '粉チーズ'], ['13014', 30, '生クリーム']] },
+  { id: 'napolitan', name: 'ナポリタン', unit: '1人前', keys: 'なぽりたん ぱすた スパゲティ', items: [['01064', 240, 'スパゲッティ（ゆで）'], ['11186', 30, 'ウインナー'], ['06153', 30, '玉ねぎ'], ['06245', 20, 'ピーマン'], ['17036', 40, 'ケチャップ'], ['14006', 8, '油']] },
+  { id: 'carbonara', name: 'カルボナーラ', unit: '1人前', keys: 'かるぼなーら ぱすた スパゲティ', items: [['01064', 240, 'スパゲッティ（ゆで）'], ['11183', 30, 'ベーコン'], ['12004', 50, '卵'], ['13038', 10, '粉チーズ'], ['13014', 30, '生クリーム'], ['14006', 5, '油']] },
   { id: 'zarusoba', name: 'ざるそば', unit: '1人前', keys: 'ざるそば もりそば そば 蕎麦', items: [['01128', 200, 'そば（ゆで）'], ['09004', 1, 'のり']] },
   { id: 'kitsune', name: 'きつねうどん', unit: '1杯', keys: 'きつねうどん うどん', items: [['01039', 200, 'うどん（ゆで）'], ['04040', 30, '油揚げ'], ['06226', 5, 'ねぎ']] },
   { id: 'nikuudon', name: '肉うどん', unit: '1杯', keys: 'にくうどん うどん', items: [['01039', 200, 'うどん（ゆで）'], ['11046', 50, '牛ばら'], ['06226', 5, 'ねぎ']] },
   { id: 'tsukimisoba', name: '月見そば', unit: '1杯', keys: 'つきみそば そば 蕎麦', items: [['01128', 200, 'そば（ゆで）'], ['12004', 50, '卵'], ['06226', 5, 'ねぎ']] },
   { id: 'hiyashichuka', name: '冷やし中華', unit: '1人前', keys: 'ひやしちゅうか', items: [['01048', 200, '中華めん（ゆで）'], ['11176', 20, 'ハム'], ['12004', 25, '錦糸卵'], ['06065', 30, 'きゅうり'], ['17108', 40, 'たれ']] },
-  { id: 'yakiudon', name: '焼きうどん', unit: '1人前', keys: 'やきうどん うどん', items: [['01039', 200, 'うどん（ゆで）'], ['11129', 40, '豚ばら'], ['06061', 50, 'キャベツ'], ['17007', 10, 'しょうゆ']] },
+  { id: 'yakiudon', name: '焼きうどん', unit: '1人前', keys: 'やきうどん うどん', items: [['01039', 200, 'うどん（ゆで）'], ['11129', 40, '豚ばら'], ['06061', 50, 'キャベツ'], ['17007', 10, 'しょうゆ'], ['14006', 8, '油']] },
   // パン
   { id: 'hamsand', name: 'ハムサンド', unit: '1人前', keys: 'はむさんど サンドイッチ', items: [['01026', 70, '食パン'], ['11176', 20, 'ハム'], ['14017', 4, 'バター'], ['06312', 10, 'レタス']] },
   { id: 'tamagosand', name: 'たまごサンド', unit: '1人前', keys: 'たまごさんど 卵サンド タマゴサンド サンドイッチ', items: [['01026', 70, '食パン'], ['12005', 50, 'ゆで卵'], ['17042', 10, 'マヨネーズ']] },
@@ -440,18 +440,18 @@ const DISHES = [
   { id: 'hotdog', name: 'ホットドッグ', unit: '1個', keys: 'ほっとどっぐ', items: [['01034', 40, 'パン'], ['11189', 50, 'フランクフルト'], ['17036', 10, 'ケチャップ']] },
   { id: 'pizza', name: 'ピザ', unit: '1切れ', keys: 'ぴざ', items: [['01076', 35, 'ピザ生地'], ['13056', 20, 'チーズ'], ['17036', 10, 'ソース']] },
   // おかず
-  { id: 'shogayaki', name: '豚のしょうが焼き', unit: '1人前', keys: 'しょうがやき 生姜焼き ぶた', items: [['11123', 100, '豚ロース'], ['06153', 30, '玉ねぎ'], ['17007', 10, 'しょうゆ']] },
-  { id: 'teriyaki', name: '鶏の照り焼き', unit: '1人前', keys: 'てりやき 照焼 とり チキン', items: [['11221', 120, '鶏もも'], ['17007', 10, 'しょうゆ'], ['16025', 10, 'みりん']] },
+  { id: 'shogayaki', name: '豚のしょうが焼き', unit: '1人前', keys: 'しょうがやき 生姜焼き ぶた', items: [['11123', 100, '豚ロース'], ['06153', 30, '玉ねぎ'], ['17007', 10, 'しょうゆ'], ['14006', 5, '油'], ['03003', 3, '砂糖']] },
+  { id: 'teriyaki', name: '鶏の照り焼き', unit: '1人前', keys: 'てりやき 照焼 とり チキン', items: [['11221', 120, '鶏もも'], ['17007', 10, 'しょうゆ'], ['16025', 10, 'みりん'], ['14006', 5, '油']] },
   { id: 'sabamiso', name: 'さばのみそ煮', unit: '1切れ', keys: 'さばのみそに 鯖の味噌煮 さば', items: [['10154', 80, 'さば'], ['17045', 10, 'みそ'], ['03003', 5, '砂糖']] },
-  { id: 'buridaikon', name: 'ぶり大根', unit: '1人前', keys: 'ぶりだいこん ぶり', items: [['10241', 60, 'ぶり'], ['06134', 100, '大根'], ['17007', 10, 'しょうゆ']] },
-  { id: 'kakuni', name: '豚の角煮', unit: '1人前', keys: 'かくに ぶた', items: [['11129', 100, '豚ばら'], ['17007', 10, 'しょうゆ']] },
-  { id: 'hoikoro', name: '回鍋肉', unit: '1人前', keys: 'ほいこーろー ホイコーロー', items: [['11129', 60, '豚ばら'], ['06061', 100, 'キャベツ'], ['06245', 20, 'ピーマン'], ['17045', 8, 'みそ']] },
-  { id: 'chinjao', name: '青椒肉絲', unit: '1人前', keys: 'ちんじゃおろーす チンジャオロース', items: [['11064', 60, '牛肉'], ['06245', 60, 'ピーマン'], ['06151', 30, 'たけのこ']] },
-  { id: 'yasaiitame', name: '野菜炒め', unit: '1人前', keys: 'やさいいため', items: [['11129', 50, '豚ばら'], ['06061', 80, 'キャベツ'], ['06291', 50, 'もやし'], ['06214', 20, 'にんじん'], ['06153', 20, '玉ねぎ']] },
+  { id: 'buridaikon', name: 'ぶり大根', unit: '1人前', keys: 'ぶりだいこん ぶり', items: [['10241', 60, 'ぶり'], ['06134', 100, '大根'], ['17007', 10, 'しょうゆ'], ['03003', 5, '砂糖']] },
+  { id: 'kakuni', name: '豚の角煮', unit: '1人前', keys: 'かくに ぶた', items: [['11129', 100, '豚ばら'], ['17007', 10, 'しょうゆ'], ['03003', 10, '砂糖']] },
+  { id: 'hoikoro', name: '回鍋肉', unit: '1人前', keys: 'ほいこーろー ホイコーロー', items: [['11129', 60, '豚ばら'], ['06061', 100, 'キャベツ'], ['06245', 20, 'ピーマン'], ['17045', 8, 'みそ'], ['14006', 8, '油']] },
+  { id: 'chinjao', name: '青椒肉絲', unit: '1人前', keys: 'ちんじゃおろーす チンジャオロース', items: [['11064', 60, '牛肉'], ['06245', 60, 'ピーマン'], ['06151', 30, 'たけのこ'], ['14006', 8, '油']] },
+  { id: 'yasaiitame', name: '野菜炒め', unit: '1人前', keys: 'やさいいため', items: [['11129', 50, '豚ばら'], ['06061', 80, 'キャベツ'], ['06291', 50, 'もやし'], ['06214', 20, 'にんじん'], ['06153', 20, '玉ねぎ'], ['14006', 8, '油']] },
   { id: 'chawanmushi', name: '茶碗蒸し', unit: '1個', keys: 'ちゃわんむし', items: [['12004', 25, '卵1/2個'], ['11227', 10, '鶏ささみ'], ['10415', 10, 'えび'], ['10379', 5, 'かまぼこ'], ['08039', 5, 'しいたけ']] },
-  { id: 'agedashi', name: '揚げ出し豆腐', unit: '1人前', keys: 'あげだしどうふ とうふ', items: [['04032', 150, '木綿豆腐1/2丁'], ['06367', 20, '大根おろし']] },
+  { id: 'agedashi', name: '揚げ出し豆腐', unit: '1人前', keys: 'あげだしどうふ とうふ', items: [['04032', 150, '木綿豆腐1/2丁'], ['06367', 20, '大根おろし'], ['14006', 10, '揚げ油（吸油）']] },
   { id: 'yudofu', name: '湯豆腐', unit: '1人前', keys: 'ゆどうふ とうふ', items: [['04032', 200, '木綿豆腐'], ['06226', 10, 'ねぎ']] },
-  { id: 'sukiyaki', name: 'すき焼き', unit: '1人前', keys: 'すきやき', items: [['11008', 100, '牛肩ロース'], ['04038', 50, '焼き豆腐'], ['06226', 50, 'ねぎ'], ['02005', 40, 'しらたき'], ['06233', 50, '白菜'], ['12004', 50, 'つけ卵']] },
+  { id: 'sukiyaki', name: 'すき焼き', unit: '1人前', keys: 'すきやき', items: [['11008', 100, '牛肩ロース'], ['04038', 50, '焼き豆腐'], ['06226', 50, 'ねぎ'], ['02005', 40, 'しらたき'], ['06233', 50, '白菜'], ['12004', 50, 'つけ卵'], ['03003', 10, '砂糖']] },
   { id: 'yosenabe', name: '寄せ鍋', unit: '1人前', keys: 'よせなべ 鍋', items: [['10205', 50, 'たら'], ['11221', 50, '鶏もも'], ['10415', 20, 'えび'], ['04032', 60, '豆腐'], ['06233', 80, '白菜'], ['06226', 20, 'ねぎ'], ['08001', 20, 'えのき']] },
   { id: 'oden', name: 'おでん', unit: '1人前', keys: 'おでん', items: [['06134', 80, '大根'], ['12005', 50, 'ゆで卵'], ['10381', 30, 'ちくわ'], ['04039', 50, '厚揚げ'], ['02003', 40, 'こんにゃく'], ['10385', 25, 'はんぺん']] },
   { id: 'yakitori-momo', name: '焼き鳥（もも）', unit: '1本', keys: 'やきとり 焼鳥', items: [['11221', 30, '鶏もも']] },
@@ -460,7 +460,7 @@ const DISHES = [
   { id: 'tempura', name: '天ぷら盛り合わせ', unit: '1人前', keys: 'てんぷら 天麩羅', items: [['10416', 50, 'えび天2尾'], ['02047', 30, 'さつまいも'], ['06343', 30, 'なす'], ['08057', 15, 'しいたけ']] },
   // 汁・サラダ
   { id: 'misoshiru', name: 'みそ汁（豆腐とわかめ）', unit: '1杯', keys: 'みそしる 味噌汁 おみそ汁', items: [['17045', 12, 'みそ'], ['04033', 30, '豆腐'], ['09041', 10, 'わかめ']] },
-  { id: 'kenchin', name: 'けんちん汁', unit: '1杯', keys: 'けんちんじる', items: [['04032', 30, '豆腐'], ['06134', 30, '大根'], ['06214', 10, 'にんじん'], ['06084', 10, 'ごぼう'], ['02010', 20, '里いも'], ['17007', 5, 'しょうゆ']] },
+  { id: 'kenchin', name: 'けんちん汁', unit: '1杯', keys: 'けんちんじる', items: [['04032', 30, '豆腐'], ['06134', 30, '大根'], ['06214', 10, 'にんじん'], ['06084', 10, 'ごぼう'], ['02010', 20, '里いも'], ['17007', 5, 'しょうゆ'], ['14006', 3, 'ごま油']] },
   { id: 'tamagosoup', name: '卵スープ', unit: '1杯', keys: 'たまごすーぷ', items: [['12004', 25, '卵1/2個'], ['17025', 150, 'スープ']] },
   { id: 'potatosalad', name: 'ポテトサラダ', unit: '1人前', keys: 'ぽてとさらだ ポテサラ', items: [['02017', 80, 'じゃがいも'], ['06065', 15, 'きゅうり'], ['06214', 10, 'にんじん'], ['11176', 10, 'ハム'], ['17042', 15, 'マヨネーズ']] },
   { id: 'macaronisalad', name: 'マカロニサラダ', unit: '1人前', keys: 'まかろにさらだ', items: [['01064', 40, 'マカロニ（ゆで）'], ['06065', 10, 'きゅうり'], ['11176', 10, 'ハム'], ['17042', 12, 'マヨネーズ']] },
@@ -472,36 +472,38 @@ const DISHES = [
   { id: 'ohagi', name: 'おはぎ', unit: '1個', keys: 'おはぎ ぼたもち', items: [['01154', 50, 'もち米'], ['04101', 50, 'あん']] },
   { id: 'crepe', name: 'クレープ（バナナ・クリーム）', unit: '1個', keys: 'くれーぷ', items: [['01015', 20, '小麦粉'], ['12004', 15, '卵'], ['13003', 30, '牛乳'], ['13017', 20, 'ホイップ'], ['03003', 5, '砂糖'], ['07107', 30, 'バナナ']] },
   // 外食（公式発表値）：ケンタッキーフライドチキン「栄養成分表」2026/3/25現在（配合に基づく標準値）。fixed＝1単位あたりのたんぱく質g、g＝可食部重量
-  { id: 'kfc-original', name: 'ケンタッキー オリジナルチキン', unit: '1本', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 16.5, g: 87, src: 'kfc' },
-  { id: 'kfc-boneless', name: 'ケンタッキー 骨なしケンタッキー', unit: '1個', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 20.3, g: 83, src: 'kfc' },
-  { id: 'kfc-redhot', name: 'ケンタッキー レッドホットチキン', unit: '1本', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 20.9, g: 102, src: 'kfc' },
-  { id: 'kfc-crispy', name: 'ケンタッキー カーネルクリスピー', unit: '1本', keys: 'けんたっきー KFC ケンタ チキン', fixed: 6.8, g: 42, src: 'kfc' },
-  { id: 'kfc-nugget', name: 'ケンタッキー ナゲット', unit: '1ピース', keys: 'けんたっきー KFC ケンタ なげっと チキン', fixed: 2.66, g: 18.8, src: 'kfc', srcNote: '5ピース（94g）13.3gを1ピースあたりに換算' },
-  { id: 'kfc-fillet', name: 'ケンタッキー チキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 24.3, g: 161, src: 'kfc' },
-  { id: 'kfc-fillet-hot', name: 'ケンタッキー 辛口チキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 24.4, g: 161, src: 'kfc' },
-  { id: 'kfc-fillet-cheese', name: 'ケンタッキー チーズチキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 26.8, g: 178, src: 'kfc' },
-  { id: 'kfc-fillet-double', name: 'ケンタッキー ダブルチキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 44.6, g: 248, src: 'kfc' },
-  { id: 'kfc-wafu', name: 'ケンタッキー 和風チキンカツバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 16.0, g: 165, src: 'kfc' },
-  { id: 'kfc-tatsuta', name: 'ケンタッキー ケンタの鶏竜田バーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー たつた', fixed: 18.0, g: 182, src: 'kfc' },
-  { id: 'kfc-twister-pm', name: 'ケンタッキー ペッパーマヨツイスター', unit: '1個', keys: 'けんたっきー KFC ケンタ ついすたー', fixed: 11.3, g: 143, src: 'kfc' },
-  { id: 'kfc-twister-teri', name: 'ケンタッキー てりやきツイスター', unit: '1個', keys: 'けんたっきー KFC ケンタ ついすたー', fixed: 11.6, g: 143, src: 'kfc' },
-  { id: 'kfc-potato-s', name: 'ケンタッキー フライドポテト S', unit: '1個', keys: 'けんたっきー KFC ケンタ ぽてと', fixed: 2.6, g: 80, src: 'kfc' },
-  { id: 'kfc-potato-l', name: 'ケンタッキー フライドポテト L', unit: '1個', keys: 'けんたっきー KFC ケンタ ぽてと', fixed: 5.3, g: 160, src: 'kfc' },
-  { id: 'kfc-coleslaw-s', name: 'ケンタッキー コールスロー S', unit: '1個', keys: 'けんたっきー KFC ケンタ こーるすろー さらだ', fixed: 1.0, g: 80, src: 'kfc' },
-  { id: 'kfc-coleslaw-m', name: 'ケンタッキー コールスロー M', unit: '1個', keys: 'けんたっきー KFC ケンタ こーるすろー さらだ', fixed: 1.6, g: 130, src: 'kfc' },
-  { id: 'kfc-biscuit', name: 'ケンタッキー ビスケット', unit: '1個', keys: 'けんたっきー KFC ケンタ びすけっと', fixed: 3.2, g: 56, src: 'kfc' },
-  { id: 'kfc-chocopie', name: 'ケンタッキー チョコパイ', unit: '1個', keys: 'けんたっきー KFC ケンタ ちょこぱい', fixed: 3.1, g: 53, src: 'kfc' },
+  { id: 'kfc-original', name: 'ケンタッキー オリジナルチキン', unit: '1本', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 16.5, kcal: 218, fat: 12.8, carb: 9.1, g: 87, src: 'kfc' },
+  { id: 'kfc-boneless', name: 'ケンタッキー 骨なしケンタッキー', unit: '1個', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 20.3, kcal: 191, fat: 8.5, carb: 8.3, g: 83, src: 'kfc' },
+  { id: 'kfc-redhot', name: 'ケンタッキー レッドホットチキン', unit: '1本', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 20.9, kcal: 271, fat: 16.7, carb: 9.3, g: 102, src: 'kfc' },
+  { id: 'kfc-crispy', name: 'ケンタッキー カーネルクリスピー', unit: '1本', keys: 'けんたっきー KFC ケンタ チキン', fixed: 6.8, kcal: 119, fat: 6.6, carb: 8.2, g: 42, src: 'kfc' },
+  { id: 'kfc-nugget', name: 'ケンタッキー ナゲット', unit: '1ピース', keys: 'けんたっきー KFC ケンタ なげっと チキン', fixed: 2.66, kcal: 44.4, fat: 2.68, carb: 2.36, g: 18.8, src: 'kfc', srcNote: '5ピース（94g）たんぱく質13.3g・222kcalを1ピースあたりに換算' },
+  { id: 'kfc-fillet', name: 'ケンタッキー チキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 24.3, kcal: 398, fat: 19.7, carb: 31.1, g: 161, src: 'kfc' },
+  { id: 'kfc-fillet-hot', name: 'ケンタッキー 辛口チキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 24.4, kcal: 384, fat: 17.8, carb: 31.9, g: 161, src: 'kfc' },
+  { id: 'kfc-fillet-cheese', name: 'ケンタッキー チーズチキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 26.8, kcal: 468, fat: 25.8, carb: 32.1, g: 178, src: 'kfc' },
+  { id: 'kfc-fillet-double', name: 'ケンタッキー ダブルチキンフィレバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 44.6, kcal: 615, fat: 30.7, carb: 40.0, g: 248, src: 'kfc' },
+  { id: 'kfc-wafu', name: 'ケンタッキー 和風チキンカツバーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー', fixed: 16.0, kcal: 426, fat: 22.3, carb: 40.5, g: 165, src: 'kfc' },
+  { id: 'kfc-tatsuta', name: 'ケンタッキー ケンタの鶏竜田バーガー', unit: '1個', keys: 'けんたっきー KFC ケンタ ばーがー バーガー たつた', fixed: 18.0, kcal: 473, fat: 27.5, carb: 38.8, g: 182, src: 'kfc' },
+  { id: 'kfc-twister-pm', name: 'ケンタッキー ペッパーマヨツイスター', unit: '1個', keys: 'けんたっきー KFC ケンタ ついすたー', fixed: 11.3, kcal: 301, fat: 14.5, carb: 31.7, g: 143, src: 'kfc' },
+  { id: 'kfc-twister-teri', name: 'ケンタッキー てりやきツイスター', unit: '1個', keys: 'けんたっきー KFC ケンタ ついすたー', fixed: 11.6, kcal: 360, fat: 18.8, carb: 35.0, g: 143, src: 'kfc' },
+  { id: 'kfc-potato-s', name: 'ケンタッキー フライドポテト S', unit: '1個', keys: 'けんたっきー KFC ケンタ ぽてと', fixed: 2.6, kcal: 195, fat: 7.8, carb: 28.7, g: 80, src: 'kfc' },
+  { id: 'kfc-potato-l', name: 'ケンタッキー フライドポテト L', unit: '1個', keys: 'けんたっきー KFC ケンタ ぽてと', fixed: 5.3, kcal: 390, fat: 15.5, carb: 57.4, g: 160, src: 'kfc' },
+  { id: 'kfc-coleslaw-s', name: 'ケンタッキー コールスロー S', unit: '1個', keys: 'けんたっきー KFC ケンタ こーるすろー さらだ', fixed: 1.0, kcal: 85, fat: 6.3, carb: 6.3, g: 80, src: 'kfc' },
+  { id: 'kfc-coleslaw-m', name: 'ケンタッキー コールスロー M', unit: '1個', keys: 'けんたっきー KFC ケンタ こーるすろー さらだ', fixed: 1.6, kcal: 137, fat: 10.2, carb: 10.3, g: 130, src: 'kfc' },
+  { id: 'kfc-biscuit', name: 'ケンタッキー ビスケット', unit: '1個', keys: 'けんたっきー KFC ケンタ びすけっと', fixed: 3.2, kcal: 211, fat: 12.5, carb: 21.3, g: 56, src: 'kfc' },
+  { id: 'kfc-chocopie', name: 'ケンタッキー チョコパイ', unit: '1個', keys: 'けんたっきー KFC ケンタ ちょこぱい', fixed: 3.1, kcal: 270, fat: 15.8, carb: 29.0, g: 53, src: 'kfc' },
 ];
 const DISH_SRC = { kfc: 'ケンタッキーフライドチキン公式「栄養成分表」（2026/3/25現在）の値です' };
 function dishItem(d) {
-  if (d.fixed != null) return { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: d.fixed, basis: 'unit', grams: d.g, brand: true, chips: [1, 2, 3, 4, 5] };
-  let p = 0, g = 0, ok = true;
+  if (d.fixed != null) return { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: d.fixed, kcal: d.kcal ?? null, fat: d.fat ?? null, carb: d.carb ?? null, basis: 'unit', grams: d.g, brand: true, chips: [1, 2, 3, 4, 5] };
+  let p = 0, g = 0, k = 0, fa = 0, cb = 0, ok = true, nut = true;
   for (const [c, w] of d.items) {
     const f = foodByCode.get(c);
     if (!f) { ok = false; continue; }
     p += f.p * w / 100; g += w;
+    if (f.kcal == null || f.fat == null || f.carb == null) nut = false;
+    else { k += f.kcal * w / 100; fa += f.fat * w / 100; cb += f.carb * w / 100; }
   }
-  return ok ? { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: r1(p), basis: 'unit', grams: Math.round(g),
+  return ok ? { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: r1(p), kcal: nut ? Math.round(k) : null, fat: nut ? r1(fa) : null, carb: nut ? r1(cb) : null, basis: 'unit', grams: Math.round(g),
     chips: /人前|杯/.test(d.unit) ? [0.5, 1, 1.5, 2] : [1, 2, 3, 4] } : null;
 }
 function dishNote(id) {
@@ -835,9 +837,9 @@ async function loadFoods() {
   try {
     const res = await fetch('foods.json');
     const data = await res.json();
-    foods = data.foods.map(([code, g, name, p, f, ml, rate]) => {
+    foods = data.foods.map(([code, g, name, p, f, ml, rate, kcal, fat, carb]) => {
       const { main, sub, parts } = splitName(name);
-      return { code, g, name, p, f, ml, rate: rate || null, main, sub, parts, group: data.groups[g], key: norm(name), kw: name.split(/\s+/).map(norm).filter(Boolean) };
+      return { code, g, name, p, f, ml, rate: rate || null, kcal: kcal ?? null, fat: fat ?? null, carb: carb ?? null, main, sub, parts, group: data.groups[g], key: norm(name), kw: name.split(/\s+/).map(norm).filter(Boolean) };
     });
     foodByCode = new Map(foods.map(x => [x.code, x]));
     foodsReady = true;
@@ -1041,6 +1043,7 @@ function renderToday() {
         ? `<div class="remain">推奨量まで あと <span style="color:var(--accent)">${fmt(remain)}g</span></div>`
         : `<div class="remain done">推奨量に届きました（+${fmt(-remain)}g）</div>`}
       ${t.frail && total >= target && total < t.frail ? `<div class="small muted">高齢者の目安（${t.frail}g）まで あと ${fmt(t.frail - total)}g</div>` : ''}
+      ${showNut() && foodsReady ? pfcHtml(dayEntries(viewDate), t) : ''}
     </div>`;
 
     if (remain > 0 && foodsReady) suggestHtml = renderSuggestions(remain);
@@ -1056,10 +1059,10 @@ function renderToday() {
   for (const [m, label] of MEALS) {
     const list = dayEntries(viewDate).filter(e => e.meal === m);
     html += `<div class="card">
-      <div class="meal-head"><h2>${label}</h2><span class="meal-total">${fmt(mealTotal(viewDate, m))}g</span></div>
+      <div class="meal-head"><h2>${label}</h2><span class="meal-total">${showNut() && list.length && foodsReady ? (n => n.unknown === list.length ? '' : `<span class="tiny muted" style="font-weight:400">${n.kcal}kcal${n.unknown ? '＋不明' : ''}　</span>`)(sumNut(list)) : ''}${fmt(mealTotal(viewDate, m))}g</span></div>
       <div class="pstrip" data-pmeal="${m}"></div>
       ${list.map(e => `<button class="entry" data-edit="${e.id}">
-          <span class="nm"><div>${esc(e.name)}</div><div class="tiny muted">${esc(entryAmountLabel(e))}</div></span>
+          <span class="nm"><div>${esc(e.name)}</div><div class="tiny muted">${esc(entryAmountLabel(e))}${showNut() && foodsReady ? (n => n.kcal == null ? '・kcal不明' : `・${n.kcal}kcal`)(entryNut(e)) : ''}</div></span>
           <span class="pg">${fmt(e.protein)}g</span>
         </button>`).join('')}
       <div class="meal-actions">
@@ -1194,6 +1197,12 @@ function renderSettings() {
   </div>
 
   <div class="card">
+    <h2>表示</h2>
+    <label style="display:flex;gap:10px;align-items:center;font-weight:700"><input type="checkbox" id="showPFC" ${state.showPFC ? 'checked' : ''} style="width:22px;height:22px">カロリー・PFC（脂質・炭水化物）も表示する</label>
+    <div class="hint" style="margin-top:6px">オンにすると、今日の画面に1日の合計kcalとPFCの割合、記録ごとのkcalを小さく表示します。料理（目安）のカロリーは油の量などでぶれる、おおまかな値です。</div>
+  </div>
+
+  <div class="card">
     <h2>写真</h2>
     <p class="small muted" style="margin-top:0">食べたものを思い出すための写真です。縮小してこの端末の中だけに保存し、外部には送りません。バックアップには含まれません。</p>
     <div class="field"><label for="keepDays">写真を残す期間</label>
@@ -1227,16 +1236,16 @@ function renderSettings() {
     <p class="tiny muted">推奨量・推定平均必要量（p.103の表）／成人の維持必要量 0.73g/kg体重/日（p.90）／推奨量算定係数 1.25（p.92）／高齢者の1.2g/kg体重/日（p.95）／疾患管理の優先（p.96）／目標量（p.95〜96, p.103）</p>
     <p class="tiny muted">乳児（1歳未満）の目安量：0〜5か月 10g、6〜8か月 15g、9〜11か月 25g（p.103）</p>
     <h3>食品のたんぱく質量</h3>
-    <p>日本食品標準成分表（八訂）増補2023年から引用（文部科学省 科学技術・学術審議会 資源調査分科会、2026年3月27日掲載のデータ）。「たんぱく質」の列の値を使用。</p>
+    <p>日本食品標準成分表（八訂）増補2023年から引用（文部科学省 科学技術・学術審議会 資源調査分科会、2026年3月27日掲載のデータ）。「たんぱく質」の列の値を使用。カロリー・PFCを表示するときは、同じ成分表の「エネルギー（kcal）」「脂質」「炭水化物」の列を使用（PFCの割合は、たんぱく質・炭水化物を1gあたり4kcal、脂質を9kcalとして計算）。</p>
     <h3>個数で入れるときの重さ</h3>
     <p>卵：農林水産省「鶏卵の規格」（畜産物の価格安定に関する法律施行規則の規定に基づく鶏卵の規格）の重量区分（例：M 58g以上64g未満）の中央値から、成分表の廃棄率（殻）を除いて計算。目玉焼きなどは、さらに成分表の重量変化率をかけています。</p>
     <p>飲み物のmL：成分表の備考に「100mL＝◯g」がある食品はその値で換算。記載がない飲み物（豆乳・お茶・コーヒーなど）は1mL＝1gの目安で換算し、記録に「約・目安」と表示（成分表の飲み物の換算値はほとんどが100mL＝97〜108gの範囲）。</p>
     <p>調理前の重さで入れる場合と「1本分」「乾めん100g分」など：日本食品標準成分表（八訂）増補2023年 第1章「調理方法の概要及び重量変化率表」の重量変化率を使って換算。</p>
     <p>ごはん茶碗1杯、食パン1枚、納豆1パック、豆腐1/2丁、トマト1個、レタス1人前、くだもの1個、刺身1切れ、調理前の量（ささみ1本50gなど）、かき1個・あじ1尾・薄切り肉1枚などの重さは、自治体の資料や管理栄養士の目安量一覧などを参考にした一般的な目安です。たんぱく質の値は、すべて食品成分表から計算しています。</p>
-    <p>ギリシャヨーグルト（水切り・無糖）の値は、米国農務省の食品データベース（USDA FoodData Central）によります。</p>
+    <p>ギリシャヨーグルト（無脂肪・無糖）の値は、米国農務省の食品データベース（USDA FoodData Central）によります（100gあたり たんぱく質10.2g・59kcal）。</p>
     <p>「外食（公式発表値）」は、各社が公式に公表している栄養成分の値です（ケンタッキーフライドチキン「栄養成分表」2026/3/25現在）。</p>
-    <p>「料理（目安）」は、成分表にない料理を一般的な家庭の分量で材料に分け、材料ごとに成分表の値から計算した目安です（材料と分量は各料理の記録画面に表示）。</p>
-    <p>プロテイン（粉末）：成分表には載っていないため、市販品（明治 ザバス ソイプロテイン100など、1食分28gでたんぱく質20.0g）の栄養成分表示から、粉の約7割（71.4%）をたんぱく質として計算しています。商品によって6〜8割程度の差があるので、使っている商品はマイリストへの登録（100gあたり）をおすすめします。</p>
+    <p>「料理（目安）」は、成分表にない料理を一般的な家庭の分量で材料に分け、材料ごとに成分表の値から計算した目安です（材料と分量は各料理の記録画面に表示）。カロリーは油や砂糖の量で大きく変わるので、おおまかな目安です。</p>
+    <p>プロテイン（粉末）：成分表には載っていないため、市販品（明治 ザバス ソイプロテイン100など、1食分28gでたんぱく質20.0g）の栄養成分表示から、粉の約7割（71.4%）をたんぱく質として計算しています。商品によって6〜8割程度の差があるので、使っている商品はマイリストへの登録（100gあたり）をおすすめします。カロリー・脂質・炭水化物も同じ商品（1食分28gで107kcal・脂質1.2g・炭水化物4.2g）から計算しています。</p>
     <p class="tiny muted">たんぱく質ノート v1.3.1</p>
   </div>`;
 }
@@ -1263,7 +1272,8 @@ function closeSheet() {
 
 /* --- 食品を探す --- */
 function openAdd(meal) {
-  const mode = state.myList.length ? 'ml' : historyItems().length ? 'hist' : 'search';
+  // いつも「食材」から始める（入力するとすぐ探せるように）。マイリストはこの画面の上のほうにも並べる
+  const mode = 'search';
   sheetCtx = { meal, mode, q: '' };
   const segs = [['ml', 'マイリスト'], ['hist', '履歴'], ['search', '食材']];
   openSheet(`${mealLabel(meal)}に追加`, `
@@ -1272,11 +1282,14 @@ function openAdd(meal) {
     <div class="seg" id="seg">${segs.map(([k, l]) => `<button data-mode="${k}" class="${k === mode ? 'on' : ''}">${l}</button>`).join('')}</div>
     <div id="results"></div>`, sh => {
     const q = $('#q', sh);
-    q.addEventListener('input', () => {
+    // スマホの日本語入力では確定まで input が来ないことがあるので、確定・検索キーでも探す（change は使わない：結果をタップした瞬間に描き直してしまうため）
+    const onQ = () => {
       sheetCtx.q = q.value;
       if (sheetCtx.mode !== 'search' && q.value.trim()) { sheetCtx.mode = 'search'; setSeg('search'); }
       renderResults();
-    });
+    };
+    ['input', 'compositionend', 'search'].forEach(ev => q.addEventListener(ev, onQ));
+    q.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); onQ(); q.blur(); } });
     setSeg(mode);
     renderResults();
   });
@@ -1309,7 +1322,7 @@ function mlEntry(it, meal) {
   if (it.kind === 'food') {
     const f = foodByCode.get(it.code);
     if (!f) return null;
-    return { meal, mlId: it.id, code: it.code, name: it.name, grams: it.grams, protein: proteinFor(f, it.grams), amode: it.amode, ulabel: it.ulabel, count: it.count, raw: it.raw, desc: it.desc };
+    return Object.assign({ meal, mlId: it.id, code: it.code, name: it.name, grams: it.grams, protein: proteinFor(f, it.grams), amode: it.amode, ulabel: it.ulabel, count: it.count, raw: it.raw, desc: it.desc }, foodNut(f, it.grams));
   }
   const item = mlItem(it);
   const is100 = item.basis === '100g';
@@ -1317,11 +1330,13 @@ function mlEntry(it, meal) {
   return {
     meal, mlId: it.id, kind: it.kind, refId: it.id, name: it.name, unit: item.unit, basis: item.basis,
     perUnit: item.protein, qty: is100 ? null : v, grams: is100 ? v : null, protein: itemProtein(item, v),
+    perKcal: item.kcal ?? null, perFat: item.fat ?? null, perCarb: item.carb ?? null, ...itemNut(item, v),
   };
 }
 function mlItem(it) {
-  if (it.kind === 'menu') return { kind: 'menu', id: it.id, name: it.name, unit: '1食', protein: it.protein, basis: 'unit' };
-  return { kind: 'prod', id: it.id, name: it.name, unit: it.basis === '100g' ? '100g' : (it.unit || '1個'), protein: it.protein, basis: it.basis === '100g' ? '100g' : 'unit' };
+  const nut = { kcal: it.kcal ?? null, fat: it.fat ?? null, carb: it.carb ?? null };
+  if (it.kind === 'menu') return Object.assign({ kind: 'menu', id: it.id, name: it.name, unit: '1食', protein: it.protein, basis: 'unit' }, nut);
+  return Object.assign({ kind: 'prod', id: it.id, name: it.name, unit: it.basis === '100g' ? '100g' : (it.unit || '1個'), protein: it.protein, basis: it.basis === '100g' ? '100g' : 'unit' }, nut);
 }
 function mlProteinShown(it) {
   const e = mlEntry(it, 'b');
@@ -1398,6 +1413,11 @@ function renderResults() {
       .filter(([k]) => foodByCode.has(k))
       .sort((a, b) => b[1].t - a[1].t).slice(0, 8).map(([k]) => foodByCode.get(k));
     let html = '';
+    if (state.myList.length) {
+      const mls = mlSorted();
+      html += `<div class="list-label">マイリスト</div>` + mls.slice(0, 5).map(mlRow).join('') +
+        (mls.length > 5 ? `<div class="meal-actions"><button class="btn ghost small block" data-mode="ml">マイリストをすべて見る（${mls.length}件）</button></div>` : '');
+    }
     if (recent.length) html += `<div class="list-label">最近使った食材</div>` + recent.map(f => foodRow(f)).join('');
     html += `<div class="list-label">よく使う食材</div>` + GENERIC_ITEMS.filter(it => !it.need).map(genRow).join('') + STAPLES.map(s => {
       const f = foodByCode.get(s.code);
@@ -1601,6 +1621,7 @@ function updAmount() {
   const f = foodByCode.get(sheetCtx.code);
   const g = currentGrams();
   $('#calc').textContent = `${fmt(proteinFor(f, g))}g`;
+  if (showNut() && f.kcal != null) $('#calc').insertAdjacentHTML('beforeend', `<span class="tiny muted" style="font-weight:400">　${foodNut(f, g).kcal}kcal</span>`);
   $('#gramsLabel').textContent = g > 0 && sheetCtx.amode !== 'g' ? `（${fmt(g)}g）` : '';
   $('#saveAmt').disabled = !(g > 0);
   $('#starBtn').disabled = !(g > 0);
@@ -1688,6 +1709,12 @@ function openMlForm(id, opts = {}) {
 
       <div class="field"><label for="mlP" id="pLabel">たんぱく質（g）</label><input id="mlP" type="number" inputmode="decimal" step="any" min="0" value="${it ? esc(it.protein) : ''}" placeholder="例：12">
         <div class="hint" id="pHint"></div></div>
+      ${showNut() ? `<div class="field"><label>カロリー・脂質・炭水化物（任意・同じ量あたり）</label>
+        <div style="display:flex;gap:6px">
+          <input id="mlK" type="number" inputmode="decimal" step="any" min="0" value="${it && it.kcal != null ? esc(it.kcal) : ''}" placeholder="kcal">
+          <input id="mlF" type="number" inputmode="decimal" step="any" min="0" value="${it && it.fat != null ? esc(it.fat) : ''}" placeholder="脂質g">
+          <input id="mlC" type="number" inputmode="decimal" step="any" min="0" value="${it && it.carb != null ? esc(it.carb) : ''}" placeholder="炭水化物g">
+        </div><div class="hint">入れなくても記録できます（その分はカロリーの合計から除きます）</div></div>` : ''}
       <div class="form-err" id="mlErr" hidden></div>
 
       ${meal ? `<button class="btn block" type="submit" data-and="rec">登録して${mealLabel(meal)}に記録</button>
@@ -1730,6 +1757,11 @@ function openMlForm(id, opts = {}) {
       if (k === 'prod' && b === 'unit' && protein > 80 && !confirm(`${unit}あたり ${protein}g はかなり多い値です。「100gあたり」の表示ではありませんか？\nこのまま登録する場合は OK を押してください。`)) return;
       if (k === 'menu' && protein > 100 && !confirm(`1食あたり ${protein}g はかなり多い値です。このまま登録しますか？`)) return;
       const data = { kind: k, name, protein, basis: b, unit, defGrams: b === '100g' ? defGrams : undefined };
+      if ($('#mlK', sh)) {
+        const nv = id => { const x = $(id, sh).value.trim(); return x === '' ? null : Number(x); };
+        Object.assign(data, { kcal: nv('#mlK'), fat: nv('#mlF'), carb: nv('#mlC') });
+        if (data.kcal == null) { data.fat = null; data.carb = null; }
+      }
       let target;
       if (it) { Object.assign(it, data); target = it; }
       else { target = Object.assign({ id: uid() }, data); state.myList.push(target); }
@@ -1781,7 +1813,15 @@ function deleteMl(it) {
 
 /* マイリストの市販品・メニューや、その記録の量を入れる。item = {kind, id, name, unit, protein, basis} */
 function itemFromEntry(e) {
-  return { kind: e.kind || 'my', id: e.refId || e.myId, name: e.name, unit: e.unit || '1食', protein: e.perUnit, basis: e.basis || 'unit' };
+  const it = { kind: e.kind || 'my', id: e.refId || e.myId, name: e.name, unit: e.unit || '1食', protein: e.perUnit, basis: e.basis || 'unit', kcal: e.perKcal ?? null, fat: e.perFat ?? null, carb: e.perCarb ?? null };
+  // 以前の記録で1単位あたりのカロリーが無いものは、今のデータから補う
+  if (it.kcal == null) {
+    const src = it.kind === 'dish' ? (() => { const d = DISHES.find(x => x.id === it.id); return d && dishItem(d); })()
+      : it.kind === 'gen' ? GENERIC_ITEMS.find(x => x.id === it.id)
+      : e.mlId ? (() => { const m = state.myList.find(x => x.id === e.mlId); return m && m.kind !== 'food' ? mlItem(m) : null; })() : null;
+    if (src) Object.assign(it, { kcal: src.kcal ?? null, fat: src.fat ?? null, carb: src.carb ?? null });
+  }
+  return it;
 }
 function openItemAmount(item, entry, defVal, mlId) {
   const is100 = item.basis === '100g';
@@ -1803,6 +1843,7 @@ function openItemAmount(item, entry, defVal, mlId) {
     const qty = $('#qty', sh);
     const upd = () => {
       $('#calc', sh).textContent = `${fmt(itemProtein(item, sheetCtx.val))}g`;
+      if (showNut() && item.kcal != null) $('#calc', sh).insertAdjacentHTML('beforeend', `<span class="tiny muted" style="font-weight:400">　${itemNut(item, sheetCtx.val).kcal}kcal</span>`);
       $('#saveMy', sh).disabled = !(Number(sheetCtx.val) > 0);
     };
     qty.addEventListener('input', () => { sheetCtx.val = Number(qty.value) || 0; upd(); });
@@ -1812,6 +1853,52 @@ function openItemAmount(item, entry, defVal, mlId) {
 function itemProtein(item, val) {
   const v = Number(val) || 0;
   return r1(item.basis === '100g' ? item.protein * v / 100 : item.protein * v);
+}
+
+/* ---------- カロリー・PFC（脂質・炭水化物） ----------
+   記録したときに kcal・脂質・炭水化物も保存する（あとで成分表や料理を見直しても過去の記録は変わらない）。
+   以前の記録（保存していないもの）は、今のデータから計算して表示する。マイリストで未入力のものは「不明」 */
+function nutOf(src, factor) {
+  if (!src || src.kcal == null) return { kcal: null, fat: null, carb: null };
+  return { kcal: Math.round(src.kcal * factor), fat: src.fat == null ? null : r1(src.fat * factor), carb: src.carb == null ? null : r1(src.carb * factor) };
+}
+function foodNut(f, grams) { return nutOf(f, (Number(grams) || 0) / 100); }
+function itemNut(item, val) { const v = Number(val) || 0; return nutOf(item, item.basis === '100g' ? v / 100 : v); }
+function entryNut(e) {
+  if (e.kcal !== undefined) return { kcal: e.kcal, fat: e.fat ?? null, carb: e.carb ?? null };
+  if (e.code && foodByCode.has(e.code)) return foodNut(foodByCode.get(e.code), e.grams);
+  if (e.kind === 'dish') { const d = DISHES.find(x => x.id === e.refId); const it = d && dishItem(d); if (it) return itemNut(it, e.qty); }
+  if (e.kind === 'gen') { const g = GENERIC_ITEMS.find(x => x.id === e.refId); if (g) return itemNut(g, e.grams); }
+  if (e.mlId) { const m = state.myList.find(x => x.id === e.mlId); if (m && m.kcal != null && m.kind !== 'food') return itemNut(mlItem(m), m.basis === '100g' ? e.grams : e.qty); }
+  return { kcal: null, fat: null, carb: null };
+}
+function sumNut(list) {
+  let kcal = 0, fat = 0, carb = 0, p = 0, unknown = 0;
+  for (const e of list) {
+    const n = entryNut(e);
+    if (n.kcal == null) { unknown++; continue; }
+    kcal += n.kcal; fat += n.fat || 0; carb += n.carb || 0; p += Number(e.protein) || 0;
+  }
+  return { kcal: Math.round(kcal), fat: r1(fat), carb: r1(carb), p: r1(p), unknown };
+}
+const showNut = () => !!state.showPFC;
+// 今日の画面：合計 kcal と PFC の割合（エネルギー比は P・C 4kcal/g、F 9kcal/g で計算）
+function pfcHtml(list, t) {
+  const n = sumNut(list);
+  const eP = n.p * 4, eF = n.fat * 9, eC = n.carb * 4, eT = eP + eF + eC;
+  const pct = x => eT > 0 ? Math.round(x / eT * 100) : 0;
+  const [pLo, pHi] = String((t && t.goalPct) || '13〜20').split('〜').map(Number);
+  const segs = [['P', pct(eP), pLo, pHi, 'var(--primary)'], ['F', pct(eF), 20, 30, 'var(--accent)'], ['C', pct(eC), 50, 65, 'var(--bar-soft)']];
+  const bar = eT > 0 ? segs.map(([k, v, lo, hi, col]) => `<span style="width:${v}%;background:${col};display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;font-weight:700;min-width:${v ? 28 : 0}px;overflow:hidden">${v ? k + v + '%' : ''}</span>`).join('') : '';
+  const off = eT > 0 ? segs.filter(([, v, lo, hi]) => v < lo || v > hi).map(([k, v, lo, hi]) => `${k}${v < lo ? '少なめ' : '多め'}`) : [];
+  return `<div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap">
+      <span><b style="font-size:1.15rem">${n.kcal.toLocaleString()}</b><span class="small muted"> kcal</span></span>
+      <span class="small">P ${fmt(n.p)}g　F ${fmt(n.fat)}g　C ${fmt(n.carb)}g</span>
+    </div>
+    ${eT > 0 ? `<div style="display:flex;height:22px;border-radius:11px;overflow:hidden;margin:6px 0 4px;background:var(--track)">${bar}</div>` : ''}
+    <div class="tiny muted">目安 P${pLo}〜${pHi}%・F20〜30%・C50〜65%${off.length ? `　<b style="color:var(--accent)">${off.join('・')}</b>` : ''}${n.unknown ? `<br>カロリー不明の記録${n.unknown}件は除いています（マイリストで未入力など）` : ''}</div>
+  </div>`;
 }
 
 /* --- 記録の編集 --- */
@@ -2001,7 +2088,7 @@ document.addEventListener('click', ev => {
       if (!(grams > 0)) return;
       const staple = STAPLES.find(s => s.code === f.code);
       const meta = amountMeta();
-      const data = Object.assign({ meal: sheetCtx.meal, code: f.code, name: sheetCtx.label || (staple ? staple.label : f.main), grams, protein: proteinFor(f, grams) }, meta);
+      const data = Object.assign({ meal: sheetCtx.meal, code: f.code, name: sheetCtx.label || (staple ? staple.label : f.main), grams, protein: proteinFor(f, grams) }, foodNut(f, grams), meta);
       if (sheetCtx.mlId) data.mlId = sheetCtx.mlId;
       state.recent[f.code] = Object.assign(state.recent[f.code] || { n: 0 }, { amode: meta.amode, ulabel: meta.ulabel, raw: meta.raw, g: grams, unit: meta.unit, ml: meta.ml });
       if (sheetCtx.editing) { updateEntry(viewDate, sheetCtx.editing.id, data); toast('修正しました'); }
@@ -2017,6 +2104,7 @@ document.addEventListener('click', ev => {
       const data = {
         meal: sheetCtx.meal, mlId: sheetCtx.mlId || undefined, kind: it.kind, refId: it.id, name: it.name, unit: it.unit, basis: is100 ? '100g' : 'unit',
         perUnit: it.protein, qty: is100 ? null : v, grams: is100 ? v : null, protein: itemProtein(it, v),
+        perKcal: it.kcal ?? null, perFat: it.fat ?? null, perCarb: it.carb ?? null, ...itemNut(it, v),
       };
       if (sheetCtx.editing) { updateEntry(viewDate, sheetCtx.editing.id, data); toast('修正しました'); }
       else { addEntry(viewDate, data); toast(`${it.name} ${fmt(data.protein)}g を記録しました`); }
@@ -2044,6 +2132,7 @@ document.addEventListener('click', ev => {
 
 document.addEventListener('change', ev => {
   if (ev.target.id === 'photoInput' && ev.target.files.length) { addPhotos(Array.from(ev.target.files)); ev.target.value = ''; }
+  if (ev.target.id === 'showPFC') { state.showPFC = ev.target.checked; saveState(); toast(state.showPFC ? 'カロリー・PFCを表示します' : 'カロリー・PFCを隠しました'); return; }
   if (ev.target.id === 'keepDays') { state.photoKeepDays = Number(ev.target.value); saveState(); cleanupPhotos(); toast('保存しました'); }
   if (ev.target.id === 'importFile' && ev.target.files[0]) importData(ev.target.files[0]);
   if (ev.target.name === 'sex') $('#statusField').hidden = ev.target.value !== 'f';
