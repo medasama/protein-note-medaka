@@ -718,6 +718,7 @@ function uid() { return Date.now().toString(36) + Math.random().toString(36).sli
 function toast(msg) {
   const t = $('#toast');
   t.textContent = msg;
+  t.classList.toggle('top', !$('#sheet').hidden); // シートを開いているときは、下のボタンにかぶらないよう上に出す
   t.hidden = false;
   clearTimeout(toast._t);
   toast._t = setTimeout(() => { t.hidden = true; }, Math.max(2200, String(msg).length * 90));
@@ -1369,7 +1370,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.23</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.24</p>
   </div>`;
 }
 
@@ -1398,6 +1399,7 @@ window.addEventListener('resize', fitSheet);
 
 function openSheet(title, bodyHtml, onMount, opts = {}) {
   const sh = $('#sheet');
+  const tt = $('#toast'); if (tt && !tt.classList.contains('top')) tt.hidden = true; // 下に出ているお知らせがボタンにかぶらないように
   sh.classList.toggle('tall', !!opts.tall);
   sh.innerHTML = `<div class="sheet-head"><h3>${title}</h3><button class="close-x" data-close="1" aria-label="閉じる">✕</button></div>
     <div class="sheet-body">${bodyHtml}</div>`;
@@ -1923,8 +1925,9 @@ function openAmount(code, opts = {}) {
     meal: editing ? editing.meal : (opts.meal || (sheetCtx && sheetCtx.meal) || guessMeal()),
   });
   const units = st.units;
-  const title = editing ? '記録を修正' : esc(opts.label || (staple ? staple.label : dispName(f.main).name));
+  const title = editing ? esc(dispName(editing.name).name) : esc(opts.label || (staple ? staple.label : dispName(f.main).name));
   openSheet(title, `
+    ${editing ? editTag(editing) : ''}
     ${photoStripForSheet()}
     <div class="small">${esc(f.name)}</div>
     <div class="tiny muted">100gあたり たんぱく質 ${fmt(f.p)}g${f.f === 1 ? '（推定値）' : f.f === 2 ? '（微量）' : ''}</div>
@@ -2209,13 +2212,18 @@ function itemFromEntry(e) {
   }
   return it;
 }
+/* 修正画面の目印：何の記録を直しているか */
+function editTag(e) {
+  return `<div class="edit-tag">✎ ${esc(dateLabel(viewDate))}・${esc(mealLabel(e.meal))}の記録を修正しています<div class="tiny muted">今の量：${esc(entryAmountLabel(e))}・たんぱく質 ${fmt(e.protein)}g</div></div>`;
+}
 function openItemAmount(item, entry, defVal, mlId) {
   const is100 = item.basis === '100g';
   const meal = entry ? entry.meal : sheetCtx.meal;
   const val = entry ? (is100 ? entry.grams : entry.qty) : (defVal || (is100 ? 100 : 1));
   sheetCtx = { meal, item, val, editing: entry || null, mlId: entry ? entry.mlId : mlId };
   const chips = item.chips || (is100 ? [50, 100, 150, 200] : [0.5, 1, 1.5, 2, 3]);
-  openSheet(entry ? '記録を修正' : esc(item.name), `
+  openSheet(esc(entry ? dispName(entry.name).name : item.name), `
+    ${entry ? editTag(entry) : ''}
     ${item.kind === 'gen' ? '' : `<div class="tiny muted">${is100 ? '100g' : esc(item.unit)}あたり たんぱく質 ${fmt(item.protein)}g</div>`}
     <div class="meal-pick">${MEALS.map(([mm, l]) => `<button class="chip ${mm === meal ? 'on' : ''}" data-meal="${mm}">${l}</button>`).join('')}</div>
     <div class="amount-box"><input id="qty" type="number" inputmode="decimal" min="0" step="any" value="${fmt(val)}"><span class="u">${is100 ? 'g' : '× ' + esc(item.unit)}</span></div>

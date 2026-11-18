@@ -384,3 +384,6 @@ details.fold[open] summary{margin-bottom:6px}
 .m-actions #mGo{flex:1}
 .hop{border:none;background:none;padding:0;margin:0;flex:none;cursor:pointer;line-height:0;-webkit-tap-highlight-color:transparent}
 .hop img{display:block}
+.edit-tag{background:var(--chip-bg);border-left:4px solid var(--primary);border-radius:8px;padding:8px 10px;margin:0 0 10px;font-size:.92rem;font-weight:700}
+.edit-tag .tiny{font-weight:400;margin-top:2px}
+.toast.top{top:calc(env(safe-area-inset-top) + 12px);bottom:auto}
