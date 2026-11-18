@@ -83,7 +83,7 @@ const FOOD_UNITS = {
   '04040': [['1枚', 30, '枚']],
   '04039': [['1枚', 140, '枚']],
   '13025': [['1食分', 100]],
-  '13040': [['スライス1枚', 18, '枚']],
+  '13040': [['スライス1枚', 18, '枚'], ['6Pチーズ1個', 18, '個'], ['ベビーチーズ1個', 15, '個']],
   '11227': [['1本', 50, '本']],
   '11228': [{ l: '1本分', raw: 50, c: '本' }],
   '11229': [{ l: '1本分', raw: 50, c: '本' }],
@@ -200,9 +200,19 @@ const FOOD_UNITS = {
   '12019': [['1切れ', 30, '切れ']],
   '04041': [['1個', 80, '個']],
   '04042': [['1個', 16, '個']],
-  '13034': [['1/6個', 17, '切れ']],
+  '13034': [['1/6個', 17, '切れ'], ['1個', 100, '個']],
   '13038': [['大さじ1', 6], ['小さじ1', 2]],
-  '13056': [['1個', 100, '個']],
+  '13056': [['1個', 100, '個'], ['1/2個', 50, '個'], ['さけるチーズ1本', 25, '本']],
+  '13035': [['個包装1個', 18, '個'], ['大さじ1', 15]],
+  '13033': [['大さじ1', 15], ['1/2カップ', 100]],
+  '13055': [['大さじ1', 15]],
+  '13058': [['大さじ1', 15]],
+  '13031': [['1切れ', 20, '切れ']],
+  '13032': [['1切れ', 20, '切れ']],
+  '13039': [['1切れ', 20, '切れ']],
+  '13057': [['1切れ', 20, '切れ']],
+  '15134': [['1切れ', 80, '切れ']],
+  '15135': [['1切れ', 80, '切れ']],
   '13026': [['1個', 80, '個']],
   // 主食・その他
   '01111': [['1個', 100, '個']],
@@ -427,6 +437,10 @@ const DISHES = [
   { id: 'tendon', name: '天丼', unit: '1人前', keys: 'てんどん どんぶり 丼 天ぷら', items: [['01088', 250, 'ごはん'], ['10416', 50, 'えび天2尾'], ['02047', 30, 'さつまいも天'], ['06343', 30, 'なす天'], ['17007', 10, 'しょうゆ']] },
   { id: 'kaisendon', name: '海鮮丼', unit: '1人前', keys: 'かいせんどん どんぶり 丼 刺身 さしみ', items: [['01088', 250, 'ごはん'], ['10253', 30, 'まぐろ'], ['10130', 30, 'サーモン'], ['10345', 20, 'いか'], ['10319', 20, '甘えび'], ['10140', 10, 'いくら']] },
   { id: 'creamstew', name: 'クリームシチュー（鶏肉）', unit: '1人前', keys: 'しちゅー シチュー クリーム ホワイトシチュー', items: [['11221', 60, '鶏もも'], ['02017', 50, 'じゃがいも'], ['06214', 30, 'にんじん'], ['06153', 50, '玉ねぎ'], ['06263', 20, 'ブロッコリー'], ['13003', 150, '牛乳'], ['14017', 8, 'バター'], ['01015', 8, '小麦粉']] },
+  { id: 'caprese', name: 'カプレーゼ', unit: '1人前', keys: 'かぷれーぜ モッツァレラ トマト チーズ', items: [['13056', 50, 'モッツァレラ'], ['06182', 100, 'トマト'], ['14001', 5, 'オリーブ油'], ['06238', 1, 'バジル']] },
+  { id: 'cheesetoast', name: 'チーズトースト', unit: '1枚', keys: 'ちーずとーすと チーズ トースト', items: [['01026', 60, '食パン6枚切'], ['13040', 20, 'チーズ']] },
+  { id: 'cheeseomelet', name: 'チーズオムレツ', unit: '1人前', keys: 'ちーずおむれつ オムレツ チーズ', items: [['12004', 100, '卵2個'], ['13040', 18, 'チーズ'], ['13003', 15, '牛乳'], ['14017', 5, 'バター']] },
+  { id: 'gratin', name: 'マカロニグラタン（鶏肉）', unit: '1人前', keys: 'ぐらたん グラタン マカロニ チーズ ドリア', items: [['01064', 80, 'マカロニ（ゆで）'], ['11221', 40, '鶏もも'], ['06153', 40, '玉ねぎ'], ['13003', 150, '牛乳'], ['14017', 8, 'バター'], ['01015', 8, '小麦粉'], ['13036', 15, 'チーズ']] },
   { id: 'curryrice', name: 'カレーライス（ごはん込み）', unit: '1人前', keys: 'かれー カレー ライス', items: [['01088', 250, 'ごはん'], ['11119', 50, '豚かたロース'], ['02017', 40, 'じゃがいも'], ['06214', 20, 'にんじん'], ['06153', 50, '玉ねぎ'], ['17051', 20, 'カレールウ']] },
   { id: 'omurice', name: 'オムライス', unit: '1人前', keys: 'おむらいす', items: [['01088', 200, 'ごはん'], ['12004', 100, '卵2個'], ['11221', 30, '鶏もも'], ['06153', 30, '玉ねぎ'], ['17036', 25, 'ケチャップ'], ['14006', 8, '油']] },
   { id: 'tkg', name: '卵かけごはん', unit: '1杯', keys: 'たまごかけごはん たまごかけご飯 TKG', items: [['01088', 150, 'ごはん'], ['12004', 50, '卵'], ['17007', 5, 'しょうゆ']] },
@@ -635,6 +649,16 @@ function unitNote(u, f) {
 
 /* 検索の言い換え（漢字・通称 → 成分表の表記） */
 const ALIASES = {
+  // チーズ（商品の呼び方 → 成分表の名前）
+  'カッテージチーズ': ['カテージ'], 'カッテージ': ['カテージ'], 'カテージチーズ': ['カテージ'],
+  '粉チーズ': ['パルメザン'], 'こなちーず': ['パルメザン'], 'パルメザンチーズ': ['パルメザン'], 'パルミジャーノ': ['パルメザン'],
+  'ピザ用チーズ': ['ゴーダ', 'モッツァレラ', 'チェダー'], 'とろけるチーズ': ['ゴーダ', 'モッツァレラ', 'チェダー', 'プロセスチーズ'], 'シュレッドチーズ': ['ゴーダ', 'モッツァレラ', 'チェダー'],
+  'スライスチーズ': ['プロセスチーズ', 'チェダー', 'ゴーダ'], '6Pチーズ': ['プロセスチーズ'], '6pチーズ': ['プロセスチーズ'], 'ろっぴーちーず': ['プロセスチーズ'],
+  'ベビーチーズ': ['プロセスチーズ'], 'キャンディチーズ': ['プロセスチーズ'], 'さけるチーズ': ['モッツァレラ'], 'ストリングチーズ': ['モッツァレラ'],
+  'モッツァレラチーズ': ['モッツァレラ'], 'モッツアレラ': ['モッツァレラ'], 'もっつぁれら': ['モッツァレラ'], 'ブッラータ': ['モッツァレラ'],
+  'カマンベールチーズ': ['カマンベール'], 'ブリー': ['カマンベール'], 'ゴーダチーズ': ['ゴーダ'], 'チェダーチーズ': ['チェダー'],
+  'リコッタチーズ': ['リコッタ'], 'マスカルポーネチーズ': ['マスカルポーネ'],
+  'エメンタールチーズ': ['エメンタール'], 'エダムチーズ': ['エダム'], 
   'たまご': ['鶏卵'], '玉子': ['鶏卵'], '卵': ['卵'],
   '鶏肉': ['にわとり'], '鶏': ['にわとり', '鶏'], 'とりにく': ['にわとり'], 'チキン': ['にわとり', 'チキン'],
   '豚肉': ['ぶた'], '豚': ['ぶた', '豚'], 'ぶたにく': ['ぶた'], 'ポーク': ['ぶた', 'ポーク'],
@@ -1014,6 +1038,7 @@ function render() {
   if (currentTab === 'today') renderToday();
   if (currentTab === 'history') renderHistory();
   if (currentTab === 'settings') renderSettings();
+  playPendingHop();
 }
 
 // めだかの筋肉段階：〜50%=1／〜85%=2／〜100%=3／達成=4
@@ -1041,6 +1066,12 @@ function ringSvg(ratio) {
 }
 
 // めだかのひとこと（1画面に1つ）
+
+function playPendingHop() {
+  if (!hitokoto.pending || !$('#sheet').hidden || currentTab !== 'today') return;
+  hitokoto.pending = false;
+  setTimeout(() => hopMedaka($('.hop img')), 350);
+}
 function hitokoto(ratio) {
   const past = viewDate !== todayStr();
   const md = viewDate.split('-');
@@ -1059,8 +1090,15 @@ function hitokoto(ratio) {
   else if (ratio < 0.85) m = 'いい調子！！';
   else if (ratio < 1) m = 'もう少し！';
   else m = '達成！！おつかれさま！';
+  // 段階が上がった（めだかがマッチョになった）ら、一度だけ跳ねて見せる
+  if (!past) {
+    const seen = hitokoto.seen[viewDate];
+    if (seen != null && st > seen) hitokoto.pending = true;
+    hitokoto.seen[viewDate] = st;
+  }
   return `<div class="hito hito-m${st}"><button class="hop" data-hop="1" aria-label="めだか"><img src="characters/medaka-m${st}.png" alt=""></button><span>${m}</span></div>`;
 }
+hitokoto.seen = {};
 
 function renderToday() {
   const el = $('#tab-today');
@@ -1370,7 +1408,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.24</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.26</p>
   </div>`;
 }
 
@@ -1401,6 +1439,7 @@ function openSheet(title, bodyHtml, onMount, opts = {}) {
   const sh = $('#sheet');
   const tt = $('#toast'); if (tt && !tt.classList.contains('top')) tt.hidden = true; // 下に出ているお知らせがボタンにかぶらないように
   sh.classList.toggle('tall', !!opts.tall);
+  sh.classList.toggle('editing', !!opts.editing); // 記録の修正中は見出しの色を変える
   sh.innerHTML = `<div class="sheet-head"><h3>${title}</h3><button class="close-x" data-close="1" aria-label="閉じる">✕</button></div>
     <div class="sheet-body">${bodyHtml}</div>`;
   sh.hidden = false;
@@ -1412,8 +1451,9 @@ function openSheet(title, bodyHtml, onMount, opts = {}) {
 function closeSheet() {
   const sh = $('#sheet');
   sh.hidden = true;
-  sh.classList.remove('tall');
+  sh.classList.remove('tall', 'editing');
   multiCtx = null;
+  playPendingHop();
   ['bottom', 'paddingBottom', 'maxHeight', 'height'].forEach(k => { sh.style[k] = ''; });
   $('#sheetBackdrop').hidden = true;
   document.body.style.overflow = '';
@@ -1496,9 +1536,9 @@ function multiCands(term) {
     ...mine.map(it => ({ k: 'ml', id: it.id })),
     ...dTop.map(d => ({ k: 'dish', id: d.id })),
     ...gens.map(g => ({ k: 'gen', id: g.id })),
-    ...res.slice(0, 5).map(f => ({ k: 'food', id: f.code })),
+    ...res.slice(0, 5).map(f => ({ k: 'food', id: f.code, q: term })),
     ...dLow.map(d => ({ k: 'dish', id: d.id })),
-    ...res.slice(5, 40).map(f => ({ k: 'food', id: f.code })),
+    ...res.slice(5, 40).map(f => ({ k: 'food', id: f.code, q: term })),
   ];
   multiCtx.cache[term] = { list: out, widened: widened ? terms : null };
   return multiCtx.cache[term];
@@ -1516,7 +1556,7 @@ function multiEntry(cand, remember) {
     return g ? itemEntryData(g, (state.recent['gen:' + g.id] || {}).v || g.defVal, meal) : null;
   }
   const f = foodByCode.get(cand.id);
-  return f ? foodEntryData(amountState(f), meal, remember) : null;
+  return f ? foodEntryData(amountState(f, { q: cand.q }), meal, remember) : null;
 }
 function multiCandSub(cand) {
   if (cand.k === 'food') { const f = foodByCode.get(cand.id); return dispName(f.main).note; }
@@ -1594,7 +1634,7 @@ function multiPick(key) {
   if (cand.k === 'ml') adjustMl(cand.id);
   else if (cand.k === 'dish') { const d = DISHES.find(x => x.id === cand.id); const it = d && dishItem(d); if (it) openItemAmount(it, null, (state.recent['dish:' + it.id] || {}).v || 1); }
   else if (cand.k === 'gen') { const g = GENERIC_ITEMS.find(x => x.id === cand.id); if (g) openItemAmount(g, null, (state.recent['gen:' + g.id] || {}).v || g.defVal); }
-  else openAmount(cand.id, { meal: multiCtx.meal });
+  else openAmount(cand.id, { meal: multiCtx.meal, q: cand.q });
 }
 /* ✕・背景・Esc：まとめて入力の途中で量の画面を開いていたら候補へ戻る */
 function closeOrBack() {
@@ -1635,7 +1675,7 @@ function hopMedaka(img) {
     { transform: at(dx, dy, big, 0), offset: 0.70 },                                  // 少し止まって見せる
     { transform: at(dx * 0.5, dy * 0.5 - 60, big * 0.55, 10), offset: 0.86 },        // ぴょんと戻る
     { transform: at(0, 0, 1, 0), offset: 1 },
-  ], { duration: 1700, easing: 'ease-in-out' });
+  ], { duration: 2200, easing: 'ease-in-out' });
   const done = () => { fly.remove(); img.style.visibility = ''; hopMedaka.busy = false; };
   a.onfinish = done; a.oncancel = done;
 }
@@ -1910,6 +1950,12 @@ function amountState(f, opts = {}) {
       else if (last.unit === 'g' || !drink) { unit = 'g'; value = last.g || 100; }
     }
   }
+  // 「6Pチーズ」「さけるチーズ」のように、探した言葉がそのまま単位の名前に入っていれば、その単位で
+  if (!src && opts.q && units.length) {
+    const nq = norm(opts.q);
+    const k = nq.length >= 2 && !norm(f.name).includes(nq) ? units.findIndex(u => norm(u.l).includes(nq)) : -1;
+    if (k >= 0) { mode = 'unit'; unitIdx = k; count = 1; }
+  }
   return { code, amode: mode, unitIdx, count, value, raw, unit, editing, units,
     mlId: editing ? editing.mlId : (opts.mlId || null),
     label: editing ? editing.name : (opts.label || null) };
@@ -1927,7 +1973,6 @@ function openAmount(code, opts = {}) {
   const units = st.units;
   const title = editing ? esc(dispName(editing.name).name) : esc(opts.label || (staple ? staple.label : dispName(f.main).name));
   openSheet(title, `
-    ${editing ? editTag(editing) : ''}
     ${photoStripForSheet()}
     <div class="small">${esc(f.name)}</div>
     <div class="tiny muted">100gあたり たんぱく質 ${fmt(f.p)}g${f.f === 1 ? '（推定値）' : f.f === 2 ? '（微量）' : ''}</div>
@@ -1942,7 +1987,7 @@ function openAmount(code, opts = {}) {
     <button class="btn block" id="saveAmt">${editing ? '修正する' : '記録する'}</button>
     <div class="meal-actions"><button class="btn ghost small block" id="starBtn">☆ この量でマイリストへ</button></div>
     ${editing ? '<div class="meal-actions"><button class="btn danger small block" id="delEntry">この記録を削除</button></div>' : ''}
-  `, () => renderAmountBody());
+  `, () => renderAmountBody(), { editing: !!editing });
 }
 function renderAmountBody() {
   const c = sheetCtx;
@@ -2223,7 +2268,6 @@ function openItemAmount(item, entry, defVal, mlId) {
   sheetCtx = { meal, item, val, editing: entry || null, mlId: entry ? entry.mlId : mlId };
   const chips = item.chips || (is100 ? [50, 100, 150, 200] : [0.5, 1, 1.5, 2, 3]);
   openSheet(esc(entry ? dispName(entry.name).name : item.name), `
-    ${entry ? editTag(entry) : ''}
     ${item.kind === 'gen' ? '' : `<div class="tiny muted">${is100 ? '100g' : esc(item.unit)}あたり たんぱく質 ${fmt(item.protein)}g</div>`}
     <div class="meal-pick">${MEALS.map(([mm, l]) => `<button class="chip ${mm === meal ? 'on' : ''}" data-meal="${mm}">${l}</button>`).join('')}</div>
     <div class="amount-box"><input id="qty" type="number" inputmode="decimal" min="0" step="any" value="${fmt(val)}"><span class="u">${is100 ? 'g' : '× ' + esc(item.unit)}</span></div>
@@ -2242,7 +2286,7 @@ function openItemAmount(item, entry, defVal, mlId) {
     };
     qty.addEventListener('input', () => { sheetCtx.val = Number(qty.value) || 0; upd(); });
     upd();
-  });
+  }, { editing: !!entry });
 }
 function itemProtein(item, val) {
   const v = Number(val) || 0;

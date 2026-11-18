@@ -387,3 +387,18 @@ details.fold[open] summary{margin-bottom:6px}
 .edit-tag{background:var(--chip-bg);border-left:4px solid var(--primary);border-radius:8px;padding:8px 10px;margin:0 0 10px;font-size:.92rem;font-weight:700}
 .edit-tag .tiny{font-weight:400;margin-top:2px}
 .toast.top{top:calc(env(safe-area-inset-top) + 12px);bottom:auto}
+/* 記録の修正中：見出しの帯の色を反転（昼は深い水の紺、夜は光る水色） */
+#sheet.editing{background:#e6f2f7}
+#sheet.editing .sheet-head{background:#1f4a5c;border-radius:18px 18px 0 0;padding-bottom:12px;margin-bottom:10px}
+#sheet.editing .sheet-head h3{color:#fff}
+#sheet.editing .sheet-head h3::before{content:'✎ ';opacity:.8}
+#sheet.editing .sheet-head button{background:rgba(255,255,255,.18);color:#fff}
+#sheet.editing #saveAmt,#sheet.editing #saveMy{background:#1f4a5c;color:#fff}
+@media (prefers-color-scheme:dark){
+  #sheet.editing{background:#10293d}
+  #sheet.editing .sheet-head{background:#6fd3e6}
+  #sheet.editing .sheet-head h3{color:#0e2233}
+  #sheet.editing .sheet-head button{background:rgba(14,34,51,.15);color:#0e2233}
+  #sheet.editing #saveAmt,#sheet.editing #saveMy{background:#6fd3e6;color:#0e2233}
+  .note{color:#f5dfae}
+}
