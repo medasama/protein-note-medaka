@@ -426,6 +426,7 @@ const DISHES = [
   { id: 'katsudon', name: 'カツ丼', unit: '1人前', keys: 'かつどん どんぶり 丼 とんかつ', items: [['01088', 250, 'ごはん'], ['11276', 100, 'とんかつ'], ['12004', 50, '卵'], ['06153', 40, '玉ねぎ'], ['17007', 10, 'しょうゆ']] },
   { id: 'tendon', name: '天丼', unit: '1人前', keys: 'てんどん どんぶり 丼 天ぷら', items: [['01088', 250, 'ごはん'], ['10416', 50, 'えび天2尾'], ['02047', 30, 'さつまいも天'], ['06343', 30, 'なす天'], ['17007', 10, 'しょうゆ']] },
   { id: 'kaisendon', name: '海鮮丼', unit: '1人前', keys: 'かいせんどん どんぶり 丼 刺身 さしみ', items: [['01088', 250, 'ごはん'], ['10253', 30, 'まぐろ'], ['10130', 30, 'サーモン'], ['10345', 20, 'いか'], ['10319', 20, '甘えび'], ['10140', 10, 'いくら']] },
+  { id: 'creamstew', name: 'クリームシチュー（鶏肉）', unit: '1人前', keys: 'しちゅー シチュー クリーム ホワイトシチュー', items: [['11221', 60, '鶏もも'], ['02017', 50, 'じゃがいも'], ['06214', 30, 'にんじん'], ['06153', 50, '玉ねぎ'], ['06263', 20, 'ブロッコリー'], ['13003', 150, '牛乳'], ['14017', 8, 'バター'], ['01015', 8, '小麦粉']] },
   { id: 'curryrice', name: 'カレーライス（ごはん込み）', unit: '1人前', keys: 'かれー カレー ライス', items: [['01088', 250, 'ごはん'], ['11119', 50, '豚かたロース'], ['02017', 40, 'じゃがいも'], ['06214', 20, 'にんじん'], ['06153', 50, '玉ねぎ'], ['17051', 20, 'カレールウ']] },
   { id: 'omurice', name: 'オムライス', unit: '1人前', keys: 'おむらいす', items: [['01088', 200, 'ごはん'], ['12004', 100, '卵2個'], ['11221', 30, '鶏もも'], ['06153', 30, '玉ねぎ'], ['17036', 25, 'ケチャップ'], ['14006', 8, '油']] },
   { id: 'tkg', name: '卵かけごはん', unit: '1杯', keys: 'たまごかけごはん たまごかけご飯 TKG', items: [['01088', 150, 'ごはん'], ['12004', 50, '卵'], ['17007', 5, 'しょうゆ']] },
@@ -512,9 +513,34 @@ const DISHES = [
   { id: 'kfc-biscuit', name: 'ケンタッキー ビスケット', unit: '1個', keys: 'けんたっきー KFC ケンタ びすけっと', fixed: 3.2, kcal: 211, fat: 12.5, carb: 21.3, g: 56, src: 'kfc' },
   { id: 'kfc-chocopie', name: 'ケンタッキー チョコパイ', unit: '1個', keys: 'けんたっきー KFC ケンタ ちょこぱい', fixed: 3.1, kcal: 270, fat: 15.8, carb: 29.0, g: 53, src: 'kfc' },
 ];
-const DISH_SRC = { kfc: 'ケンタッキーフライドチキン公式「栄養成分表」（2026/3/25現在）の値です' };
+/* ---------- 市販品：主なビール類（メーカーの栄養成分表示 100mlあたり。幅がある値は中間。脂質はすべて0g）----------
+   [id, 名前, 検索用の言葉, たんぱく質g, kcal, 炭水化物g] → 350ml缶・500ml缶を作る */
+const BEERS = [
+  ['premol', 'ザ・プレミアム・モルツ', 'プレモル ぷれもる プレミアムモルツ サントリー', 0.5, 47, 3.7],
+  ['suntorynama', 'サントリー生ビール', 'サントリー 生ビール なまびーる トリプル生', 0.4, 43, 3.2],
+  ['kinmugi', '金麦', 'きんむぎ 金麦 サントリー', 0.2, 43, 3.3],
+  ['kinmugi75', '金麦〈糖質75%オフ〉', 'きんむぎ 金麦 糖質オフ サントリー', 0.2, 26, 0.75],
+  ['superdry', 'アサヒスーパードライ', 'スーパードライ すーぱーどらい ドライ アサヒ', 0.3, 42, 3.0],
+  ['asahinama', 'アサヒ生ビール（マルエフ）', 'マルエフ まるえふ アサヒ 生ビール', 0.3, 41, 3.0],
+  ['clearasahi', 'クリアアサヒ', 'クリアアサヒ くりあ アサヒ', 0.3, 42, 2.8],
+  ['ichiban', 'キリン一番搾り', '一番搾り いちばんしぼり キリン きりん', 0.4, 40, 2.7],
+  ['greenlabel', 'キリン淡麗グリーンラベル', '淡麗 たんれい グリーンラベル ぐりーんらべる 糖質オフ キリン', 0.1, 29, 0.85],
+  ['nodogoshi', 'キリンのどごし〈生〉', 'のどごし のどごし生 キリン', 0.2, 38, 2.8],
+  ['honkirin', '本麒麟', '本麒麟 ほんきりん キリン', 0.4, 42, 3.0],
+  ['kurolabel', 'サッポロ生ビール黒ラベル', '黒ラベル くろらべる サッポロ さっぽろ', 0.3, 40, 3.0],
+  ['yebisu', 'ヱビスビール', 'ヱビス エビス えびす サッポロ', 0.5, 42, 3.1],
+];
+for (const [id, name, keys, p, k, c] of BEERS) {
+  for (const ml of [350, 500]) {
+    const f = ml / 100;
+    DISHES.push({ id: `beer-${id}-${ml}`, name: `${name} ${ml}ml缶`, unit: '1缶', keys: `${keys} ビール びーる 缶ビール 酒`, fixed: Math.round(p * f * 10) / 10, kcal: Math.round(k * f), fat: 0, carb: Math.round(c * f * 10) / 10, g: ml, ml, src: 'beer',
+      srcNote: `100mlあたり たんぱく質${p}g・${k}kcal・炭水化物${c}g（幅がある値は中間）` });
+  }
+}
+const DISH_SRC = { kfc: 'ケンタッキーフライドチキン公式「栄養成分表」（2026/3/25現在）の値です',
+  beer: 'メーカーが公表している栄養成分表示から計算した値です' };
 function dishItem(d) {
-  if (d.fixed != null) return { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: d.fixed, kcal: d.kcal ?? null, fat: d.fat ?? null, carb: d.carb ?? null, basis: 'unit', grams: d.g, brand: true, chips: [1, 2, 3, 4, 5] };
+  if (d.fixed != null) return { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: d.fixed, kcal: d.kcal ?? null, fat: d.fat ?? null, carb: d.carb ?? null, basis: 'unit', grams: d.g, brand: d.src || true, chips: [1, 2, 3, 4, 5] };
   let p = 0, g = 0, k = 0, fa = 0, cb = 0, ok = true, nut = true;
   for (const [c, w] of d.items) {
     const f = foodByCode.get(c);
@@ -529,12 +555,12 @@ function dishItem(d) {
 function dishNote(id) {
   const d = DISHES.find(x => x.id === id);
   if (!d) return '';
-  if (d.fixed != null) return `${DISH_SRC[d.src] || ''}（${d.unit}・可食部${d.g}g${d.srcNote ? '。' + d.srcNote : ''}）。店舗・時期により変わることがあります。`;
+  if (d.fixed != null) return `${DISH_SRC[d.src] || ''}（${d.unit}・${d.ml ? '内容量' + d.ml + 'mL' : '可食部' + d.g + 'g'}${d.srcNote ? '。' + d.srcNote : ''}）。店舗・時期により変わることがあります。`;
   return '材料の目安：' + d.items.map(([, w, l]) => `${l}${w}g`).join('、') + '。一般的な家庭の分量で、材料ごとに食品成分表から計算した目安です。';
 }
 function dishRow(it) {
   return `<button class="food" data-dishpick="${it.id}">
-    <span class="nm"><div>${esc(it.name)}</div><div class="sub">${it.brand ? '外食（公式発表値）' : '料理の目安'}・${esc(it.unit)}</div></span>
+    <span class="nm"><div>${esc(it.name)}</div><div class="sub">${it.brand ? (it.brand === 'kfc' ? '外食（公式発表値）' : '市販品（公式発表値）') : '料理の目安'}・${esc(it.unit)}</div></span>
     <span class="p">${fmt(it.protein)}g<small>/${esc(it.unit.replace(/^1/, ''))}</small></span></button>`;
 }
 function searchDishes(q) {
@@ -1337,13 +1363,13 @@ function renderSettings() {
     <p>調理前の重さで入れる場合と「1本分」「乾めん100g分」など：日本食品標準成分表（八訂）増補2023年 第1章「調理方法の概要及び重量変化率表」の重量変化率を使って換算。</p>
     <p>ごはん茶碗1杯、食パン1枚、納豆1パック、豆腐1/2丁、トマト1個、レタス1人前、くだもの1個、刺身1切れ、調理前の量（ささみ1本50gなど）、かき1個・あじ1尾・薄切り肉1枚などの重さは、自治体の資料や管理栄養士の目安量一覧などを参考にした一般的な目安です。たんぱく質の値は、すべて食品成分表から計算しています。</p>
     <p>ギリシャヨーグルト（無脂肪・無糖）の値は、米国農務省の食品データベース（USDA FoodData Central）によります（100gあたり たんぱく質10.2g・59kcal）。</p>
-    <p>「外食（公式発表値）」は、各社が公式に公表している栄養成分の値です（ケンタッキーフライドチキン「栄養成分表」2026/3/25現在）。</p>
+    <p>「外食（公式発表値）」は、各社が公式に公表している栄養成分の値です（ケンタッキーフライドチキン「栄養成分表」2026/3/25現在）。「市販品（公式発表値）」も同じく、メーカーが公表している栄養成分表示の値です（ビール類：各社の公式サイト・商品の表示、2026年11月確認。幅のある値は中間をとっています。リニューアルで変わることがあります）。</p>
     <p>「料理（目安）」は、成分表にない料理を一般的な家庭の分量で材料に分け、材料ごとに成分表の値から計算した目安です（材料と分量は各料理の記録画面に表示）。カロリーは油や砂糖の量で大きく変わるので、おおまかな目安です。</p>
     <p>プロテイン（粉末）：成分表には載っていないため、市販品（明治 ザバス ソイプロテイン100など、1食分28gでたんぱく質20.0g）の栄養成分表示から、粉の約7割（71.4%）をたんぱく質として計算しています。商品によって6〜8割程度の差があるので、使っている商品はマイリストへの登録（100gあたり）をおすすめします。カロリー・脂質・炭水化物も同じ商品（1食分28gで107kcal・脂質1.2g・炭水化物4.2g）から計算しています。</p>
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.20</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.23</p>
   </div>`;
 }
 
@@ -1492,7 +1518,7 @@ function multiEntry(cand, remember) {
 }
 function multiCandSub(cand) {
   if (cand.k === 'food') { const f = foodByCode.get(cand.id); return dispName(f.main).note; }
-  if (cand.k === 'dish') { const d = DISHES.find(x => x.id === cand.id); return d && d.fixed ? '外食' : '料理（目安）'; }
+  if (cand.k === 'dish') { const d = DISHES.find(x => x.id === cand.id); return d && d.fixed != null ? (d.src === 'kfc' ? '外食' : '市販品') : '料理（目安）'; }
   if (cand.k === 'gen') return '一般的な目安';
   return 'マイリスト';
 }
