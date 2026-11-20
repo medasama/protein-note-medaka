@@ -119,7 +119,7 @@ const FOOD_UNITS = {
   '10254': [['刺身1切れ', 12, '切れ'], ['6切れ・1人前', 70]],
   '10255': [['刺身1切れ', 12, '切れ'], ['6切れ・1人前', 70]],
   '10425': [['刺身1切れ', 12, '切れ'], ['6切れ・1人前', 70]],
-  '10241': [['刺身1切れ', 15, '切れ'], ['切り身1切れ', 80, '切れ']],
+  '10241': [['切り身1切れ', 80, '切れ'], ['刺身1切れ', 15, '切れ']],
   '10411': [['刺身1切れ', 15, '切れ'], ['切り身1切れ', 80, '切れ']],
   '10130': [['刺身1切れ', 15, '切れ'], ['切り身1切れ', 80, '切れ']],
   '10192': [['刺身1切れ', 12, '切れ'], ['切り身1切れ', 80, '切れ']],
@@ -362,6 +362,51 @@ const FOOD_UNITS = {
   // コーヒーは 1mL≒1g の目安（成分表に100mLあたりの重さの記載なし）
   '16045': [['カップ1杯 150mL', 150, '杯'], ['マグカップ1杯 250mL', 250, '杯']],
   '16064': [['1缶 185g', 185, '缶']],
+  // 野菜・果物（v1.4.27 追加。重さは可食部の一般的な目安）
+  '06214': [['中1本', 150, '本'], ['1/2本', 75, '本']],
+  '06212': [['中1本', 150, '本'], ['1/2本', 75, '本']],
+  '06245': [['1個', 30, '個']],
+  '06247': [['1個（パプリカ）', 130, '個'], ['1/2個', 65, '個']],
+  '06249': [['1個（パプリカ）', 130, '個'], ['1/2個', 65, '個']],
+  '06153': [['中1個', 180, '個'], ['1/2個', 90, '個'], ['1/4個', 45, '個']],
+  '06191': [['1本', 70, '本']],
+  '02045': [['中1本', 250, '本'], ['1/2本', 125, '本']],
+  '02010': [['1個', 50, '個']],
+  '06267': [['1束', 200, '束'], ['1/4束', 50, '束']],
+  '06132': [['輪切り2cm1切れ', 60, '切れ'], ['1/4本', 250, '本']],
+  '06134': [['輪切り2cm1切れ', 60, '切れ'], ['1/4本', 250, '本']],
+  '06226': [['1本', 100, '本'], ['1/2本', 50, '本']],
+  '06291': [['1袋', 200, '袋'], ['1/2袋', 100, '袋']],
+  '06048': [['1切れ', 50, '切れ'], ['1/8個', 150, '個']],
+  '06233': [['葉1枚', 100, '枚']],
+  '06084': [['1本', 150, '本'], ['1/3本', 50, '本']],
+  '06317': [['1節', 150, '節'], ['輪切り1枚', 20, '枚']],
+  '06032': [['1本', 8, '本']],
+  '06007': [['1本', 20, '本']],
+  '06086': [['1株', 40, '株'], ['1/4束', 70, '束']],
+  '08028': [['1パック', 100, 'パック']],
+  '06119': [['1本', 100, '本']],
+  '06036': [['1個', 70, '個']],
+  '06116': [['1本', 200, '本']],
+  '06175': [['1本', 150, '本']],
+  '06010': [['1本', 8, '本']],
+  '06207': [['1束', 100, '束']],
+  '06160': [['1株', 100, '株']],
+  '07006': [['1個', 140, '個'], ['1/2個', 70, '個']],
+  '07012': [['1粒', 15, '粒']],
+  '07054': [['1個', 85, '個']],
+  '07168': [['1個', 85, '個']],
+  '07026': [['1個', 80, '個']],
+  '07088': [['1個', 250, '個']],
+  '07049': [['1個', 180, '個']],
+  '07136': [['1個', 170, '個']],
+  '07062': [['1/2個', 105, '個']],
+  '10100': [['1切れ', 100, '切れ']],
+  '10171': [['1切れ', 80, '切れ']],
+  '10248': [['半身1枚', 100, '枚']],
+  '15035': [['1個', 100, '個']],
+  '15034': [['1個', 100, '個']],
+  '15166': [['1個', 100, '個']],
 };
 
 /* よく使う食材（一覧の表示名） */
@@ -477,7 +522,7 @@ const DISHES = [
   // おかず
   { id: 'shogayaki', name: '豚のしょうが焼き', unit: '1人前', keys: 'しょうがやき 生姜焼き ぶた', items: [['11123', 100, '豚ロース'], ['06153', 30, '玉ねぎ'], ['17007', 10, 'しょうゆ'], ['14006', 5, '油'], ['03003', 3, '砂糖']] },
   { id: 'teriyaki', name: '鶏の照り焼き', unit: '1人前', keys: 'てりやき 照焼 とり チキン', items: [['11221', 120, '鶏もも'], ['17007', 10, 'しょうゆ'], ['16025', 10, 'みりん'], ['14006', 5, '油']] },
-  { id: 'sabamiso', name: 'さばのみそ煮', unit: '1切れ', keys: 'さばのみそに 鯖の味噌煮 さば', items: [['10154', 80, 'さば'], ['17045', 10, 'みそ'], ['03003', 5, '砂糖']] },
+  { id: 'sabamiso', name: 'さばのみそ煮', unit: '1切れ', fish: 'さば', ord: 3, keys: 'さばのみそに 鯖の味噌煮 さば', items: [['10154', 80, 'さば'], ['17045', 10, 'みそ'], ['03003', 5, '砂糖']] },
   { id: 'buridaikon', name: 'ぶり大根', unit: '1人前', keys: 'ぶりだいこん ぶり', items: [['10241', 60, 'ぶり'], ['06134', 100, '大根'], ['17007', 10, 'しょうゆ'], ['03003', 5, '砂糖']] },
   { id: 'kakuni', name: '豚の角煮', unit: '1人前', keys: 'かくに ぶた', items: [['11129', 100, '豚ばら'], ['17007', 10, 'しょうゆ'], ['03003', 10, '砂糖']] },
   { id: 'hoikoro', name: '回鍋肉', unit: '1人前', keys: 'ほいこーろー ホイコーロー', items: [['11129', 60, '豚ばら'], ['06061', 100, 'キャベツ'], ['06245', 20, 'ピーマン'], ['17045', 8, 'みそ'], ['14006', 8, '油']] },
@@ -494,7 +539,14 @@ const DISHES = [
   { id: 'yakitori-tsukune', name: '焼き鳥（つくね）', unit: '1本', keys: 'やきとり 焼鳥 つくね', items: [['11230', 30, '鶏ひき肉'], ['12004', 3, '卵']] },
   { id: 'tempura', name: '天ぷら盛り合わせ', unit: '1人前', keys: 'てんぷら 天麩羅', items: [['10416', 50, 'えび天2尾'], ['02047', 30, 'さつまいも'], ['06343', 30, 'なす'], ['08057', 15, 'しいたけ']] },
   // 汁・サラダ
-  { id: 'misoshiru', name: 'みそ汁（豆腐とわかめ）', unit: '1杯', keys: 'みそしる 味噌汁 おみそ汁', items: [['17045', 12, 'みそ'], ['04033', 30, '豆腐'], ['09041', 10, 'わかめ']] },
+  // みそ汁は具を選べる（基本：みそ＋だし。具は1杯分の目安の量）
+  { id: 'misoshiru', name: 'みそ汁', unit: '1杯', keys: 'みそしる 味噌汁 おみそ汁 みそしる', items: [['17045', 12, 'みそ'], ['17021', 150, 'だし']],
+    guDef: ['tofu', 'wakame'],
+    gu: [['tofu', '豆腐', '04033', 30], ['wakame', 'わかめ', '09041', 10], ['negi', 'ねぎ', '06226', 10], ['age', '油揚げ', '04040', 5],
+      ['daikon', '大根', '06134', 30], ['ninjin', 'にんじん', '06214', 15], ['hakusai', '白菜', '06233', 30], ['tamanegi', '玉ねぎ', '06153', 30],
+      ['jaga', 'じゃがいも', '02017', 30], ['satoimo', '里いも', '02010', 30], ['gobo', 'ごぼう', '06084', 10], ['nameko', 'なめこ', '08020', 20],
+      ['shimeji', 'しめじ', '08016', 20], ['enoki', 'えのき', '08001', 20], ['horenso', 'ほうれん草', '06267', 20], ['komatsuna', '小松菜', '06086', 20],
+      ['asari', 'あさり', '10281', 20], ['shijimi', 'しじみ', '10297', 30], ['buta', '豚肉', '11129', 20], ['tamago', '卵', '12004', 50]] },
   { id: 'kenchin', name: 'けんちん汁', unit: '1杯', keys: 'けんちんじる', items: [['04032', 30, '豆腐'], ['06134', 30, '大根'], ['06214', 10, 'にんじん'], ['06084', 10, 'ごぼう'], ['02010', 20, '里いも'], ['17007', 5, 'しょうゆ'], ['14006', 3, 'ごま油']] },
   { id: 'tamagosoup', name: '卵スープ', unit: '1杯', keys: 'たまごすーぷ', items: [['12004', 25, '卵1/2個'], ['17025', 150, 'スープ']] },
   { id: 'potatosalad', name: 'ポテトサラダ', unit: '1人前', keys: 'ぽてとさらだ ポテサラ', items: [['02017', 80, 'じゃがいも'], ['06065', 15, 'きゅうり'], ['06214', 10, 'にんじん'], ['11176', 10, 'ハム'], ['17042', 15, 'マヨネーズ']] },
@@ -551,9 +603,38 @@ for (const [id, name, keys, p, k, c] of BEERS) {
       srcNote: `100mlあたり たんぱく質${p}g・${k}kcal・炭水化物${c}g（幅がある値は中間）` });
   }
 }
+/* ---------- 焼き魚・煮魚（「さば」で探すと、さば → 塩焼き → 煮付け… の順に出る） ----------
+   [生の魚のコード, 魚, 検索用の言葉, 単位, 生の重さg, 焼きのコード, 焼きの重量変化率%, 煮付け用のコード, その重量変化率%, 料理の種類]
+   重さは生の切り身・1尾の重さに、成分表の重量変化率をかけた調理後の重さ */
+const FISH_DISHES = [
+  ['10154', 'さば', 'さば 鯖 サバ', '1切れ', 80, '10156', 77, '10155', 84, ['shio', 'nituke']],
+  ['10003', 'あじ', 'あじ 鯵 アジ', '1尾', 70, '10005', 72, '10004', 87, ['shio', 'nituke']],
+  ['10047', 'いわし', 'いわし 鰯 イワシ', '1尾', 50, '10049', 75, '10048', 81, ['shio', 'nituke']],
+  ['10173', 'さんま', 'さんま 秋刀魚 サンマ', '1尾', 100, '10174', 78, null, null, ['shio']],
+  ['10241', 'ぶり', 'ぶり 鰤 ブリ', '1切れ', 80, '10242', 82, null, null, ['shio', 'teri']],
+  ['10100', 'かれい', 'かれい 鰈 カレイ', '1切れ', 100, '10102', 81, '10101', 91, ['nituke', 'shio']],
+  ['10171', 'さわら', 'さわら 鰆 サワラ', '1切れ', 80, '10172', 79, null, null, ['shio']],
+  ['10205', 'たら', 'たら 鱈 タラ', '1切れ', 100, '10206', 65, '10205', 100, ['shio', 'nituke']],
+  ['10248', 'ほっけ', 'ほっけ ホッケ 𩸽', '1人前', 100, '10412', 89, null, null, ['shio']],
+];
+const SEASON_NITUKE = [['17007', 9, 'しょうゆ'], ['03003', 4, '砂糖'], ['16025', 6, 'みりん']];
+const SEASON_TERI = [['17007', 9, 'しょうゆ'], ['16025', 9, 'みりん'], ['03003', 3, '砂糖']];
+for (const [, fish, keys, unit, raw, yaki, yr, ni, nr, kinds] of FISH_DISHES) {
+  kinds.forEach((k, i) => {
+    const ord = i + 1;
+    if (k === 'shio') DISHES.push({ id: `fish-${fish}-shio`, name: `${fish}の塩焼き`, unit, fish, ord, keys: `${keys} 塩焼き しおやき 焼き魚 焼魚`, items: [[yaki, Math.round(raw * yr / 10) / 10, `${fish}（焼き）`]] });
+    if (k === 'teri') DISHES.push({ id: `fish-${fish}-teri`, name: `${fish}の照り焼き`, unit, fish, ord, keys: `${keys} 照り焼き てりやき 焼き魚`, items: [[yaki, Math.round(raw * yr / 10) / 10, `${fish}（焼き）`], ...SEASON_TERI] });
+    if (k === 'nituke') DISHES.push({ id: `fish-${fish}-nituke`, name: `${fish}の煮付け`, unit, fish, ord, keys: `${keys} 煮付け につけ 煮魚 煮つけ`, items: [[ni, Math.round(raw * nr / 10) / 10, `${fish}（煮）`], ...SEASON_NITUKE] });
+  });
+}
+
+const FISH_KEYS = {};
+const FISH_RAW = {};
+for (const [code, fish, keys] of FISH_DISHES) { FISH_KEYS[fish] = keys.split(' ').map(norm); FISH_RAW[fish] = code; }
 const DISH_SRC = { kfc: 'ケンタッキーフライドチキン公式「栄養成分表」（2026/3/25現在）の値です',
   beer: 'メーカーが公表している栄養成分表示から計算した値です' };
-function dishItem(d) {
+function dishItem(d, sel) {
+  if (d.gu) return guDishItem(d, sel);
   if (d.fixed != null) return { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: d.fixed, kcal: d.kcal ?? null, fat: d.fat ?? null, carb: d.carb ?? null, basis: 'unit', grams: d.g, brand: d.src || true, chips: [1, 2, 3, 4, 5] };
   let p = 0, g = 0, k = 0, fa = 0, cb = 0, ok = true, nut = true;
   for (const [c, w] of d.items) {
@@ -566,9 +647,20 @@ function dishItem(d) {
   return ok ? { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: r1(p), kcal: nut ? Math.round(k) : null, fat: nut ? r1(fa) : null, carb: nut ? r1(cb) : null, basis: 'unit', grams: Math.round(g),
     chips: /人前|杯/.test(d.unit) ? [0.5, 1, 1.5, 2] : [1, 2, 3, 4] } : null;
 }
-function dishNote(id) {
-  const d = DISHES.find(x => x.id === id);
-  if (!d) return '';
+/* 具を選べる料理（みそ汁）：選んだ具を足して計算する。sel が無ければ前回選んだ具、それも無ければ guDef */
+function guDishItem(d, sel) {
+  const last = (state.recent['dish:' + d.id] || {}).gu;
+  sel = (sel || last || d.guDef).filter(k => d.gu.some(g => g[0] === k));
+  const items = d.items.concat(d.gu.filter(g => sel.includes(g[0])).map(([, l, c, w]) => [c, w, l]));
+  const it = dishItem(Object.assign({}, d, { gu: null, items }));
+  if (!it) return null;
+  const labels = d.gu.filter(g => sel.includes(g[0])).map(g => g[1]);
+  return Object.assign(it, { name: `${d.name}（${labels.length ? labels.join('・') : '具なし'}）`, title: d.name, sel, guItems: items });
+}
+function dishNote(id, sel) {
+  const d0 = DISHES.find(x => x.id === id);
+  if (!d0) return '';
+  const d = d0.gu ? Object.assign({}, d0, { items: guDishItem(d0, sel).guItems }) : d0;
   if (d.fixed != null) return `${DISH_SRC[d.src] || ''}（${d.unit}・${d.ml ? '内容量' + d.ml + 'mL' : '可食部' + d.g + 'g'}${d.srcNote ? '。' + d.srcNote : ''}）。店舗・時期により変わることがあります。`;
   return '材料の目安：' + d.items.map(([, w, l]) => `${l}${w}g`).join('、') + '。一般的な家庭の分量で、材料ごとに食品成分表から計算した目安です。';
 }
@@ -633,44 +725,15 @@ function unitsFor(f) {
     out.push({ l: '紙パック・缶 1本 350mL', g: r1(350 * mr.r / 100), c: '本', kind: mr.est ? 'mlest' : 'ml' });
     out.push({ l: 'ペットボトル1本 500mL', g: r1(500 * mr.r / 100), c: '本', kind: mr.est ? 'mlest' : 'ml' });
   }
-  if (!FOOD_UNITS[f.code] && f.ml && sizeTier(f) && ['14', '17', '03'].includes(f.code.slice(0, 2))) {
-    out.push({ l: '大さじ1', g: 15 * f.ml / 100, c: '杯', kind: 'spoon', ml: 15 });
-    out.push({ l: '小さじ1', g: 5 * f.ml / 100, c: '杯', kind: 'spoon', ml: 5 });
-  }
   for (const u of FOOD_UNITS[f.code] || []) {
     if (Array.isArray(u)) out.push({ l: u[0], g: u[1], c: u[2] || null, kind: 'est' });
     else if (f.rate) out.push({ l: u.l, g: r1(u.raw * f.rate / 100), c: u.c || null, kind: 'raw', raw: u.raw });
   }
   return out;
 }
-/* 少しずつ使う食品（油・調味料・ごま・のりなど）は、量の初期値と候補を小さくする */
-const TINY_CODES = new Set(['13038', '05017', '05018', '05019', '05042', '06223', '06103', '06365', '06366', '06239', '06095', '06096', '06322',
-  '10091', '10092', '10447', '10157', '01077', '01078', '01079', '02028', '02029', '02030', '02031', '02032', '02033', '02034', '02035', '02070']);
-const SMALL_CODES = new Set(['04029', '04030', '04082', '04096', '04109', '04110', '10034', '10045', '10421', '10055', '10056', '10324', '10325', '10326', '10330', '10314', '10093',
-  '06104', '06105', '06280', '06323', '17141', '17030', '17105', '17032', '17095', '17034', '17035', '17051', '17052', '17053', '17126', '17049', '17050']);
-// 調味料類のうち、汁物やソースとしてふつうの量を使うもの
-const NORMAL_17 = new Set(['17130', '17019', '17131', '17020', '17132', '17021', '17148', '17022', '17023', '17024', '17025', '17026', '17140', '17029', '17142', '17143', '17033', '17037', '17109']);
-function sizeTier(f) {
-  if (!f || !f.code) return null;
-  const c = f.code, g = c.slice(0, 2);
-  if (SMALL_CODES.has(c)) return 'small';
-  if (TINY_CODES.has(c)) return 'tiny';
-  if (g === '14' || g === '03') return 'tiny';
-  if (g === '17') return NORMAL_17.has(c) ? null : 'tiny';
-  if (g === '05') return 'small'; // ナッツ・種実
-  if (g === '09' && /素干し|乾|ほしのり|焼きのり|味付けのり|塩昆布|板わかめ/.test(f.name) && !/水戻し|水煮/.test(f.name)) return 'tiny';
-  return null;
-}
-const AMOUNT_SET = {
-  tiny: { g: [3, 5, 10, 15, 30], ml: [5, 10, 15, 30], def: 10, defMl: 15 },
-  small: { g: [5, 10, 20, 30, 50], ml: [10, 15, 30, 50], def: 20, defMl: 30 },
-  normal: { g: [50, 100, 150, 200], ml: [100, 150, 200, 350, 500], def: 100, defMl: 200 },
-};
-function amountSet(f) { return AMOUNT_SET[sizeTier(f) || 'normal']; }
 function unitNote(u, f) {
   if (u.kind === 'egg') return '卵の重さは農林水産省「鶏卵の規格」の重量区分の中央値から、殻の分（成分表の廃棄率）' + (f.rate ? `と調理による重さの変化（重量変化率${f.rate}%）` : '') + 'を除いて計算しています。';
   if (u.kind === 'ml') return `成分表の備考（100mL＝${f.ml}g）から計算しています。`;
-  if (u.kind === 'spoon') return `計量スプーン（大さじ15mL・小さじ5mL）すりきりの量を、成分表の備考（100mL＝${f.ml}g）で重さにしています。`;
   if (u.kind === 'mlest') return '1mL＝1gの目安で計算しています（成分表に換算値の記載がないため）。';
   if (u.kind === 'raw') return `調理前${u.raw}g（一般的な目安）に、成分表の重量変化率${f.rate}%をかけた重さです。`;
   return '1個・1枚などの重さは一般的な目安です。実際の重さがわかるときは「g」で入れてください。';
@@ -678,6 +741,7 @@ function unitNote(u, f) {
 
 /* 検索の言い換え（漢字・通称 → 成分表の表記） */
 const ALIASES = {
+  '豚まん': ['肉まん'], 'ぶたまん': ['肉まん'], 'にくまん': ['肉まん'], '中華まん': ['肉まん', 'あんまん'], 'ちゅうかまん': ['肉まん', 'あんまん'],
   // チーズ（商品の呼び方 → 成分表の名前）
   'カッテージチーズ': ['カテージ'], 'カッテージ': ['カテージ'], 'カテージチーズ': ['カテージ'],
   '粉チーズ': ['パルメザン'], 'こなちーず': ['パルメザン'], 'パルメザンチーズ': ['パルメザン'], 'パルミジャーノ': ['パルメザン'],
@@ -847,13 +911,28 @@ function splitName(name) {
 
 /* 成分表の名前を読みやすく：「こめ ［うるち米製品］ 焼きおにぎり」→「こめ 焼きおにぎり」（［］の中身は2行目へ）
    「そば そば 生」のように同じ言葉が続くときは1つに */
+const DISP_DROP = new Set(['根', '果実', 'りん茎', '塊茎', '塊根', '球茎', '結球葉', '花序', '茎葉', '根茎', '若茎', '若ざや', '未熟種子', '子実体', '葉柄',
+  'じょうのう', '軟白', '通年平均', '土耕栽培', '菌床栽培', '成魚']);
+const DISP_KEEP_LEAF = new Set(['だいこん', 'かぶ', 'セロリ', 'さつまいも', 'すぐきな']); // 根と葉の両方を食べるもの：「葉」は残す
+// ふだんの呼び方（種類の名前 → ふつうの名前。元の名前は2行目に）
+const DISP_COMMON = { 'まさば': 'さば', 'まあじ': 'あじ', 'まいわし': 'いわし', 'しろさけ': 'さけ', 'くろまぐろ': 'まぐろ', 'するめいか': 'いか', 'まだこ': 'たこ',
+  '青ピーマン': 'ピーマン', '赤色トマト': 'トマト', '赤色ミニトマト': 'ミニトマト', '西洋かぼちゃ': 'かぼちゃ', 'うんしゅうみかん': 'みかん', 'りょくとうもやし': 'もやし',
+  '根深ねぎ': '長ねぎ', 'ぶなしめじ': 'しめじ', 'キウイフルーツ': 'キウイ', '日本なし': 'なし', 'スイートコーン': 'とうもろこし', 'まがれい': 'かれい', 'まだら': 'たら' };
+const DISP_PHRASE = [['まんじゅう 中華まんじゅう ', ''], ['いんげんまめ さやいんげん', 'さやいんげん'], ['しいたけ 生しいたけ', 'しいたけ'], ['かき 甘がき', 'かき']];
 function dispName(name) {
   const notes = [];
   let n = String(name || '').replace(/［([^］]*)］|＜([^＞]*)＞/g, (_, a, b) => { notes.push(a || b); return ' '; });
-  const words = n.split(/[\s　]+/).filter(Boolean).filter((w, i, arr) => w !== arr[i - 1]);
+  let words = n.split(/[\s　]+/).filter(Boolean).filter((w, i, arr) => w !== arr[i - 1]);
+  const base = words[0];
+  // 「根」「果実」などの部位、「通年平均」などの説明、最後の「生」は表示しない（ゆで・焼きなどは残す）
+  words = words.filter((w, i) => i === 0 || !((DISP_DROP.has(w) && !(w === '根' && base === 'すぐきな')) || (w === '葉' && !DISP_KEEP_LEAF.has(base))));
+  if (words.length > 1 && words[words.length - 1] === '生') words.pop();
+  if (DISP_COMMON[words[0]]) { notes.unshift(words[0]); words[0] = DISP_COMMON[words[0]]; }
   n = words.join(' ');
+  for (const [a, b] of DISP_PHRASE) if (n.startsWith(a)) n = b + n.slice(a.length);
   return { name: n || String(name || ''), note: notes.join('・') };
 }
+
 
 /* ---------- 必要量の計算 ---------- */
 function bracketIndex(age) {
@@ -931,7 +1010,7 @@ function addEntry(d, entry) {
   if (entry.refId) {
     const k = `${entry.kind}:${entry.refId}`;
     const r = state.recent[k] || { n: 0 };
-    state.recent[k] = { n: r.n + 1, v: entry.basis === '100g' ? entry.grams : entry.qty, t: Date.now() };
+    state.recent[k] = { n: r.n + 1, v: entry.basis === '100g' ? entry.grams : entry.qty, t: Date.now(), ...(entry.gu ? { gu: entry.gu } : {}) };
   }
   saveState();
 }
@@ -1427,7 +1506,6 @@ function renderSettings() {
     <p>日本食品標準成分表（八訂）増補2023年から引用（文部科学省 科学技術・学術審議会 資源調査分科会、2026年3月27日掲載のデータ）。「たんぱく質」の列の値を使用。カロリー・PFCを表示するときは、同じ成分表の「エネルギー（kcal）」「脂質」「炭水化物」の列を使用（PFCの割合は、たんぱく質・炭水化物を1gあたり4kcal、脂質を9kcalとして計算）。</p>
     <h3>個数で入れるときの重さ</h3>
     <p>卵：農林水産省「鶏卵の規格」（畜産物の価格安定に関する法律施行規則の規定に基づく鶏卵の規格）の重量区分（例：M 58g以上64g未満）の中央値から、成分表の廃棄率（殻）を除いて計算。目玉焼きなどは、さらに成分表の重量変化率をかけています。</p>
-    <p>油・調味料・砂糖の大さじ・小さじ：大さじ15mL・小さじ5mL（すりきり）を、成分表の備考「100mL＝◯g」で重さに換算。備考に換算値がないもの（バターなど）は大さじ・小さじを出さず、gで入れる形です。</p>
     <p>飲み物のmL：成分表の備考に「100mL＝◯g」がある食品はその値で換算。記載がない飲み物（豆乳・お茶・コーヒーなど）は1mL＝1gの目安で換算し、記録に「約・目安」と表示（成分表の飲み物の換算値はほとんどが100mL＝97〜108gの範囲）。</p>
     <p>調理前の重さで入れる場合と「1本分」「乾めん100g分」など：日本食品標準成分表（八訂）増補2023年 第1章「調理方法の概要及び重量変化率表」の重量変化率を使って換算。</p>
     <p>ごはん茶碗1杯、食パン1枚、納豆1パック、豆腐1/2丁、トマト1個、レタス1人前、くだもの1個、刺身1切れ、調理前の量（ささみ1本50gなど）、かき1個・あじ1尾・薄切り肉1枚などの重さは、自治体の資料や管理栄養士の目安量一覧などを参考にした一般的な目安です。たんぱく質の値は、すべて食品成分表から計算しています。</p>
@@ -1438,7 +1516,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.27</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.29</p>
   </div>`;
 }
 
@@ -1560,13 +1638,23 @@ function multiCands(term) {
   const gens = GENERIC_ITEMS.filter(it => (it.need ? it.need.test(term) : norm(it.name + ' ' + it.keys).includes(nq)));
   const dishes = searchDishes(q);
   for (const t of extra) for (const d of searchDishes(t)) if (!dishes.some(x => x.id === d.id)) dishes.push(d);
-  const dTop = res.length ? dishes.filter(d => nq.length >= 3 && norm(d.name).startsWith(nq)) : dishes;
-  const dLow = dishes.filter(d => !dTop.includes(d));
+  // 魚の名前だけで探したとき：魚（生）→ 塩焼き → 煮付け… の順に
+  const srcD = d => DISHES.find(x => x.id === d.id) || {}; // searchDishes は表示用に作り直したものを返すので、元の定義を見る
+  const fishKey = d => { const o = srcD(d); return o.fish && FISH_KEYS[o.fish] && FISH_KEYS[o.fish].includes(nq); };
+  const fishD = res.length ? dishes.filter(fishKey).sort((a, b) => srcD(a).ord - srcD(b).ord) : [];
+  if (fishD.length) { // 生の魚（切り身・1尾）を先頭に
+    const raw = foodByCode.get(FISH_RAW[srcD(fishD[0]).fish]);
+    if (raw) res = [raw].concat(res.filter(f => f !== raw));
+  }
+  const dTop = res.length ? dishes.filter(d => !fishD.includes(d) && nq.length >= 3 && norm(d.name).startsWith(nq)) : dishes;
+  const dLow = dishes.filter(d => !dTop.includes(d) && !fishD.includes(d));
   const out = [
     ...mine.map(it => ({ k: 'ml', id: it.id })),
     ...dTop.map(d => ({ k: 'dish', id: d.id })),
     ...gens.map(g => ({ k: 'gen', id: g.id })),
-    ...res.slice(0, 5).map(f => ({ k: 'food', id: f.code, q: term })),
+    ...res.slice(0, fishD.length ? 1 : 0).map(f => ({ k: 'food', id: f.code, q: term })),
+    ...fishD.map(d => ({ k: 'dish', id: d.id })),
+    ...res.slice(fishD.length ? 1 : 0, 5).map(f => ({ k: 'food', id: f.code, q: term })),
     ...dLow.map(d => ({ k: 'dish', id: d.id })),
     ...res.slice(5, 40).map(f => ({ k: 'food', id: f.code, q: term })),
   ];
@@ -1963,8 +2051,7 @@ function amountState(f, opts = {}) {
   // 飲み物は「量（mL）で」を基本にする
   // ただしコーヒーのように専用の「1杯」があるものは個数で
   let mode = drink && !FOOD_UNITS[f.code] ? 'g' : units.length ? 'unit' : 'g';
-  const aset = amountSet(f);
-  let unitIdx = 0, count = 1, value = drink ? 200 : aset.def, raw = 100, unit = drink ? 'mL' : 'g';
+  let unitIdx = 0, count = 1, value = drink ? 200 : 100, raw = 100, unit = drink ? 'mL' : 'g';
   if (src && src.amode) {
     mode = src.amode;
     if (mode === 'unit') { const k = units.findIndex(u => u.l === src.ulabel); unitIdx = k >= 0 ? k : 0; count = src.count || 1; if (k < 0) { mode = 'g'; value = src.grams; } }
@@ -1977,8 +2064,8 @@ function amountState(f, opts = {}) {
     if (mode === 'unit') { const k = units.findIndex(u => u.l === last.ulabel); unitIdx = k >= 0 ? k : 0; if (!units.length) mode = 'g'; }
     if (mode === 'raw') raw = last.raw || 100;
     if (mode === 'g') {
-      if (last.unit === 'mL' && mr) { unit = 'mL'; value = last.ml || (drink ? 200 : aset.defMl); }
-      else if (last.unit === 'g' || !drink) { unit = 'g'; value = last.g || aset.def; }
+      if (last.unit === 'mL' && mr) { unit = 'mL'; value = last.ml || 200; }
+      else if (last.unit === 'g' || !drink) { unit = 'g'; value = last.g || 100; }
     }
   }
   // 「6Pチーズ」「さけるチーズ」のように、探した言葉がそのまま単位の名前に入っていれば、その単位で
@@ -2009,7 +2096,7 @@ function openAmount(code, opts = {}) {
     <div class="tiny muted">100gあたり たんぱく質 ${fmt(f.p)}g${f.f === 1 ? '（推定値）' : f.f === 2 ? '（微量）' : ''}</div>
     <div class="meal-pick">${MEALS.map(([m, l]) => `<button class="chip ${m === sheetCtx.meal ? 'on' : ''}" data-meal="${m}">${l}</button>`).join('')}</div>
     <div class="seg" id="amodeSeg">
-      ${units.length ? `<button data-amode="unit">${units.every(u => u.kind === 'spoon') ? '大さじ・小さじで' : '個数で'}</button>` : ''}
+      ${units.length ? `<button data-amode="unit">個数で</button>` : ''}
       <button data-amode="g">${mr ? '量（mL・g）で' : '重さ（g）で'}</button>
       ${f.rate ? `<button data-amode="raw">調理前の重さで</button>` : ''}
     </div>
@@ -2047,7 +2134,7 @@ function renderAmountBody() {
         <input id="amt" type="number" inputmode="decimal" min="0" step="any" value="${fmt(c.value)}">
         ${mlRate(f) ? `<div class="seg" style="margin:0;flex:none"><button data-unit="mL" class="${c.unit === 'mL' ? 'on' : ''}">mL</button><button data-unit="g" class="${c.unit === 'g' ? 'on' : ''}">g</button></div>` : '<span class="u">g</span>'}
       </div>
-      <div class="chips">${(c.unit === 'mL' ? amountSet(f).ml : amountSet(f).g).map(g => `<button class="chip" data-g="${g}">${g}${c.unit === 'mL' ? 'mL' : 'g'}</button>`).join('')}</div>
+      <div class="chips">${(c.unit === 'mL' ? [100, 150, 200, 350, 500] : [50, 100, 150, 200]).map(g => `<button class="chip" data-g="${g}">${g}${c.unit === 'mL' ? 'mL' : 'g'}</button>`).join('')}</div>
       <div class="tiny muted" style="margin-top:6px">${c.unit === 'mL' ? esc(mlNote(f)) : '食べる部分の重さを入れてください'}</div>`;
     $('#amt').addEventListener('input', ev => { c.value = Number(ev.target.value) || 0; updAmount(); });
   }
@@ -2103,6 +2190,7 @@ function itemEntryData(it, v, meal, mlId) {
     meal, mlId: mlId || undefined, kind: it.kind, refId: it.id, name: it.name, unit: it.unit, basis: is100 ? '100g' : 'unit',
     perUnit: it.protein, qty: is100 ? null : v, grams: is100 ? v : null, protein: itemProtein(it, v),
     perKcal: it.kcal ?? null, perFat: it.fat ?? null, perCarb: it.carb ?? null, ...itemNut(it, v),
+    ...(it.sel ? { gu: it.sel.slice() } : {}),
   };
 }
 /* 記録したあと：まとめて入力の途中なら候補の画面へ戻る */
@@ -2278,6 +2366,7 @@ function deleteMl(it) {
 
 /* マイリストの市販品・メニューや、その記録の量を入れる。item = {kind, id, name, unit, protein, basis} */
 function itemFromEntry(e) {
+  if (e.kind === 'dish') { const d = DISHES.find(x => x.id === e.refId); if (d && d.gu) return guDishItem(d, e.gu || d.guDef); }
   const it = { kind: e.kind || 'my', id: e.refId || e.myId, name: e.name, unit: e.unit || '1食', protein: e.perUnit, basis: e.basis || 'unit', kcal: e.perKcal ?? null, fat: e.perFat ?? null, carb: e.perCarb ?? null };
   // 以前の記録で1単位あたりのカロリーが無いものは、今のデータから補う
   if (it.kcal == null) {
@@ -2298,24 +2387,27 @@ function openItemAmount(item, entry, defVal, mlId) {
   const val = entry ? (is100 ? entry.grams : entry.qty) : (defVal || (is100 ? 100 : 1));
   sheetCtx = { meal, item, val, editing: entry || null, mlId: entry ? entry.mlId : mlId };
   const chips = item.chips || (is100 ? [50, 100, 150, 200] : [0.5, 1, 1.5, 2, 3]);
-  openSheet(esc(entry ? dispName(entry.name).name : item.name), `
-    ${item.kind === 'gen' ? '' : `<div class="tiny muted">${is100 ? '100g' : esc(item.unit)}あたり たんぱく質 ${fmt(item.protein)}g</div>`}
+  openSheet(esc(item.title || (entry ? dispName(entry.name).name : item.name)), `
+    ${item.kind === 'gen' ? '' : `<div class="tiny muted" id="perUnit">${is100 ? '100g' : esc(item.unit)}あたり たんぱく質 ${fmt(item.protein)}g</div>`}
     <div class="meal-pick">${MEALS.map(([mm, l]) => `<button class="chip ${mm === meal ? 'on' : ''}" data-meal="${mm}">${l}</button>`).join('')}</div>
     <div class="amount-box"><input id="qty" type="number" inputmode="decimal" min="0" step="any" value="${fmt(val)}"><span class="u">${is100 ? 'g' : '× ' + esc(item.unit)}</span></div>
     <div class="chips">${chips.map(q => `<button class="chip" data-q="${q}">${q}${is100 ? 'g' : ''}</button>`).join('')}</div>
+    ${item.sel ? `<div class="gu-head">具（タップで選ぶ）</div><div class="chips gu">${(DISHES.find(x => x.id === item.id).gu).map(([k, l]) => `<button class="chip ${item.sel.includes(k) ? 'on' : ''}" data-gu="${k}">${l}</button>`).join('')}</div>` : ''}
     ${item.kind === 'gen' ? `<div class="note">${esc((GENERIC_ITEMS.find(g => g.id === item.id) || {}).note || '')}</div>` : ''}
-    ${item.kind === 'dish' ? `<div class="note">${esc(dishNote(item.id))}</div>` : ''}
+    ${item.kind === 'dish' ? `<div class="note" id="dishNote">${esc(dishNote(item.id, item.sel))}</div>` : ''}
     <div class="result"><span>たんぱく質</span><b id="calc">0g</b></div>
     <button class="btn block" id="saveMy">${entry ? '修正する' : '記録する'}</button>
     ${entry ? '<div class="meal-actions"><button class="btn danger small block" id="delEntry">この記録を削除</button></div>' : ''}
   `, sh => {
     const qty = $('#qty', sh);
     const upd = () => {
+      const item = sheetCtx.item; // みそ汁の具を変えると item が作り直されるので、毎回 sheetCtx から
       $('#calc', sh).textContent = `${fmt(itemProtein(item, sheetCtx.val))}g`;
       if (showNut() && item.kcal != null) $('#calc', sh).insertAdjacentHTML('beforeend', `<span class="tiny muted" style="font-weight:400">　${itemNut(item, sheetCtx.val).kcal}kcal</span>`);
       $('#saveMy', sh).disabled = !(Number(sheetCtx.val) > 0);
     };
     qty.addEventListener('input', () => { sheetCtx.val = Number(qty.value) || 0; upd(); });
+    sheetCtx.upd = upd;
     upd();
   }, { editing: !!entry });
 }
@@ -2336,7 +2428,7 @@ function itemNut(item, val) { const v = Number(val) || 0; return nutOf(item, ite
 function entryNut(e) {
   if (e.kcal !== undefined) return { kcal: e.kcal, fat: e.fat ?? null, carb: e.carb ?? null };
   if (e.code && foodByCode.has(e.code)) return foodNut(foodByCode.get(e.code), e.grams);
-  if (e.kind === 'dish') { const d = DISHES.find(x => x.id === e.refId); const it = d && dishItem(d); if (it) return itemNut(it, e.qty); }
+  if (e.kind === 'dish') { const d = DISHES.find(x => x.id === e.refId); const it = d && dishItem(d, d.gu ? (e.gu || d.guDef) : undefined); if (it) return itemNut(it, e.qty); }
   if (e.kind === 'gen') { const g = GENERIC_ITEMS.find(x => x.id === e.refId); if (g) return itemNut(g, e.grams); }
   if (e.mlId) { const m = state.myList.find(x => x.id === e.mlId); if (m && m.kcal != null && m.kind !== 'food') return itemNut(mlItem(m), m.basis === '100g' ? e.grams : e.qty); }
   return { kcal: null, fat: null, carb: null };
@@ -2499,6 +2591,17 @@ document.addEventListener('click', ev => {
   if (ds.pick) { openAmount(ds.pick); return; }
   if (ds.hist) { addFromHistory(Number(ds.hist)); return; }
   if (ds.mlrec) { addFromMl(ds.mlrec); return; }
+  if (ds.gu && sheetCtx && sheetCtx.item && sheetCtx.item.sel) { // みそ汁の具を選ぶ
+    const it = sheetCtx.item;
+    const sel = it.sel.includes(ds.gu) ? it.sel.filter(k => k !== ds.gu) : it.sel.concat(ds.gu);
+    const d = DISHES.find(x => x.id === it.id);
+    sheetCtx.item = guDishItem(d, sel);
+    b.classList.toggle('on', sel.includes(ds.gu));
+    const pu = $('#perUnit'); if (pu) pu.textContent = `${sheetCtx.item.unit}あたり たんぱく質 ${fmt(sheetCtx.item.protein)}g`;
+    const dn = $('#dishNote'); if (dn) dn.textContent = dishNote(d.id, sel);
+    if (sheetCtx.upd) sheetCtx.upd();
+    return;
+  }
   if (ds.dishpick) { const d = DISHES.find(x => x.id === ds.dishpick); const it = d && dishItem(d); if (it) openItemAmount(it, null, (state.recent['dish:' + it.id] || {}).v || 1); return; }
   if (ds.genpick) { const g = GENERIC_ITEMS.find(x => x.id === ds.genpick); if (g) openItemAmount(g, null, (state.recent['gen:' + g.id] || {}).v || g.defVal); return; }
   if (ds.mladj) { adjustMl(ds.mladj); return; }
@@ -2522,7 +2625,7 @@ document.addEventListener('click', ev => {
     if (ds.amode === 'g') {
       const mr = isDrink(f) ? mlRate(f) : null;
       if (mr) { sheetCtx.unit = 'mL'; sheetCtx.value = g ? r1(g * 100 / mr.r) : 200; }
-      else { sheetCtx.unit = 'g'; sheetCtx.value = g || amountSet(f).def; }
+      else { sheetCtx.unit = 'g'; sheetCtx.value = g || 100; }
     }
     if (ds.amode === 'raw' && f.rate && g) sheetCtx.raw = r1(g * 100 / f.rate);
     renderAmountBody();

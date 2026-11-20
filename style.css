@@ -402,3 +402,5 @@ details.fold[open] summary{margin-bottom:6px}
   #sheet.editing #saveAmt,#sheet.editing #saveMy{background:#6fd3e6;color:#0e2233}
   .note{color:#f5dfae}
 }
+.gu-head{font-size:.85rem;font-weight:700;color:var(--muted);margin:10px 2px 4px}
+.chips.gu .chip{padding:7px 12px}
