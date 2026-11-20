@@ -633,15 +633,44 @@ function unitsFor(f) {
     out.push({ l: '紙パック・缶 1本 350mL', g: r1(350 * mr.r / 100), c: '本', kind: mr.est ? 'mlest' : 'ml' });
     out.push({ l: 'ペットボトル1本 500mL', g: r1(500 * mr.r / 100), c: '本', kind: mr.est ? 'mlest' : 'ml' });
   }
+  if (!FOOD_UNITS[f.code] && f.ml && sizeTier(f) && ['14', '17', '03'].includes(f.code.slice(0, 2))) {
+    out.push({ l: '大さじ1', g: 15 * f.ml / 100, c: '杯', kind: 'spoon', ml: 15 });
+    out.push({ l: '小さじ1', g: 5 * f.ml / 100, c: '杯', kind: 'spoon', ml: 5 });
+  }
   for (const u of FOOD_UNITS[f.code] || []) {
     if (Array.isArray(u)) out.push({ l: u[0], g: u[1], c: u[2] || null, kind: 'est' });
     else if (f.rate) out.push({ l: u.l, g: r1(u.raw * f.rate / 100), c: u.c || null, kind: 'raw', raw: u.raw });
   }
   return out;
 }
+/* 少しずつ使う食品（油・調味料・ごま・のりなど）は、量の初期値と候補を小さくする */
+const TINY_CODES = new Set(['13038', '05017', '05018', '05019', '05042', '06223', '06103', '06365', '06366', '06239', '06095', '06096', '06322',
+  '10091', '10092', '10447', '10157', '01077', '01078', '01079', '02028', '02029', '02030', '02031', '02032', '02033', '02034', '02035', '02070']);
+const SMALL_CODES = new Set(['04029', '04030', '04082', '04096', '04109', '04110', '10034', '10045', '10421', '10055', '10056', '10324', '10325', '10326', '10330', '10314', '10093',
+  '06104', '06105', '06280', '06323', '17141', '17030', '17105', '17032', '17095', '17034', '17035', '17051', '17052', '17053', '17126', '17049', '17050']);
+// 調味料類のうち、汁物やソースとしてふつうの量を使うもの
+const NORMAL_17 = new Set(['17130', '17019', '17131', '17020', '17132', '17021', '17148', '17022', '17023', '17024', '17025', '17026', '17140', '17029', '17142', '17143', '17033', '17037', '17109']);
+function sizeTier(f) {
+  if (!f || !f.code) return null;
+  const c = f.code, g = c.slice(0, 2);
+  if (SMALL_CODES.has(c)) return 'small';
+  if (TINY_CODES.has(c)) return 'tiny';
+  if (g === '14' || g === '03') return 'tiny';
+  if (g === '17') return NORMAL_17.has(c) ? null : 'tiny';
+  if (g === '05') return 'small'; // ナッツ・種実
+  if (g === '09' && /素干し|乾|ほしのり|焼きのり|味付けのり|塩昆布|板わかめ/.test(f.name) && !/水戻し|水煮/.test(f.name)) return 'tiny';
+  return null;
+}
+const AMOUNT_SET = {
+  tiny: { g: [3, 5, 10, 15, 30], ml: [5, 10, 15, 30], def: 10, defMl: 15 },
+  small: { g: [5, 10, 20, 30, 50], ml: [10, 15, 30, 50], def: 20, defMl: 30 },
+  normal: { g: [50, 100, 150, 200], ml: [100, 150, 200, 350, 500], def: 100, defMl: 200 },
+};
+function amountSet(f) { return AMOUNT_SET[sizeTier(f) || 'normal']; }
 function unitNote(u, f) {
   if (u.kind === 'egg') return '卵の重さは農林水産省「鶏卵の規格」の重量区分の中央値から、殻の分（成分表の廃棄率）' + (f.rate ? `と調理による重さの変化（重量変化率${f.rate}%）` : '') + 'を除いて計算しています。';
   if (u.kind === 'ml') return `成分表の備考（100mL＝${f.ml}g）から計算しています。`;
+  if (u.kind === 'spoon') return `計量スプーン（大さじ15mL・小さじ5mL）すりきりの量を、成分表の備考（100mL＝${f.ml}g）で重さにしています。`;
   if (u.kind === 'mlest') return '1mL＝1gの目安で計算しています（成分表に換算値の記載がないため）。';
   if (u.kind === 'raw') return `調理前${u.raw}g（一般的な目安）に、成分表の重量変化率${f.rate}%をかけた重さです。`;
   return '1個・1枚などの重さは一般的な目安です。実際の重さがわかるときは「g」で入れてください。';
@@ -1398,6 +1427,7 @@ function renderSettings() {
     <p>日本食品標準成分表（八訂）増補2023年から引用（文部科学省 科学技術・学術審議会 資源調査分科会、2026年3月27日掲載のデータ）。「たんぱく質」の列の値を使用。カロリー・PFCを表示するときは、同じ成分表の「エネルギー（kcal）」「脂質」「炭水化物」の列を使用（PFCの割合は、たんぱく質・炭水化物を1gあたり4kcal、脂質を9kcalとして計算）。</p>
     <h3>個数で入れるときの重さ</h3>
     <p>卵：農林水産省「鶏卵の規格」（畜産物の価格安定に関する法律施行規則の規定に基づく鶏卵の規格）の重量区分（例：M 58g以上64g未満）の中央値から、成分表の廃棄率（殻）を除いて計算。目玉焼きなどは、さらに成分表の重量変化率をかけています。</p>
+    <p>油・調味料・砂糖の大さじ・小さじ：大さじ15mL・小さじ5mL（すりきり）を、成分表の備考「100mL＝◯g」で重さに換算。備考に換算値がないもの（バターなど）は大さじ・小さじを出さず、gで入れる形です。</p>
     <p>飲み物のmL：成分表の備考に「100mL＝◯g」がある食品はその値で換算。記載がない飲み物（豆乳・お茶・コーヒーなど）は1mL＝1gの目安で換算し、記録に「約・目安」と表示（成分表の飲み物の換算値はほとんどが100mL＝97〜108gの範囲）。</p>
     <p>調理前の重さで入れる場合と「1本分」「乾めん100g分」など：日本食品標準成分表（八訂）増補2023年 第1章「調理方法の概要及び重量変化率表」の重量変化率を使って換算。</p>
     <p>ごはん茶碗1杯、食パン1枚、納豆1パック、豆腐1/2丁、トマト1個、レタス1人前、くだもの1個、刺身1切れ、調理前の量（ささみ1本50gなど）、かき1個・あじ1尾・薄切り肉1枚などの重さは、自治体の資料や管理栄養士の目安量一覧などを参考にした一般的な目安です。たんぱく質の値は、すべて食品成分表から計算しています。</p>
@@ -1408,7 +1438,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.26</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.27</p>
   </div>`;
 }
 
@@ -1933,7 +1963,8 @@ function amountState(f, opts = {}) {
   // 飲み物は「量（mL）で」を基本にする
   // ただしコーヒーのように専用の「1杯」があるものは個数で
   let mode = drink && !FOOD_UNITS[f.code] ? 'g' : units.length ? 'unit' : 'g';
-  let unitIdx = 0, count = 1, value = drink ? 200 : 100, raw = 100, unit = drink ? 'mL' : 'g';
+  const aset = amountSet(f);
+  let unitIdx = 0, count = 1, value = drink ? 200 : aset.def, raw = 100, unit = drink ? 'mL' : 'g';
   if (src && src.amode) {
     mode = src.amode;
     if (mode === 'unit') { const k = units.findIndex(u => u.l === src.ulabel); unitIdx = k >= 0 ? k : 0; count = src.count || 1; if (k < 0) { mode = 'g'; value = src.grams; } }
@@ -1946,8 +1977,8 @@ function amountState(f, opts = {}) {
     if (mode === 'unit') { const k = units.findIndex(u => u.l === last.ulabel); unitIdx = k >= 0 ? k : 0; if (!units.length) mode = 'g'; }
     if (mode === 'raw') raw = last.raw || 100;
     if (mode === 'g') {
-      if (last.unit === 'mL' && mr) { unit = 'mL'; value = last.ml || 200; }
-      else if (last.unit === 'g' || !drink) { unit = 'g'; value = last.g || 100; }
+      if (last.unit === 'mL' && mr) { unit = 'mL'; value = last.ml || (drink ? 200 : aset.defMl); }
+      else if (last.unit === 'g' || !drink) { unit = 'g'; value = last.g || aset.def; }
     }
   }
   // 「6Pチーズ」「さけるチーズ」のように、探した言葉がそのまま単位の名前に入っていれば、その単位で
@@ -1978,7 +2009,7 @@ function openAmount(code, opts = {}) {
     <div class="tiny muted">100gあたり たんぱく質 ${fmt(f.p)}g${f.f === 1 ? '（推定値）' : f.f === 2 ? '（微量）' : ''}</div>
     <div class="meal-pick">${MEALS.map(([m, l]) => `<button class="chip ${m === sheetCtx.meal ? 'on' : ''}" data-meal="${m}">${l}</button>`).join('')}</div>
     <div class="seg" id="amodeSeg">
-      ${units.length ? `<button data-amode="unit">個数で</button>` : ''}
+      ${units.length ? `<button data-amode="unit">${units.every(u => u.kind === 'spoon') ? '大さじ・小さじで' : '個数で'}</button>` : ''}
       <button data-amode="g">${mr ? '量（mL・g）で' : '重さ（g）で'}</button>
       ${f.rate ? `<button data-amode="raw">調理前の重さで</button>` : ''}
     </div>
@@ -2016,7 +2047,7 @@ function renderAmountBody() {
         <input id="amt" type="number" inputmode="decimal" min="0" step="any" value="${fmt(c.value)}">
         ${mlRate(f) ? `<div class="seg" style="margin:0;flex:none"><button data-unit="mL" class="${c.unit === 'mL' ? 'on' : ''}">mL</button><button data-unit="g" class="${c.unit === 'g' ? 'on' : ''}">g</button></div>` : '<span class="u">g</span>'}
       </div>
-      <div class="chips">${(c.unit === 'mL' ? [100, 150, 200, 350, 500] : [50, 100, 150, 200]).map(g => `<button class="chip" data-g="${g}">${g}${c.unit === 'mL' ? 'mL' : 'g'}</button>`).join('')}</div>
+      <div class="chips">${(c.unit === 'mL' ? amountSet(f).ml : amountSet(f).g).map(g => `<button class="chip" data-g="${g}">${g}${c.unit === 'mL' ? 'mL' : 'g'}</button>`).join('')}</div>
       <div class="tiny muted" style="margin-top:6px">${c.unit === 'mL' ? esc(mlNote(f)) : '食べる部分の重さを入れてください'}</div>`;
     $('#amt').addEventListener('input', ev => { c.value = Number(ev.target.value) || 0; updAmount(); });
   }
@@ -2491,7 +2522,7 @@ document.addEventListener('click', ev => {
     if (ds.amode === 'g') {
       const mr = isDrink(f) ? mlRate(f) : null;
       if (mr) { sheetCtx.unit = 'mL'; sheetCtx.value = g ? r1(g * 100 / mr.r) : 200; }
-      else { sheetCtx.unit = 'g'; sheetCtx.value = g || 100; }
+      else { sheetCtx.unit = 'g'; sheetCtx.value = g || amountSet(f).def; }
     }
     if (ds.amode === 'raw' && f.rate && g) sheetCtx.raw = r1(g * 100 / f.rate);
     renderAmountBody();
