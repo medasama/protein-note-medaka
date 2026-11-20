@@ -31,6 +31,10 @@ body{
 }
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
+/* スマホ：ボタンを続けて押したときに画面が拡大されない・長押しで文字選択やメニューが出ない */
+html{touch-action:manipulation}
+button,.chip,.food,.madd,.step,[data-close]{touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.sheet-body,.sheet{overscroll-behavior:contain}
 [hidden]{display:none !important}
 
 /* app bar */
