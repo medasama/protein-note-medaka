@@ -1516,7 +1516,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.30</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.31</p>
   </div>`;
 }
 
@@ -2771,5 +2771,15 @@ render();
 loadFoods();
 cleanupPhotos();
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  // 新しい版が入ったら自動で読み込み直す（入力中のシートが開いていたら次回起動に回す）
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloaded) return;
+    const sheet = document.getElementById('sheet');
+    if (sheet && !sheet.hidden) return;
+    reloaded = true;
+    location.reload();
+  });
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }
