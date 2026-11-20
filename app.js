@@ -1516,7 +1516,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.29</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.30</p>
   </div>`;
 }
 
@@ -1698,7 +1698,7 @@ function openMultiResults() {
       const nut = showNut() ? (x => x.kcal == null ? '' : `・${x.kcal}kcal`)(entryNut(e)) : '';
       return `<div class="mrow">
         <button class="food" data-mpick="${key}">
-          <span class="nm"><div>${esc(dispName(e.name).name)}</div><div class="sub">${esc(entryAmountLabel(e))}${nut}${multiCandSub(cand) ? '・' + esc(multiCandSub(cand)) : ''}</div></span>
+          ${guRow(cand, e, nut) || `<span class="nm"><div>${esc(dispName(e.name).name)}</div><div class="sub">${esc(entryAmountLabel(e))}${nut}${multiCandSub(cand) ? '・' + esc(multiCandSub(cand)) : ''}</div></span>`}
           <span class="p">${fmt(e.protein)}g</span>
         </button>
         <button class="madd ${done ? 'done' : ''}" data-madd="${key}" aria-label="${esc(e.name)}を記録">${done ? '✓' : '＋'}</button>
@@ -1718,6 +1718,14 @@ function openMultiResults() {
     <div class="mfoot"><span class="small">${c.added.length ? `記録した：<b>${c.added.length}品</b>・たんぱく質 <b>${fmt(total)}g</b>` : 'まだ記録していません'}</span>
       <button class="btn" data-mfinish="1">完了</button></div>
   `, sh => { const b = $('.sheet-body', sh); if (b && c.scroll) b.scrollTop = c.scroll; }, { tall: true });
+}
+/* 具を選べる料理（みそ汁）の候補行：名前をタップすると具を選べることがわかるように */
+function guRow(cand, e, nut) {
+  if (cand.k !== 'dish') return '';
+  const d = DISHES.find(x => x.id === cand.id);
+  if (!d || !d.gu) return '';
+  const labels = d.gu.filter(g => (e.gu || []).includes(g[0])).map(g => g[1]);
+  return `<span class="nm"><div>${esc(d.name)} <span class="gu-tag">具を選ぶ ›</span></div><div class="sub">${labels.length ? '具：' + esc(labels.join('・')) : '具なし'}・${esc(entryAmountLabel(e))}${nut}</div></span>`;
 }
 function multiCandAt(key) {
   const [i, j] = key.split(':').map(Number);

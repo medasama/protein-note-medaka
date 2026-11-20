@@ -404,3 +404,4 @@ details.fold[open] summary{margin-bottom:6px}
 }
 .gu-head{font-size:.85rem;font-weight:700;color:var(--muted);margin:10px 2px 4px}
 .chips.gu .chip{padding:7px 12px}
+.gu-tag{display:inline-block;font-size:.72rem;font-weight:700;color:var(--primary);background:var(--chip-bg);border-radius:999px;padding:2px 8px;margin-left:4px;vertical-align:2px}
