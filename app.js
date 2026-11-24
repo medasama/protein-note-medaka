@@ -1232,10 +1232,11 @@ function hitokoto(ratio) {
   else if (ratio < 1) m = 'もう少し！';
   else m = '達成！！おつかれさま！';
   // 段階が上がった（めだかがマッチョになった）ら、一度だけ跳ねて見せる
+  // 達成したあとは、さらに記録してたんぱく質が増えるたびに跳ねて見せる
   if (!past) {
     const seen = hitokoto.seen[viewDate];
-    if (seen != null && st > seen) hitokoto.pending = true;
-    hitokoto.seen[viewDate] = st;
+    if (seen && (st > seen.st || (st === 4 && ratio > seen.r + 1e-9))) hitokoto.pending = true;
+    hitokoto.seen[viewDate] = { st, r: ratio };
   }
   return `<div class="hito hito-m${st}"><button class="hop" data-hop="1" aria-label="めだか"><img src="characters/medaka-m${st}.png" alt=""></button><span>${m}</span></div>`;
 }
@@ -1549,7 +1550,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.34</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.35</p>
   </div>`;
 }
 
