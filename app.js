@@ -426,6 +426,16 @@ const FOOD_UNITS = {
   '16019': [["シングル30mL", 28.2, '杯']],
   '16020': [["シングル30mL", 28.5, '杯']],
   '16022': [["1杯分（梅酒60mL）", 62.3, '杯']],
+  // v1.4.38：1袋・1個で食べるもの（一般的な目安）
+  '18004': [['1袋（カップスープ）', 17, '袋']],
+  '17027': [['1個', 5, '個']],
+  '17051': [['1皿分', 20, '皿分']], '17052': [['1皿分', 20, '皿分']],
+  '07022': [['1個（中）', 10, '個']], '07023': [['1個（中）', 10, '個']],
+  '07051': [['1個', 35, '個']],
+  '16046': [['ティースプーン1杯', 2, '杯']],
+  '13020': [['ポーション1個', 4.5, '個']], '13021': [['ポーション1個', 4.5, '個']], '13022': [['ポーション1個', 4.5, '個']],
+  '13023': [['スティック1本', 3, '本']], '13024': [['スティック1本', 3, '本']],
+  '15105': [['1粒', 5, '粒']], '15110': [['1粒', 4, '粒']], '15118': [['1枚', 3, '枚']],
 };
 
 /* よく使う食材（一覧の表示名） */
@@ -553,8 +563,43 @@ const DISHES = [
   { id: 'yasaiitame', name: '野菜炒め', unit: '1人前', keys: 'やさいいため', items: [['11129', 50, '豚ばら'], ['06061', 80, 'キャベツ'], ['06291', 50, 'もやし'], ['06214', 20, 'にんじん'], ['06153', 20, '玉ねぎ'], ['14006', 8, '油']] },
   { id: 'chawanmushi', name: '茶碗蒸し', unit: '1個', keys: 'ちゃわんむし', items: [['12004', 25, '卵1/2個'], ['11227', 10, '鶏ささみ'], ['10415', 10, 'えび'], ['10379', 5, 'かまぼこ'], ['08039', 5, 'しいたけ']] },
   { id: 'agedashi', name: '揚げ出し豆腐', unit: '1人前', keys: 'あげだしどうふ とうふ', items: [['04032', 150, '木綿豆腐1/2丁'], ['06367', 20, '大根おろし'], ['14006', 10, '揚げ油（吸油）']] },
-  { id: 'yudofu', name: '湯豆腐', unit: '1人前', keys: 'ゆどうふ とうふ', items: [['04032', 200, '木綿豆腐'], ['06226', 10, 'ねぎ']] },
-  { id: 'sukiyaki', name: 'すき焼き', unit: '1人前', keys: 'すきやき', items: [['11008', 100, '牛肩ロース'], ['04038', 50, '焼き豆腐'], ['06226', 50, 'ねぎ'], ['02005', 40, 'しらたき'], ['06233', 50, '白菜'], ['12004', 50, 'つけ卵'], ['03003', 10, '砂糖']] },
+  // 鍋（1人前の目安。スープは飲み切らない前提で、味付けは少なめに見ている）
+  // 鍋は具を選べる（基本：だし＋しょうゆ＋みりん。具は1人前の目安の量。キムチ・豆乳を選ぶとキムチ鍋・豆乳鍋に近くなる）
+  { id: 'nabe', name: '鍋', unit: '1人前', keys: 'なべ 鍋 具を選ぶ 鍋料理', items: [['17021', 200, 'だし'], ['17007', 10, 'しょうゆ'], ['16025', 5, 'みりん']],
+    guDef: ['torimomo', 'tofu', 'hakusai', 'negi', 'shiitake'],
+    guGroups: [['肉', ['torimomo', 'torimune', 'dango', 'butabara', 'butarosu', 'gyu', 'motsu', 'sausage']],
+      ['魚介', ['tara', 'sake', 'buri', 'ebi', 'kaki', 'hotate', 'asari', 'tsumire']],
+      ['豆腐・卵', ['tofu', 'yakidofu', 'atsuage', 'age', 'tamago']],
+      ['野菜', ['hakusai', 'negi', 'shungiku', 'mizuna', 'kyabetsu', 'nira', 'moyashi', 'ninjin', 'daikon']],
+      ['きのこ・その他', ['shiitake', 'enoki', 'shimeji', 'maitake', 'shirataki', 'kimchi', 'tonyu']],
+      ['しめ', ['udon', 'gohan', 'mochi']]],
+    gu: [['torimomo', '鶏もも', '11221', 60], ['torimune', '鶏むね', '11220', 60], ['dango', '鶏団子', '11230', 60], ['butabara', '豚ばら', '11129', 60],
+      ['butarosu', '豚ロース', '11123', 60], ['gyu', '牛肉', '11034', 60], ['motsu', 'もつ', '11098', 60], ['sausage', 'ウインナー', '11186', 40],
+      ['tara', 'たら', '10205', 60], ['sake', '鮭', '10134', 60], ['buri', 'ぶり', '10241', 60], ['ebi', 'えび', '10415', 30],
+      ['kaki', 'かき', '10292', 60], ['hotate', 'ほたて', '10313', 30], ['asari', 'あさり', '10281', 30], ['tsumire', 'つみれ', '10383', 40],
+      ['tofu', '豆腐', '04032', 75], ['yakidofu', '焼き豆腐', '04038', 50], ['atsuage', '厚揚げ', '04039', 50], ['age', '油揚げ', '04040', 10],
+      ['tamago', '卵', '12004', 50], ['hakusai', '白菜', '06233', 100], ['negi', 'ねぎ', '06226', 30], ['shungiku', '春菊', '06099', 30],
+      ['mizuna', '水菜', '06072', 30], ['kyabetsu', 'キャベツ', '06061', 60], ['nira', 'にら', '06207', 20], ['moyashi', 'もやし', '06291', 50],
+      ['ninjin', 'にんじん', '06214', 20], ['daikon', '大根', '06134', 50], ['shiitake', 'しいたけ', '08039', 20], ['enoki', 'えのき', '08001', 30],
+      ['shimeji', 'しめじ', '08016', 30], ['maitake', 'まいたけ', '08028', 30], ['shirataki', 'しらたき', '02005', 40], ['kimchi', 'キムチ', '06236', 50],
+      ['tonyu', '豆乳', '04052', 150], ['udon', 'しめのうどん', '01039', 120], ['gohan', 'しめのごはん', '01088', 80], ['mochi', 'もち', '01117', 50]] },
+  { id: 'mizutaki', name: '水炊き', unit: '1人前', keys: 'みずたき 鍋', items: [['11221', 100, '鶏もも'], ['04032', 60, '豆腐'], ['06233', 80, '白菜'], ['06226', 20, 'ねぎ'], ['06099', 20, '春菊'], ['08039', 15, 'しいたけ'], ['17110', 15, 'ぽん酢']] },
+  { id: 'kimchinabe', name: 'キムチ鍋', unit: '1人前', keys: 'きむちなべ 鍋', items: [['11129', 70, '豚ばら'], ['06236', 80, 'キムチ'], ['04032', 75, '豆腐'], ['06233', 60, '白菜'], ['06207', 20, 'にら'], ['08001', 20, 'えのき'], ['17045', 6, 'みそ'], ['14002', 3, 'ごま油']] },
+  { id: 'motsunabe', name: 'もつ鍋', unit: '1人前', keys: 'もつなべ 鍋 もつ', items: [['11098', 100, '牛もつ（小腸）'], ['06061', 100, 'キャベツ'], ['06207', 30, 'にら'], ['06084', 15, 'ごぼう'], ['02005', 30, 'しらたき'], ['17007', 15, 'しょうゆ']] },
+  { id: 'shabu-buta', name: '豚しゃぶ', unit: '1人前', keys: 'しゃぶしゃぶ ぶたしゃぶ 豚しゃぶしゃぶ 鍋', items: [['11123', 100, '豚ロース'], ['06233', 80, '白菜'], ['06072', 30, '水菜'], ['04032', 50, '豆腐'], ['08001', 20, 'えのき'], ['17110', 15, 'ぽん酢']] },
+  { id: 'shabu-gyu', name: '牛しゃぶ', unit: '1人前', keys: 'しゃぶしゃぶ ぎゅうしゃぶ 牛しゃぶしゃぶ 鍋', items: [['11034', 100, '牛肩ロース'], ['06233', 80, '白菜'], ['06072', 30, '水菜'], ['04032', 50, '豆腐'], ['08001', 20, 'えのき'], ['17110', 15, 'ぽん酢']] },
+  { id: 'ishikari', name: '石狩鍋', unit: '1人前', keys: 'いしかりなべ 鍋 さけ 鮭', items: [['10134', 80, '鮭'], ['04032', 60, '豆腐'], ['06061', 50, 'キャベツ'], ['06153', 30, '玉ねぎ'], ['06214', 15, 'にんじん'], ['02017', 40, 'じゃがいも'], ['06226', 20, 'ねぎ'], ['17045', 15, 'みそ']] },
+  { id: 'chanko', name: 'ちゃんこ鍋', unit: '1人前', keys: 'ちゃんこなべ 鍋', items: [['11230', 60, '鶏団子'], ['11221', 50, '鶏もも'], ['04039', 40, '厚揚げ'], ['06233', 80, '白菜'], ['06226', 20, 'ねぎ'], ['08001', 20, 'えのき'], ['06134', 30, '大根'], ['17007', 10, 'しょうゆ']] },
+  { id: 'tonyunabe', name: '豆乳鍋', unit: '1人前', keys: 'とうにゅうなべ 鍋', items: [['04052', 150, '豆乳'], ['11129', 60, '豚ばら'], ['04032', 60, '豆腐'], ['06233', 80, '白菜'], ['06072', 20, '水菜'], ['08016', 20, 'しめじ'], ['17045', 8, 'みそ']] },
+  { id: 'toridango', name: '鶏団子鍋', unit: '1人前', keys: 'とりだんごなべ つくね 鍋', items: [['11230', 80, '鶏団子'], ['12004', 10, '卵（つなぎ）'], ['06233', 80, '白菜'], ['06226', 20, 'ねぎ'], ['08016', 20, 'しめじ'], ['02005', 30, 'しらたき'], ['17007', 8, 'しょうゆ']] },
+  { id: 'tarachiri', name: 'たらちり', unit: '1人前', keys: 'たらちり ちりなべ 鍋 たら', items: [['10205', 100, 'たら'], ['04032', 75, '豆腐'], ['06233', 80, '白菜'], ['06099', 20, '春菊'], ['06226', 20, 'ねぎ'], ['08039', 15, 'しいたけ'], ['17110', 15, 'ぽん酢']] },
+  { id: 'kakinabe', name: 'かき鍋（みそ・土手鍋）', unit: '1人前', keys: 'かきなべ どてなべ 牡蠣 鍋', items: [['10292', 100, 'かき'], ['04038', 50, '焼き豆腐'], ['06233', 60, '白菜'], ['06226', 20, 'ねぎ'], ['06099', 20, '春菊'], ['17045', 15, 'みそ']] },
+  { id: 'joyanabe', name: '常夜鍋', unit: '1人前', keys: 'じょうやなべ 鍋 ほうれんそう', items: [['11123', 100, '豚ロース'], ['06267', 80, 'ほうれん草'], ['17110', 15, 'ぽん酢']] },
+  { id: 'tomatonabe', name: 'トマト鍋', unit: '1人前', keys: 'とまとなべ 鍋', items: [['11221', 70, '鶏もも'], ['11186', 30, 'ウインナー'], ['06184', 100, 'トマト缶'], ['06061', 60, 'キャベツ'], ['06153', 30, '玉ねぎ'], ['06263', 30, 'ブロッコリー'], ['13040', 15, 'チーズ']] },
+  { id: 'zosui', name: '雑炊（鍋のしめ）', unit: '1杯', keys: 'ぞうすい おじや しめ 鍋', items: [['01088', 100, 'ごはん'], ['12004', 50, '卵'], ['06226', 5, 'ねぎ'], ['17021', 150, 'だし']] },
+  { id: 'shime-udon', name: 'うどん（鍋のしめ）', unit: '1人前', keys: 'しめ 鍋', items: [['01039', 120, 'うどん1/2玉']] },
+  { id: 'yudofu', name: '湯豆腐', unit: '1人前', keys: 'ゆどうふ とうふ 鍋', items: [['04032', 200, '木綿豆腐'], ['06226', 10, 'ねぎ']] },
+  { id: 'sukiyaki', name: 'すき焼き', unit: '1人前', keys: 'すきやき 鍋', items: [['11008', 100, '牛肩ロース'], ['04038', 50, '焼き豆腐'], ['06226', 50, 'ねぎ'], ['02005', 40, 'しらたき'], ['06233', 50, '白菜'], ['12004', 50, 'つけ卵'], ['03003', 10, '砂糖']] },
   { id: 'yosenabe', name: '寄せ鍋', unit: '1人前', keys: 'よせなべ 鍋', items: [['10205', 50, 'たら'], ['11221', 50, '鶏もも'], ['10415', 20, 'えび'], ['04032', 60, '豆腐'], ['06233', 80, '白菜'], ['06226', 20, 'ねぎ'], ['08001', 20, 'えのき']] },
   { id: 'oden', name: 'おでん', unit: '1人前', keys: 'おでん', items: [['06134', 80, '大根'], ['12005', 50, 'ゆで卵'], ['10381', 30, 'ちくわ'], ['04039', 50, '厚揚げ'], ['02003', 40, 'こんにゃく'], ['10385', 25, 'はんぺん']] },
   { id: 'yakitori-momo', name: '焼き鳥（もも）', unit: '1本', keys: 'やきとり 焼鳥', items: [['11221', 30, '鶏もも']] },
@@ -584,6 +629,42 @@ const DISHES = [
   // 市販品（公式発表値）：明治 ザバス アクア ホエイプロテイン100（1食分28g、公式サイトの栄養成分表示）
   { id: 'savas-aqua-gf', name: 'ザバス アクア ホエイプロテイン100 グレープフルーツ風味', unit: '1食（28g）', keys: 'ざばす ザバス アクア あくあ ホエイ ほえい アクアホエイ プロテイン ぷろていん 明治', fixed: 20.0, kcal: 102, fat: 0.2, carb: 5.8, g: 28, src: 'meiji' },
   { id: 'savas-aqua-lemon', name: 'ザバス アクア ホエイプロテイン100 レモン風味', unit: '1食（28g）', keys: 'ざばす ザバス アクア あくあ ホエイ ほえい アクアホエイ プロテイン ぷろていん 明治 れもん', fixed: 20.0, kcal: 99, fat: 0.2, carb: 5.3, g: 28, src: 'meiji' },
+  // 冷凍食品（公式サイトの栄養成分表示。スープ・具・麺すべて食べた場合の1食分）
+  // キンレイ お水がいらない（1食あたり・推定値）
+  { id: 'kinrei-yokozuna', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない ラーメン横綱', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 横綱 よこづな 豚骨醤油 とんこつしょうゆ', fixed: 21.2, kcal: 461, fat: 16.4, carb: 58.7, src: 'kinrei', content: '481g（めん170g）' },
+  { id: 'kinrei-tenichi', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 天下一品', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 天下一品 てんかいっぴん 天一 こってり', fixed: 21.4, kcal: 441, fat: 16.0, carb: 54.4, src: 'kinrei', content: '486g（めん150g）' },
+  { id: 'kinrei-iekei', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 横浜家系ラーメン', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 横浜家系 いえけい 家系 豚骨醤油 とんこつしょうゆ', fixed: 21.6, kcal: 473, fat: 14.6, carb: 65.8, src: 'kinrei', content: '470g（めん180g）' },
+  { id: 'kinrei-champon', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 四海樓ちゃんぽん', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン ちゃんぽん チャンポン キンレイ きんれい お水がいらない 四海樓 しかいろう 長崎', fixed: 16.1, kcal: 417, fat: 14.0, carb: 58.6, src: 'kinrei', content: '518g（めん160g）' },
+  { id: 'kinrei-sapporo', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 札幌味噌ラーメン', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 札幌 さっぽろ 味噌ラーメン みそらーめん 味噌', fixed: 20.0, kcal: 527, fat: 21.6, carb: 65.9, src: 'kinrei', content: '527g（めん150g）' },
+  { id: 'kinrei-shiogensui', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 塩元帥ラーメン', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 塩元帥 しおげんすい 塩ラーメン しおらーめん', fixed: 15.7, kcal: 450, fat: 15.2, carb: 63.8, src: 'kinrei', content: '491g（めん160g）' },
+  { id: 'kinrei-kitakata', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 喜多方ラーメン坂内', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 喜多方 きたかた 坂内 ばんない 醤油ラーメン しょうゆらーめん', fixed: 17.9, kcal: 338, fat: 6.0, carb: 54.2, src: 'kinrei', content: '497g（めん170g）' },
+  { id: 'kinrei-kumamoto', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 熊本ラーメン', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 熊本 くまもと 豚骨ラーメン とんこつ', fixed: 18.9, kcal: 463, fat: 18.4, carb: 57.7, src: 'kinrei', content: '473g（めん150g）' },
+  { id: 'kinrei-onomichi', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 尾道ラーメン', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 尾道 おのみち 醤油ラーメン しょうゆらーめん', fixed: 19.2, kcal: 487, fat: 20.2, carb: 58.7, src: 'kinrei', content: '506g（めん160g）' },
+  { id: 'kinrei-taiwan', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 台湾ラーメン', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 台湾ラーメン たいわん', fixed: 23.7, kcal: 414, fat: 8.9, carb: 61.6, src: 'kinrei', content: '493g（めん160g）' },
+  { id: 'kinrei-buta', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 大盛り 豚ラーメン', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 大盛り おおもり 豚ラーメン ぶたらーめん 二郎系', fixed: 26.4, kcal: 742, fat: 34.4, carb: 83.8, src: 'kinrei', content: '574g（めん230g）' },
+  { id: 'kinrei-stamina', cat: '冷凍食品（市販品）', name: 'キンレイ お水がいらない 大盛り スタミナラーメン', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン キンレイ きんれい お水がいらない 大盛り おおもり スタミナラーメン すたみな', fixed: 23.9, kcal: 654, fat: 24.5, carb: 88.0, src: 'kinrei', content: '583g（めん230g）' },
+  // ニチレイフーズ（1人前あたり）
+  { id: 'nichirei-kobashimiso', cat: '冷凍食品（市販品）', name: 'ニチレイ これぞ濃厚 香ばし味噌ラーメン', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン ニチレイ にちれい これぞ濃厚 香ばし 味噌ラーメン みそらーめん 味噌', fixed: 17.4, kcal: 523, fat: 22.8, carb: 62.1, src: 'nichirei', content: '300g' },
+  { id: 'nichirei-chige', cat: '冷凍食品（市販品）', name: 'ニチレイ これぞ濃厚 辛旨チゲ味噌ラーメン', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン ニチレイ にちれい これぞ濃厚 辛旨 チゲ ちげ 味噌ラーメン みそらーめん キムチ', fixed: 17.4, kcal: 481, fat: 16.2, carb: 66.3, src: 'nichirei', content: '300g' },
+  { id: 'nichirei-gyokai', cat: '冷凍食品（市販品）', name: 'ニチレイ コクと旨味の魚介豚骨ラーメン', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン ニチレイ にちれい 魚介豚骨 ぎょかいとんこつ 豚骨 まぜそば', fixed: 19.8, kcal: 485, fat: 16.8, carb: 63.6, src: 'nichirei', content: '300g' },
+  { id: 'nichirei-tantan', cat: '冷凍食品（市販品）', name: 'ニチレイ 本当に旨い担々麺', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン たんたんめん 担々麺 坦々麺 タンタンメン ニチレイ にちれい', fixed: 20.7, kcal: 620, fat: 33.3, carb: 59.4, src: 'nichirei', content: '300g' },
+  { id: 'nichirei-hiyashichuka', cat: '冷凍食品（市販品）', name: 'ニチレイ レンジで冷たい 冷し中華', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン ひやしちゅうか 冷やし中華 冷し中華 ニチレイ にちれい', fixed: 12.0, kcal: 333, fat: 3.3, carb: 63.9, src: 'nichirei', content: '300g' },
+  { id: 'nichirei-morioka', cat: '冷凍食品（市販品）', name: 'ニチレイ レンジで冷たい 盛岡風冷麺', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン れいめん 冷麺 盛岡冷麺 もりおか ニチレイ にちれい', fixed: 9.3, kcal: 295, fat: 0.9, carb: 62.3, src: 'nichirei', content: '310g' },
+  { id: 'nichirei-butashabu-udon', cat: '冷凍食品（市販品）', name: 'ニチレイ レンジで冷たい 冷やし豚しゃぶうどん', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン うどん 冷やしうどん 豚しゃぶ ぶたしゃぶ ニチレイ にちれい', fixed: 12.8, kcal: 372, fat: 6.4, carb: 65.9, src: 'nichirei', content: '320g' },
+  { id: 'nichirei-curry-udon', cat: '冷凍食品（市販品）', name: 'ニチレイ 和風だし香るカレーうどん', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン カレーうどん かれーうどん うどん ニチレイ にちれい', fixed: 13.8, kcal: 476, fat: 11.8, carb: 78.7, src: 'nichirei', content: '320g' },
+  { id: 'nichirei-ankake-yakisoba', cat: '冷凍食品（市販品）', name: 'ニチレイ 香ばし麺の五目あんかけ焼そば', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン やきそば 焼きそば 焼そば あんかけ焼きそば 五目 ニチレイ にちれい', fixed: 13.1, kcal: 443, fat: 13.8, carb: 66.7, src: 'nichirei', content: '355g' },
+  // Umios（旧マルハニチロ）（1人前あたり）
+  { id: 'umios-yokohama', cat: '冷凍食品（市販品）', name: 'Umios 横浜あんかけラーメン', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン Umios うみおす ウミオス マルハニチロ まるはにちろ 新中華街 横浜あんかけ あんかけラーメン サンマー麺 生碼麺', fixed: 15.8, kcal: 423, fat: 9.0, carb: 69.7, src: 'umios', content: '452g（具入りスープ282g、めん170g）' },
+  { id: 'umios-ebi', cat: '冷凍食品（市販品）', name: 'Umios えびと野菜のあんかけラーメン', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン らーめん ラーメン Umios うみおす ウミオス マルハニチロ まるはにちろ 新中華街 えび 海老 あんかけラーメン', fixed: 13.1, kcal: 385, fat: 10.1, carb: 60.3, src: 'umios', content: '437g（具入りスープ277g、めん160g）' },
+  { id: 'umios-tantan', cat: '冷凍食品（市販品）', name: 'Umios 新中華街 濃厚担々麺', unit: '1人前', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン たんたんめん 担々麺 坦々麺 タンタンメン Umios うみおす ウミオス マルハニチロ まるはにちろ 新中華街', fixed: 21.7, kcal: 630, fat: 34.0, carb: 59.4, src: 'umios', content: '362g' },
+  // 日清食品冷凍（1食あたり）
+  { id: 'nissin-shirunashi', cat: '冷凍食品（市販品）', name: '冷凍 日清中華 汁なし担々麺 大盛り', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン たんたんめん 汁なし担々麺 しるなし 担々麺 坦々麺 日清 にっしん 日清中華 大盛り', fixed: 17.0, kcal: 604, fat: 20.6, carb: 87.7, src: 'nissin' },
+  { id: 'nissin-kanzen-tantan', cat: '冷凍食品（市販品）', name: '冷凍 完全メシ 日清中華 汁なし担々麺', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン たんたんめん 汁なし担々麺 しるなし 担々麺 坦々麺 日清 にっしん 日清中華 完全メシ かんぜんめし', fixed: 18.7, kcal: 469, fat: 13.3, carb: 72.5, src: 'nissin', content: '300g' },
+  { id: 'nissin-lajiao', cat: '冷凍食品（市販品）', name: '冷凍 日清中華 辣椒担々麺', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン たんたんめん 担々麺 坦々麺 辣椒 ラージャオ 日清 にっしん 日清中華', fixed: 26.8, kcal: 614, fat: 28.2, carb: 63.3, src: 'nissin', content: '344g' },
+  { id: 'nissin-gold', cat: '冷凍食品（市販品）', name: '冷凍 日清中華 THE GOLD 汁なし担々麺', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン たんたんめん 汁なし担々麺 しるなし 担々麺 坦々麺 日清 にっしん 日清中華 ゴールド', fixed: 15.8, kcal: 638, fat: 29.5, carb: 77.2, src: 'nissin' },
+  { id: 'nissin-jajamen', cat: '冷凍食品（市販品）', name: '冷凍 日清中華 ジャージャー麺 大盛り', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン じゃーじゃーめん ジャージャー麺 炸醤麺 日清 にっしん 日清中華 大盛り', fixed: 17.7, kcal: 560, fat: 16.2, carb: 85.8, src: 'nissin' },
+  { id: 'nissin-biangbiang', cat: '冷凍食品（市販品）', name: '冷凍 日清中華 ビャンビャン麺', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン びゃんびゃんめん ビャンビャン麺 日清 にっしん 日清中華', fixed: 15.5, kcal: 494, fat: 18.3, carb: 66.7, src: 'nissin' },
+  { id: 'nissin-shanghai', cat: '冷凍食品（市販品）', name: '冷凍 日清中華 上海焼そば 大盛り', unit: '1食', keys: 'れいとう 冷凍 冷凍食品 冷食 れいしょく 冷凍麺 冷凍ラーメン やきそば 焼きそば 焼そば 上海焼そば しゃんはい 日清 にっしん 日清中華 大盛り', fixed: 13.6, kcal: 460, fat: 13.9, carb: 70.1, src: 'nissin' },
   // 外食（公式発表値）：ケンタッキーフライドチキン「栄養成分表」2026/3/25現在（配合に基づく標準値）。fixed＝1単位あたりのたんぱく質g、g＝可食部重量
   { id: 'kfc-original', name: 'ケンタッキー オリジナルチキン', unit: '1本', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 16.5, kcal: 218, fat: 12.8, carb: 9.1, g: 87, src: 'kfc' },
   { id: 'kfc-boneless', name: 'ケンタッキー 骨なしケンタッキー', unit: '1個', keys: 'けんたっきー KFC ケンタ フライドチキン チキン', fixed: 20.3, kcal: 191, fat: 8.5, carb: 8.3, g: 83, src: 'kfc' },
@@ -659,7 +740,12 @@ const FISH_RAW = {};
 for (const [code, fish, keys] of FISH_DISHES) { FISH_KEYS[fish] = keys.split(' ').map(norm); FISH_RAW[fish] = code; }
 const DISH_SRC = { kfc: 'ケンタッキーフライドチキン公式「栄養成分表」（2026/3/25現在）の値です',
   beer: 'メーカーが公表している栄養成分表示から計算した値です',
-  meiji: '明治 ザバス公式サイトの栄養成分表示（1食分28gあたり）の値です。水などで溶かした分は入っていません' };
+  meiji: '明治 ザバス公式サイトの栄養成分表示（1食分28gあたり）の値です。水などで溶かした分は入っていません',
+  kinrei: 'キンレイ公式サイトの栄養成分表示（1食あたり・推定値）の値です',
+  nichirei: 'ニチレイフーズ公式サイトの栄養成分表示（1人前あたり）の値です',
+  umios: 'Umios（旧マルハニチロ）公式サイトの栄養成分表示（1人前あたり）の値です',
+  nissin: '日清食品公式サイトの栄養成分表示（1食あたり）の値です' };
+const FROZEN_SRC = ['kinrei', 'nichirei', 'umios', 'nissin']; // 冷凍食品：スープまで全部食べた場合の値
 function dishItem(d, sel) {
   if (d.gu) return guDishItem(d, sel);
   if (d.fixed != null) return { kind: 'dish', id: d.id, name: d.name, unit: d.unit, protein: d.fixed, kcal: d.kcal ?? null, fat: d.fat ?? null, carb: d.carb ?? null, basis: 'unit', grams: d.g, brand: d.src || true, chips: [1, 2, 3, 4, 5] };
@@ -688,6 +774,7 @@ function dishNote(id, sel) {
   const d0 = DISHES.find(x => x.id === id);
   if (!d0) return '';
   const d = d0.gu ? Object.assign({}, d0, { items: guDishItem(d0, sel).guItems }) : d0;
+  if (d.fixed != null && FROZEN_SRC.includes(d.src)) return `${DISH_SRC[d.src]}（${d.unit}${d.content ? '・内容量' + d.content : ''}）。スープまで全部食べた場合の値です。商品の改良で変わることがあるので、お手元のパッケージの表示があればそちらを優先してください。`;
   if (d.fixed != null) return `${DISH_SRC[d.src] || ''}（${d.unit}・${d.ml ? '内容量' + d.ml + 'mL' : '可食部' + d.g + 'g'}${d.srcNote ? '。' + d.srcNote : ''}）。店舗・時期により変わることがあります。`;
   return '材料の目安：' + d.items.map(([, w, l]) => `${l}${w}g`).join('、') + '。一般的な家庭の分量で、材料ごとに食品成分表から計算した目安です。';
 }
@@ -700,11 +787,13 @@ function searchDishes(q) {
   const toks = tokenize(q);
   if (!toks.length) return [];
   const alts = toks.map(t => [t].concat(NORM_ALIASES[t] || []));
+  const nq = norm(q);
   return DISHES.filter(d => {
     // 語ごとに調べる（つなげると「ケンタ」＋「こーるすろー」が「たこ」に当たってしまうため）
     const words = [norm(d.name)].concat((d.name + ' ' + d.keys).split(/\s+/).map(norm));
     return alts.every(a => a.some(x => words.some(w => w.includes(norm(x)))));
-  }).map(dishItem).filter(Boolean);
+  }).sort((a, b) => (norm(b.name) === nq) - (norm(a.name) === nq)) // 名前がぴったりの料理を先に（「鍋」で回鍋肉より鍋）
+    .map(d => dishItem(d)).filter(Boolean); // map(dishItem) だと何番目かの数字が「選んだ具」として渡ってしまう
 }
 
 const SUGGEST_CODES = ['12004', '04046', '11220', '04032', '10134', '10263', '13003', '13040'];
@@ -735,6 +824,53 @@ function mlNote(f) {
     : `mLは成分表の備考（100mL＝${m.r}g）で換算しています。`;
 }
 
+/* 少しずつ食べる・使う食品は、量の初期値と候補を小さくする（v1.4.27 の仕組みを復元し、対象を広げた）
+   tiny ：初期値10g（候補 3・5・10・15・30g）… 油・調味料・砂糖・ごま・のり・乾物・薬味・あめ など
+   small：初期値20g（候補 5・10・20・30・50g）… ナッツ・漬物・ジャム・ドライフルーツ・チョコ など */
+const TINY_CODES = new Set(['13038', '05017', '05018', '05019', '05042', '06223', '06103', '06365', '06366', '06239', '06095', '06096', '06322',
+  '10091', '10092', '10447', '10157', '01077', '01078', '01079', '02028', '02029', '02030', '02031', '02032', '02033', '02034', '02035', '02070',
+  // ここから v1.4.38 で追加
+  '13009', '13010', '13020', '13021', '13022', '13023', '13024',                  // 粉乳・コーヒーホワイトナー
+  '16033', '16035', '16036', '16043', '16046', '16048', '16051', '16062', '16063', // 茶葉・インスタントコーヒー・ピュアココア・昆布茶
+  '11198', '09021', '09006', '09027', '09049',                                     // ゼラチン・削り昆布・あらめ・寒天
+  '06056', '06111', '06122', '06136', '06172', '06326', '02043',                    // かんぴょう・干し野菜・切干しだいこん・唐辛子
+  '08004', '08006', '08008', '08013', '08030',                                     // 乾しいたけ・きくらげ・乾まいたけ
+  '06003', '06320', '06281', '06349',                                              // あさつき・わけぎ・みょうがたけ・にんにく油いため（薬味）
+  '01066', '01067', '01068', '04089', '07185',                                     // 焼きふ・おから乾燥・くこの実
+  '10113', '10210', '10448', '10363', '10364', '10366', '10367', '10422', '10446', // キャビア・でんぶ・あみ・粒うに・焼き干し・裸節
+  '07020', '07021', '07022', '07023',                                              // 梅干し・梅漬
+  '15105', '15106', '15107', '15108', '15109', '15110', '15111', '15112', '15118', '15119', '15120']); // あめ・キャラメル・ガム
+const SMALL_CODES = new Set(['04029', '04030', '04082', '04096', '04109', '04110', '10034', '10045', '10421', '10055', '10056', '10324', '10325', '10326', '10330', '10314', '10093',
+  '06104', '06105', '06280', '06323', '17141', '17030', '17105', '17032', '17095', '17034', '17035', '17051', '17052', '17053', '17126', '17049', '17050',
+  // ここから v1.4.38 で追加
+  '18004', '16049', '13014', '13015', '13016', '13017', '13018', '13019', '13041', '11196', '15138', '15180', // 粉末スープ・ミルクココア・クリーム・スプレッド
+  '01006', '04005', '04060', '04061', '04062', '04115', '02021', '09041', '09043',     // 押麦・さらしあん・湯葉・金山寺みそ・干し納豆・乾燥マッシュポテト・わかめ（戻し）
+  '07008', '07016', '07051', '07082', '07095', '07096', '07108', '07117', '07147', '07160', '07172', '07183', // ドライフルーツ
+  '07010', '07011', '07013', '07014', '07123', '07125', '07154', '07037', '07038', '07039', '07103', '07127', // ジャム・オリーブ・砂糖漬
+  '10141', '10365', '15001', '15002', '15003', '15113', '15114', '15115', '15116', '15137', '15187']); // すじこ・生うに・甘納豆・マシュマロ・チョコ
+// 漬物（成分表の名前に「漬」があるもの）は small。ただし汁物などの料理はのぞく
+const PICKLE_RE = /漬物|塩漬|ぬかみそ漬|しょうゆ漬|甘酢漬|こうじ漬|からし漬|しば漬|奈良漬|守口漬|べったら漬|福神漬|たくあん|キムチ|ザーサイ|ピクルス|すぐき漬|たかな漬|いぶりがっこ|みそ漬/;
+// 調味料類のうち、汁物やソースとしてふつうの量を使うもの
+const NORMAL_17 = new Set(['17130', '17019', '17131', '17020', '17132', '17021', '17148', '17022', '17023', '17024', '17025', '17026', '17140', '17029', '17142', '17143', '17033', '17037', '17109']);
+function sizeTier(f) {
+  if (!f || !f.code) return null;
+  const c = f.code, g = c.slice(0, 2);
+  if (SMALL_CODES.has(c)) return 'small';
+  if (TINY_CODES.has(c)) return 'tiny';
+  if (g === '14' || g === '03') return 'tiny';
+  if (g === '17') return NORMAL_17.has(c) ? null : 'tiny';
+  if (g === '05') return 'small'; // ナッツ・種実
+  if (g === '09' && /素干し|乾|ほしのり|焼きのり|味付けのり|塩昆布|板わかめ/.test(f.name) && !/水戻し|水煮/.test(f.name)) return 'tiny';
+  if ((g === '06' || g === '07') && PICKLE_RE.test(f.name)) return 'small';
+  return null;
+}
+const AMOUNT_SET = {
+  tiny: { g: [3, 5, 10, 15, 30], ml: [5, 10, 15, 30], def: 10, defMl: 15 },
+  small: { g: [5, 10, 20, 30, 50], ml: [10, 15, 30, 50], def: 20, defMl: 30 },
+  normal: { g: [50, 100, 150, 200], ml: [100, 150, 200, 350, 500], def: 100, defMl: 200 },
+};
+function amountSet(f) { return AMOUNT_SET[sizeTier(f) || 'normal']; }
+
 /* 食品の目安量一覧 → [{ l: 表示, g: その食品としての重さ, c: 数え方, kind, note }] */
 function unitsFor(f) {
   if (!f) return [];
@@ -752,6 +888,10 @@ function unitsFor(f) {
     out.push({ l: '紙パック・缶 1本 350mL', g: r1(350 * mr.r / 100), c: '本', kind: mr.est ? 'mlest' : 'ml' });
     out.push({ l: 'ペットボトル1本 500mL', g: r1(500 * mr.r / 100), c: '本', kind: mr.est ? 'mlest' : 'ml' });
   }
+  if (!FOOD_UNITS[f.code] && f.ml && sizeTier(f) && ['14', '17', '03'].includes(f.code.slice(0, 2))) {
+    out.push({ l: '大さじ1', g: 15 * f.ml / 100, c: '杯', kind: 'spoon', ml: 15 });
+    out.push({ l: '小さじ1', g: 5 * f.ml / 100, c: '杯', kind: 'spoon', ml: 5 });
+  }
   for (const u of FOOD_UNITS[f.code] || []) {
     if (Array.isArray(u)) out.push({ l: u[0], g: u[1], c: u[2] || null, kind: 'est' });
     else if (f.rate) out.push({ l: u.l, g: r1(u.raw * f.rate / 100), c: u.c || null, kind: 'raw', raw: u.raw });
@@ -762,6 +902,7 @@ function unitNote(u, f) {
   if (u.kind === 'egg') return '卵の重さは農林水産省「鶏卵の規格」の重量区分の中央値から、殻の分（成分表の廃棄率）' + (f.rate ? `と調理による重さの変化（重量変化率${f.rate}%）` : '') + 'を除いて計算しています。';
   if (u.kind === 'ml') return `成分表の備考（100mL＝${f.ml}g）から計算しています。`;
   if (u.kind === 'mlest') return '1mL＝1gの目安で計算しています（成分表に換算値の記載がないため）。';
+  if (u.kind === 'spoon') return `計量スプーン（大さじ15mL・小さじ5mL）すりきりの量を、成分表の備考（100mL＝${f.ml}g）で重さにしています。`;
   if (u.kind === 'raw') return `調理前${u.raw}g（一般的な目安）に、成分表の重量変化率${f.rate}%をかけた重さです。`;
   return '1個・1枚などの重さは一般的な目安です。実際の重さがわかるときは「g」で入れてください。';
 }
@@ -1540,6 +1681,8 @@ function renderSettings() {
     <p>日本食品標準成分表（八訂）増補2023年から引用（文部科学省 科学技術・学術審議会 資源調査分科会、2026年3月27日掲載のデータ）。「たんぱく質」の列の値を使用。カロリー・PFCを表示するときは、同じ成分表の「エネルギー（kcal）」「脂質」「炭水化物」の列を使用（PFCの割合は、たんぱく質・炭水化物を1gあたり4kcal、脂質を9kcalとして計算）。</p>
     <h3>個数で入れるときの重さ</h3>
     <p>卵：農林水産省「鶏卵の規格」（畜産物の価格安定に関する法律施行規則の規定に基づく鶏卵の規格）の重量区分（例：M 58g以上64g未満）の中央値から、成分表の廃棄率（殻）を除いて計算。目玉焼きなどは、さらに成分表の重量変化率をかけています。</p>
+    <p>油・調味料・砂糖の大さじ・小さじ：大さじ15mL・小さじ5mL（すりきり）を、成分表の備考「100mL＝◯g」で重さに換算。備考に換算値がないもの（バターなど）は大さじ・小さじを出さず、gで入れる形です。</p>
+    <p>粉末スープ1袋・梅干し1個・カレールウ1皿分などは一般的な目安の重さです。袋に「1食分◯g」とあるときは、gで入れるのが正確です。</p>
     <p>飲み物のmL：成分表の備考に「100mL＝◯g」がある食品はその値で換算。記載がない飲み物（豆乳・お茶・コーヒーなど）は1mL＝1gの目安で換算し、記録に「約・目安」と表示（成分表の飲み物の換算値はほとんどが100mL＝97〜108gの範囲）。</p>
     <p>調理前の重さで入れる場合と「1本分」「乾めん100g分」など：日本食品標準成分表（八訂）増補2023年 第1章「調理方法の概要及び重量変化率表」の重量変化率を使って換算。</p>
     <p>ごはん茶碗1杯、食パン1枚、納豆1パック、豆腐1/2丁、トマト1個、レタス1人前、くだもの1個、刺身1切れ、調理前の量（ささみ1本50gなど）、かき1個・あじ1尾・薄切り肉1枚などの重さは、自治体の資料や管理栄養士の目安量一覧などを参考にした一般的な目安です。たんぱく質の値は、すべて食品成分表から計算しています。</p>
@@ -1550,7 +1693,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.35</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.38</p>
   </div>`;
 }
 
@@ -2099,7 +2242,8 @@ function amountState(f, opts = {}) {
   // 飲み物は「量（mL）で」を基本にする
   // ただしコーヒーのように専用の「1杯」があるものは個数で
   let mode = drink && !FOOD_UNITS[f.code] ? 'g' : units.length ? 'unit' : 'g';
-  let unitIdx = 0, count = 1, value = drink ? 200 : 100, raw = 100, unit = drink ? 'mL' : 'g';
+  const aset = amountSet(f);
+  let unitIdx = 0, count = 1, value = drink ? 200 : aset.def, raw = 100, unit = drink ? 'mL' : 'g';
   if (src && src.amode) {
     mode = src.amode;
     if (mode === 'unit') { const k = units.findIndex(u => u.l === src.ulabel); unitIdx = k >= 0 ? k : 0; count = src.count || 1; if (k < 0) { mode = 'g'; value = src.grams; } }
@@ -2112,8 +2256,8 @@ function amountState(f, opts = {}) {
     if (mode === 'unit') { const k = units.findIndex(u => u.l === last.ulabel); unitIdx = k >= 0 ? k : 0; if (!units.length) mode = 'g'; }
     if (mode === 'raw') raw = last.raw || 100;
     if (mode === 'g') {
-      if (last.unit === 'mL' && mr) { unit = 'mL'; value = last.ml || 200; }
-      else if (last.unit === 'g' || !drink) { unit = 'g'; value = last.g || 100; }
+      if (last.unit === 'mL' && mr) { unit = 'mL'; value = last.ml || (drink ? 200 : aset.defMl); }
+      else if (last.unit === 'g' || !drink) { unit = 'g'; value = last.g || aset.def; }
     }
   }
   // 「6Pチーズ」「さけるチーズ」のように、探した言葉がそのまま単位の名前に入っていれば、その単位で
@@ -2144,7 +2288,7 @@ function openAmount(code, opts = {}) {
     <div class="tiny muted">100gあたり たんぱく質 ${fmt(f.p)}g${f.f === 1 ? '（推定値）' : f.f === 2 ? '（微量）' : ''}</div>
     <div class="meal-pick">${MEALS.map(([m, l]) => `<button class="chip ${m === sheetCtx.meal ? 'on' : ''}" data-meal="${m}">${l}</button>`).join('')}</div>
     <div class="seg" id="amodeSeg">
-      ${units.length ? `<button data-amode="unit">個数で</button>` : ''}
+      ${units.length ? `<button data-amode="unit">${units.every(u => u.kind === 'spoon') ? '大さじ・小さじで' : '個数で'}</button>` : ''}
       <button data-amode="g">${mr ? '量（mL・g）で' : '重さ（g）で'}</button>
       ${f.rate ? `<button data-amode="raw">調理前の重さで</button>` : ''}
     </div>
@@ -2182,7 +2326,7 @@ function renderAmountBody() {
         <input id="amt" type="number" inputmode="decimal" min="0" step="any" value="${fmt(c.value)}">
         ${mlRate(f) ? `<div class="seg" style="margin:0;flex:none"><button data-unit="mL" class="${c.unit === 'mL' ? 'on' : ''}">mL</button><button data-unit="g" class="${c.unit === 'g' ? 'on' : ''}">g</button></div>` : '<span class="u">g</span>'}
       </div>
-      <div class="chips">${(c.unit === 'mL' ? [100, 150, 200, 350, 500] : [50, 100, 150, 200]).map(g => `<button class="chip" data-g="${g}">${g}${c.unit === 'mL' ? 'mL' : 'g'}</button>`).join('')}</div>
+      <div class="chips">${(c.unit === 'mL' ? amountSet(f).ml : amountSet(f).g).map(g => `<button class="chip" data-g="${g}">${g}${c.unit === 'mL' ? 'mL' : 'g'}</button>`).join('')}</div>
       <div class="tiny muted" style="margin-top:6px">${c.unit === 'mL' ? esc(mlNote(f)) : '食べる部分の重さを入れてください'}</div>`;
     $('#amt').addEventListener('input', ev => { c.value = Number(ev.target.value) || 0; updAmount(); });
   }
@@ -2425,6 +2569,13 @@ function itemFromEntry(e) {
   }
   return it;
 }
+/* 具のボタン。guGroups があれば「肉」「魚介」などの見出しごとに分けて並べる */
+function guChipsHtml(d, sel) {
+  const chip = ([k, l]) => `<button class="chip ${sel.includes(k) ? 'on' : ''}" data-gu="${k}">${l}</button>`;
+  if (!d.guGroups) return `<div class="gu-head">具（タップで選ぶ）</div><div class="chips gu">${d.gu.map(chip).join('')}</div>`;
+  return `<div class="gu-head">具（タップで選ぶ）</div>` + d.guGroups.map(([title, keys]) =>
+    `<div class="gu-sub">${esc(title)}</div><div class="chips gu">${d.gu.filter(g => keys.includes(g[0])).map(chip).join('')}</div>`).join('');
+}
 /* 修正画面の目印：何の記録を直しているか */
 function editTag(e) {
   return `<div class="edit-tag">✎ ${esc(dateLabel(viewDate))}・${esc(mealLabel(e.meal))}の記録を修正しています<div class="tiny muted">今の量：${esc(entryAmountLabel(e))}・たんぱく質 ${fmt(e.protein)}g</div></div>`;
@@ -2440,7 +2591,7 @@ function openItemAmount(item, entry, defVal, mlId) {
     <div class="meal-pick">${MEALS.map(([mm, l]) => `<button class="chip ${mm === meal ? 'on' : ''}" data-meal="${mm}">${l}</button>`).join('')}</div>
     <div class="amount-box"><input id="qty" type="number" inputmode="decimal" min="0" step="any" value="${fmt(val)}"><span class="u">${is100 ? 'g' : '× ' + esc(item.unit)}</span></div>
     <div class="chips">${chips.map(q => `<button class="chip" data-q="${q}">${q}${is100 ? 'g' : ''}</button>`).join('')}</div>
-    ${item.sel ? `<div class="gu-head">具（タップで選ぶ）</div><div class="chips gu">${(DISHES.find(x => x.id === item.id).gu).map(([k, l]) => `<button class="chip ${item.sel.includes(k) ? 'on' : ''}" data-gu="${k}">${l}</button>`).join('')}</div>` : ''}
+    ${item.sel ? guChipsHtml(DISHES.find(x => x.id === item.id), item.sel) : ''}
     ${item.kind === 'gen' ? `<div class="note">${esc((GENERIC_ITEMS.find(g => g.id === item.id) || {}).note || '')}</div>` : ''}
     ${item.kind === 'dish' ? `<div class="note" id="dishNote">${esc(dishNote(item.id, item.sel))}</div>` : ''}
     <div class="result"><span>たんぱく質</span><b id="calc">0g</b></div>
@@ -2681,7 +2832,7 @@ document.addEventListener('click', ev => {
     if (ds.amode === 'g') {
       const mr = isDrink(f) ? mlRate(f) : null;
       if (mr) { sheetCtx.unit = 'mL'; sheetCtx.value = g ? r1(g * 100 / mr.r) : 200; }
-      else { sheetCtx.unit = 'g'; sheetCtx.value = g || 100; }
+      else { sheetCtx.unit = 'g'; sheetCtx.value = g || amountSet(foodByCode.get(sheetCtx.code)).def; }
     }
     if (ds.amode === 'raw' && f.rate && g) sheetCtx.raw = r1(g * 100 / f.rate);
     renderAmountBody();
