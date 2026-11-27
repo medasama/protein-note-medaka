@@ -573,11 +573,11 @@ const DISHES = [
   { id: 'agedashi', name: '揚げ出し豆腐', unit: '1人前', keys: 'あげだしどうふ とうふ', items: [['04032', 150, '木綿豆腐1/2丁'], ['06367', 20, '大根おろし'], ['14006', 10, '揚げ油（吸油）'], ['17021', 40, 'だし'], ['17007', 8, 'しょうゆ'], ['16025', 8, 'みりん']] },
   // 鍋（1人前の目安。スープは飲み切らない前提で、味付けは少なめに見ている）
   // 鍋は具を選べる（基本：だし＋しょうゆ＋みりん。具は1人前の目安の量。キムチ・豆乳を選ぶとキムチ鍋・豆乳鍋に近くなる）
-  // 味（だし・たれ）も選べる。初期の「寄せ鍋（しょうゆ）」は v1.4.38 までの基本の味と同じ。キムチ・豆乳は具から味へ移した
+  // 味（だし・たれ）も選べる。初期の「寄せ鍋（しょうゆ）」は v1.4.38 までの基本の味と同じ。キムチ・豆乳は具から味へ移した。「寄せ鍋（だし・ポン酢）」はだしで煮てポン酢で食べる（v1.4.42まではポン酢だけ）
   { id: 'nabe', name: '鍋', unit: '1人前', keys: 'なべ 鍋 具を選ぶ 鍋料理', items: [],
     dashiDef: 'yose',
     dashi: [['yose', '寄せ鍋（しょうゆ）', [['17021', 200, 'だし'], ['17007', 10, 'しょうゆ'], ['16025', 5, 'みりん']]],
-      ['ponzu', 'ポン酢', [['17110', 15, 'ぽん酢']]],
+      ['ponzu', '寄せ鍋（だし・ポン酢）', [['17021', 200, 'だし'], ['17110', 15, 'ぽん酢']]],
       ['miso', 'みそ', [['17021', 150, 'だし'], ['17045', 15, 'みそ']]],
       ['kimchi', 'キムチ', [['06236', 60, 'キムチ'], ['17045', 6, 'みそ'], ['14002', 3, 'ごま油']]],
       ['tonyu', '豆乳', [['04052', 150, '豆乳'], ['17045', 8, 'みそ']]],
@@ -589,8 +589,8 @@ const DISHES = [
       ['魚介', ['tara', 'sake', 'buri', 'ebi', 'kaki', 'hotate', 'asari', 'tsumire']],
       ['豆腐・卵', ['tofu', 'yakidofu', 'atsuage', 'age', 'tamago']],
       ['野菜', ['hakusai', 'negi', 'shungiku', 'mizuna', 'kyabetsu', 'nira', 'moyashi', 'ninjin', 'daikon']],
-      ['きのこ・その他', ['shiitake', 'enoki', 'shimeji', 'maitake', 'shirataki']],
-      ['しめ', ['udon', 'gohan', 'mochi']]],
+      ['きのこ・その他', ['shiitake', 'enoki', 'shimeji', 'maitake', 'eringi', 'shirataki']],
+      ['しめ', ['udon', 'gohan', 'mochi', 'malony']]],
     gu: [['torimomo', '鶏もも', '11221', 60], ['torimune', '鶏むね', '11220', 60], ['dango', '鶏団子', '11230', 60], ['butabara', '豚ばら', '11129', 60],
       ['butarosu', '豚ロース', '11123', 60], ['gyu', '牛肉', '11034', 60], ['motsu', 'もつ', '11098', 60], ['sausage', 'ウインナー', '11186', 40],
       ['tara', 'たら', '10205', 100], ['sake', '鮭', '10134', 80], ['buri', 'ぶり', '10241', 80], ['ebi', 'えび', '10415', 40],
@@ -599,8 +599,8 @@ const DISHES = [
       ['tamago', '卵', '12004', 50], ['hakusai', '白菜', '06233', 100], ['negi', 'ねぎ', '06226', 30], ['shungiku', '春菊', '06099', 30],
       ['mizuna', '水菜', '06072', 30], ['kyabetsu', 'キャベツ', '06061', 60], ['nira', 'にら', '06207', 20], ['moyashi', 'もやし', '06291', 50],
       ['ninjin', 'にんじん', '06214', 20], ['daikon', '大根', '06134', 50], ['shiitake', 'しいたけ', '08039', 20], ['enoki', 'えのき', '08001', 30],
-      ['shimeji', 'しめじ', '08016', 30], ['maitake', 'まいたけ', '08028', 30], ['shirataki', 'しらたき', '02005', 40],
-      ['udon', 'しめのうどん', '01039', 120], ['gohan', 'しめのごはん', '01088', 80], ['mochi', 'もち', '01117', 50]] },
+      ['shimeji', 'しめじ', '08016', 30], ['maitake', 'まいたけ', '08028', 30], ['eringi', 'エリンギ', '08025', 30], ['shirataki', 'しらたき', '02005', 40],
+      ['udon', 'しめのうどん', '01039', 120], ['gohan', 'しめのごはん', '01088', 80], ['mochi', 'もち', '01117', 50], ['malony', 'マロニー（乾）', '02059', 25]] },
   { id: 'mizutaki', name: '水炊き', unit: '1人前', keys: 'みずたき 鍋', items: [['11221', 100, '鶏もも'], ['04032', 60, '豆腐'], ['06233', 80, '白菜'], ['06226', 20, 'ねぎ'], ['06099', 20, '春菊'], ['08039', 15, 'しいたけ'], ['17110', 15, 'ぽん酢']] },
   { id: 'kimchinabe', name: 'キムチ鍋', unit: '1人前', keys: 'きむちなべ 鍋', items: [['11129', 70, '豚ばら'], ['06236', 80, 'キムチ'], ['04032', 75, '豆腐'], ['06233', 60, '白菜'], ['06207', 20, 'にら'], ['08001', 20, 'えのき'], ['17045', 6, 'みそ'], ['14002', 3, 'ごま油']] },
   { id: 'motsunabe', name: 'もつ鍋', unit: '1人前', keys: 'もつなべ 鍋 もつ', items: [['11098', 100, '牛もつ（小腸）'], ['06061', 100, 'キャベツ'], ['06207', 30, 'にら'], ['06084', 15, 'ごぼう'], ['02005', 30, 'しらたき'], ['17007', 15, 'しょうゆ']] },
@@ -875,7 +875,7 @@ function guDishItem(d, sel, opt) {
   const it = dishItem(Object.assign({}, d, { gu: null, items }));
   if (!it) return null;
   const labels = gus.map(g => g[1]);
-  const head = dsh && dashi !== d.dashiDef ? dsh[1] + '・' : '';
+  const head = dsh && dashi !== d.dashiDef ? dsh[1].replace(/^寄せ鍋（(.+)）$/, '$1') + '・' : ''; // 名前の中は「だし・ポン酢」のように短く
   return Object.assign(it, { name: `${d.name}（${head}${labels.length ? labels.join('・') : '具なし'}）`, title: d.name, sel, ga: ga2, dashi, guBase: base, guItems: items });
 }
 function guOpt(e) { return { ga: e.ga, dashi: e.dashi }; }
@@ -1500,11 +1500,34 @@ function hitokoto(ratio) {
 }
 hitokoto.seen = {};
 
+/* ---------- 更新のお知らせ（大きな更新のときだけ） ----------
+   新しいお知らせを先頭に足す。banner は今日の画面の上に出す1行（一度閉じたら出ない）。items は設定の「更新のお知らせ」に並べる。
+   go：「見てみる」で開くタブ（settings なら表示の欄へ） */
+const NEWS = [
+  { id: '2026-11-nutri', date: '2026年11月', banner: '更新！！ほかの栄養素も見られるようになったよ！ 見たい人は設定画面から表示をオンにしてね！', go: 'settings',
+    items: ['食塩・食物繊維・カルシウム・鉄・ビタミンも見られるようになりました（設定の「表示」でオンにした人だけ）',
+      '鍋・みそ汁・焼肉・すき焼き・カレーで、具の量を直せるようになりました。鍋は味（だし・たれ）も選べます',
+      '料理もマイリストに入れられるようになりました（☆ この内容でマイリストへ）',
+      '市販品は「Webで調べる」と「栄養成分表示を貼り付け」で、かんたんに登録できます',
+      '魚の名前で探すと刺身も出るようになりました。KFCのメニューを最新にしました'] },
+];
+function newsBanner() {
+  const n = NEWS[0];
+  if (!n || currentTab !== 'today' || state.newsSeen === n.id) return '';
+  return `<div class="news-band" role="status"><span class="news-text">${esc(n.banner)}</span>
+    <span class="news-acts"><button class="btn small" data-newsgo="1">見てみる</button><button class="news-x" data-newsx="1" aria-label="お知らせを閉じる">✕</button></span></div>`;
+}
+function markNewsSeen() { if (NEWS[0]) { state.newsSeen = NEWS[0].id; saveState(); } }
+function newsCard() {
+  if (!NEWS.length) return '';
+  return `<div class="card" id="newsCard"><h2>更新のお知らせ</h2>${NEWS.map(n => `<div class="news-item"><div class="small" style="font-weight:700">${esc(n.date)}</div><ul class="small">${n.items.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div>`;
+}
+
 function renderToday() {
   const el = $('#tab-today');
   const t = computeTargets(state.profile);
   const total = dayTotal(viewDate);
-  let html = '';
+  let html = newsBanner();
   let suggestHtml = '';
 
   if (!t) {
@@ -1756,12 +1779,12 @@ function renderSettings() {
     <div class="meal-actions" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="mlRegMenu">＋ メニューを登録</button><button class="btn ghost small" data-mlnew="1">＋ 市販品を登録</button></div>
   </div>
 
-  <div class="card">
+  <div class="card" id="dispCard">
     <h2>表示</h2>
     <label style="display:flex;gap:10px;align-items:center;font-weight:700"><input type="checkbox" id="showPFC" ${state.showPFC ? 'checked' : ''} style="width:22px;height:22px">カロリー・PFC（脂質・炭水化物）も表示する</label>
     <div class="hint" style="margin-top:6px">オンにすると、今日の画面に1日の合計kcalとPFCの割合、記録ごとのkcalを小さく表示します。料理（目安）のカロリーは油の量などでぶれる、おおまかな値です。</div>
     <label style="display:flex;gap:10px;align-items:center;font-weight:700;margin-top:14px"><input type="checkbox" id="showNutri" ${state.showNutri ? 'checked' : ''} style="width:22px;height:22px">ほかの栄養素（食塩・食物繊維・カルシウム・鉄・ビタミン）も表示する</label>
-    <div class="hint" style="margin-top:6px">オンにすると、今日の画面に食塩・食物繊維・カルシウム・鉄を、「詳細」でビタミンも表示します。食品成分表から計算したおおまかな目安で、調理で減る分は入っていません。公式値の市販品・外食は、公表されている分だけ使います（今はKFCのみ）。</div>
+    <div class="hint" style="margin-top:6px">オンにすると、今日の画面に食塩・食物繊維・カルシウム・鉄を、「詳細」でビタミンも表示します。食品成分表から計算した大まかな目安です。</div>
   </div>
 
   <div class="card">
@@ -1774,6 +1797,8 @@ function renderSettings() {
       <div class="hint">期間を過ぎた写真は、次に開いたときに自動で消えます（記録は消えません）</div></div>
     <div class="small muted" id="photoCountLabel"></div>
   </div>
+
+  ${newsCard()}
 
   <div class="card">
     <h2>データの保存</h2>
@@ -1818,7 +1843,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.41</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.44</p>
   </div>`;
 }
 
@@ -1860,6 +1885,7 @@ function openSheet(title, bodyHtml, onMount, opts = {}) {
 }
 function closeSheet() {
   const sh = $('#sheet');
+  if (state.mlDraft && sh.querySelector('#mlForm')) { delete state.mlDraft; saveState(); } // 登録画面を自分で閉じたら下書きは捨てる
   sh.hidden = true;
   sh.classList.remove('tall', 'editing');
   multiCtx = null;
@@ -2016,8 +2042,9 @@ function openMultiResults() {
     return `<div class="mgroup">
       <div class="mhead"><b>${esc(term)}</b><span class="tiny muted">${list.length ? list.length + '件' : ''}</span></div>
       ${widened ? `<div class="tiny muted" style="padding:2px 4px 4px">「${esc(term)}」では見つからなかったので、${widened.map(t => '「' + esc(t) + '」').join('と')}で探しました</div>` : ''}
-      ${rows || `<div class="empty small">見つかりませんでした。別の言い方で試してください</div>`}
+      ${rows || `<div class="empty small">見つかりませんでした。別の言い方で試すか、市販品ならWebで調べてマイリストに登録できます</div>`}
       ${list.length > n ? `<button class="btn ghost small block" data-mmore="${i}">もっと見る</button>` : ''}
+      <div class="mhelp"><span class="tiny muted">市販品が見つからないとき：</span><button class="linkbtn" data-web="${esc(term)}">Webで調べる</button><button class="linkbtn" data-mlnew="${esc(term)}">マイリストに登録</button></div>
     </div>`;
   }).join('');
   openSheet(`${mealLabel(c.meal)}に追加`, `
@@ -2666,6 +2693,51 @@ function finishReg() {
   closeSheet(); render();
 }
 
+/* ---------- 市販品の登録の手助け：Webで調べる／栄養成分表示を貼り付けて読み取る ---------- */
+function webSearchUrl(name) { return 'https://www.google.com/search?q=' + encodeURIComponent(`${name} 栄養成分表示`); }
+function openWebSearch(name) {
+  const w = window.open(webSearchUrl(name), '_blank', 'noopener');
+  if (!w) location.href = webSearchUrl(name);
+}
+/* コピーした栄養成分表示の文字から数字を読み取る。読めなかった項目は入れない
+   返り値：{ basis: 'unit'|'100g', unit, grams(1単位のg), defGrams, protein, kcal, fat, carb, salt, fib, scaled } */
+function parseNutritionText(raw) {
+  let t = String(raw || '').normalize('NFKC')
+    .replace(/,(?=\d{3})/g, '').replace(/(\d)\s*[〜～~－−―ー-]\s*(?=\d)/g, '$1〜').replace(/[ \t　]+/g, ' ');
+  const NUM = '(\\d+(?:\\.\\d+)?)(?:\\s*〜\\s*(\\d+(?:\\.\\d+)?))?';
+  const val = m => m ? (m[2] ? (Number(m[1]) + Number(m[2])) / 2 : Number(m[1])) : null; // 幅がある値は中間
+  const pick = (labels, unit, skip) => {
+    const re = new RegExp(`(?:${labels})(?![^\\n]{0,4}(?:${skip || '$^'}))[^\\d]{0,14}${NUM}\\s*${unit}`, 'i');
+    return val(t.match(re));
+  };
+  const r = {};
+  r.protein = pick('たんぱく質|タンパク質|蛋白質|たん白質|タンパク', 'g');
+  r.kcal = pick('エネルギー|熱量|カロリー', 'kcal');
+  r.fat = pick('脂質', 'g', '飽和|脂肪酸');
+  r.carb = pick('炭水化物', 'g');
+  r.fib = pick('食物繊維', 'g');
+  r.salt = pick('食塩相当量|食塩', 'g');
+  if (r.salt == null) { const na = pick('ナトリウム', 'mg'); if (na != null) r.salt = Math.round(na * 2.54 / 100) / 10; }
+  if (r.carb == null) { const su = pick('糖質', 'g'); if (su != null && r.fib != null) r.carb = Math.round((su + r.fib) * 10) / 10; }
+  // 何あたりか（最初に出てくる「〜当たり／あたり」）
+  const m = t.match(/([^\n]{0,20}?)(?:当たり|あたり|当り)/);
+  if (m) {
+    const head = m[1].replace(/^.*(?:栄養成分表示|栄養成分|表示|成分)/, '').trim();
+    const gm = head.match(/(\d+(?:\.\d+)?)\s*(?:g|ml|mL)/i);
+    const um = head.match(/(1|１)\s*([^\d\s(（)）]{1,6})/);
+    if (gm && Number(gm[1]) === 100 && !um) { r.basis = '100g'; }
+    else if (um) { r.basis = 'unit'; r.unit = '1' + um[2].replace(/分$/, '').replace(/当$/, ''); if (gm) r.grams = Number(gm[1]); }
+    else if (gm) { // 「60gあたり」のように単位がないときは 100gあたりに直す
+      const g = Number(gm[1]);
+      if (g > 0) {
+        r.basis = '100g'; r.defGrams = g; r.scaled = g;
+        for (const k of ['protein', 'kcal', 'fat', 'carb', 'fib', 'salt']) if (r[k] != null) r[k] = k === 'kcal' ? Math.round(r[k] * 100 / g) : Math.round(r[k] * 1000 / g) / 10;
+      }
+    }
+  }
+  return r;
+}
+
 /* opts: { name: 初期の名前, meal: 追加画面から開いたときの食事 } */
 function openMlForm(id, opts = {}) {
   const it = id ? state.myList.find(x => x.id === id) : null;
@@ -2682,6 +2754,15 @@ function openMlForm(id, opts = {}) {
           <label><input type="radio" name="kind" value="menu" ${kind === 'menu' ? 'checked' : ''}>メニュー</label>
         </div></div>
       <div class="field"><label for="mlName">名前</label><input id="mlName" maxlength="40" value="${esc(it ? it.name : (opts.name || ''))}" placeholder="例：サラダチキン プレーン／家の豚汁"></div>
+      <div class="paste-help">
+        <div class="paste-btns"><button type="button" class="btn ghost small" id="mlWeb">🔍 Webで調べる</button><button type="button" class="btn ghost small" id="mlPasteBtn">📋 栄養成分表示を貼り付け</button></div>
+        <div class="hint">Webページや、パッケージの写真の文字（iPhoneの写真の文字認識、Googleレンズなど）をコピーして貼り付けると、数字を読み取って下の欄に入れます</div>
+        <div id="mlPasteArea" hidden>
+          <textarea id="mlPaste" rows="5" placeholder="ここに貼り付け（長押し →「ペースト」）"></textarea>
+          <button type="button" class="btn small block" id="mlParse">読み取る</button>
+          <div id="mlParsed" class="small" style="margin-top:6px"></div>
+        </div>
+      </div>
 
       <div id="prodFields">
         <div class="field"><label>パッケージの表示</label>
@@ -2733,6 +2814,61 @@ function openMlForm(id, opts = {}) {
     sh.querySelectorAll('input[name=kind],input[name=basis]').forEach(r => r.addEventListener('change', sync));
     $('#mlUnit', sh).addEventListener('input', sync);
     sync();
+    // 表示していない欄（カロリー・食塩など）は、読み取った値をここに持っておいて登録時に入れる
+    let extra = {};
+    const setVal = (id, v) => { const el = $(id, sh); if (el && v != null) { el.value = v; el.classList.add('filled'); } return !!el; };
+    const applyParsed = r => {
+      extra = {};
+      if (r.basis) {
+        if (r.basis === '100g' || $('input[name=kind]:checked', sh).value === 'prod') sh.querySelector('input[name=kind][value=prod]').checked = true;
+        sh.querySelector(`input[name=basis][value="${r.basis}"]`).checked = true;
+        if (r.unit) setVal('#mlUnit', r.unit);
+        if (r.defGrams) setVal('#mlDef', r.defGrams);
+      }
+      setVal('#mlP', r.protein);
+      for (const [id, k] of [['#mlK', 'kcal'], ['#mlF', 'fat'], ['#mlC', 'carb'], ['#mlSalt', 'salt'], ['#mlFib', 'fib']]) {
+        if (r[k] != null && !setVal(id, r[k])) extra[k] = r[k];
+      }
+      sync();
+      const L = [['protein', 'たんぱく質', 'g'], ['kcal', 'エネルギー', 'kcal'], ['fat', '脂質', 'g'], ['carb', '炭水化物', 'g'], ['salt', '食塩相当量', 'g'], ['fib', '食物繊維', 'g']];
+      const got = L.filter(([k]) => r[k] != null).map(([k, l, u]) => `${l} ${fmt(r[k])}${u}`);
+      const miss = L.filter(([k]) => r[k] == null).map(([, l]) => l);
+      const per = r.basis === '100g' ? (r.scaled ? `100gあたり（表示は${fmt(r.scaled)}gあたり → 100gあたりに直しました）` : '100gあたり') : r.unit ? `${r.unit}${r.grams ? `（${fmt(r.grams)}g）` : ''}あたり` : '何あたりか読み取れませんでした（下で選んでください）';
+      $('#mlParsed', sh).innerHTML = got.length
+        ? `<div class="parsed-ok"><b>読み取った値</b>：${esc(per)}<br>${esc(got.join('・'))}</div>${miss.length ? `<div class="tiny muted">読み取れなかった：${esc(miss.join('・'))}（必要なら手で入れてください）</div>` : ''}<div class="tiny" style="color:var(--accent);font-weight:700">数字がパッケージの表示と合っているか、確認してから登録してください</div>`
+        : '<div class="form-err">数字を読み取れませんでした。栄養成分表示の部分だけをコピーして、もう一度お試しください。または下の欄に手で入れてください</div>';
+    };
+    const runParse = () => { const v = $('#mlPaste', sh).value; if (v.trim()) applyParsed(parseNutritionText(v)); };
+    $('#mlParse', sh).addEventListener('click', runParse);
+    $('#mlPasteBtn', sh).addEventListener('click', async () => {
+      $('#mlPasteArea', sh).hidden = false;
+      try {
+        const txt = navigator.clipboard && navigator.clipboard.readText ? await navigator.clipboard.readText() : '';
+        if (txt && txt.trim()) { $('#mlPaste', sh).value = txt; runParse(); return; }
+      } catch (e) { /* 読めないときは手で貼り付けてもらう */ }
+      $('#mlPaste', sh).focus();
+      toast('下の欄を長押しして「ペースト」してください');
+    });
+    $('#mlPaste', sh).addEventListener('paste', () => setTimeout(runParse, 0));
+    const draftNow = () => ({ name: $('#mlName', sh).value, kind: $('input[name=kind]:checked', sh).value, basis: $('input[name=basis]:checked', sh).value,
+      unit: $('#mlUnit', sh).value, def: $('#mlDef', sh).value, p: $('#mlP', sh).value, paste: $('#mlPaste', sh).value, t: Date.now() });
+    $('#mlWeb', sh).addEventListener('click', () => {
+      const name = $('#mlName', sh).value.trim();
+      if (!name) { toast('先に名前（商品名）を入れてください'); $('#mlName', sh).focus(); return; }
+      if (!it) { state.mlDraft = draftNow(); saveState(); } // 戻ったときに入力が消えていても戻せるように
+      openWebSearch(name);
+    });
+    // Webで調べに行った間にアプリが読み込み直されていたら、入力を戻す（1日以内）
+    const dr = state.mlDraft;
+    if (!it && dr && Date.now() - dr.t < 86400000 && (!opts.name || opts.name === dr.name)) {
+      $('#mlName', sh).value = dr.name || '';
+      sh.querySelector(`input[name=kind][value="${dr.kind}"]`).checked = true;
+      sh.querySelector(`input[name=basis][value="${dr.basis}"]`).checked = true;
+      $('#mlUnit', sh).value = dr.unit || '1個'; $('#mlDef', sh).value = dr.def || 100; $('#mlP', sh).value = dr.p || '';
+      if (dr.paste) { $('#mlPasteArea', sh).hidden = false; $('#mlPaste', sh).value = dr.paste; }
+      sync();
+      toast('調べる前の入力を戻しました');
+    }
     let submitter = 'none';
     sh.querySelectorAll('button[type=submit]').forEach(b => b.addEventListener('click', () => { submitter = b.dataset.and; }));
     $('#mlForm', sh).addEventListener('submit', ev => {
@@ -2764,6 +2900,9 @@ function openMlForm(id, opts = {}) {
         const nv = id => { const x = $(id, sh).value.trim(); return x === '' ? null : Number(x); };
         Object.assign(data, { salt: nv('#mlSalt'), fib: nv('#mlFib') });
       }
+      for (const [k, v] of Object.entries(extra)) if (data[k] === undefined) data[k] = v; // 表示していない欄で読み取った値
+      if (data.kcal == null && (data.fat != null || data.carb != null)) { data.fat = null; data.carb = null; }
+      delete state.mlDraft;
       let target;
       if (it) { Object.assign(it, data); target = it; }
       else { target = Object.assign({ id: uid() }, data); state.myList.push(target); }
@@ -2884,14 +3023,21 @@ function guBoxHtml() {
   if (!it || !it.sel) return '';
   const d = DISHES.find(x => x.id === it.id);
   let h = '';
-  if (d.dashi) h += `<div class="gu-head">味（だし・たれ）</div><div class="chips gu">${d.dashi.map(([k, l]) => `<button class="chip ${k === it.dashi ? 'on' : ''}" data-dashi="${k}">${esc(l)}</button>`).join('')}</div>`;
-  h += guChipsHtml(d, it.sel);
+  if (d.dashi) {
+    const cur = d.dashi.find(x => x[0] === it.dashi);
+    h += `<div class="gu-sec"><div class="gu-sec-h">味（だし・たれ）<span>${esc(cur ? cur[1] : '')}</span></div>
+      <div class="chips gu">${d.dashi.map(([k, l]) => `<button class="chip ${k === it.dashi ? 'on' : ''}" data-dashi="${k}">${esc(l)}</button>`).join('')}</div></div>`;
+  }
+  h += `<div class="gu-sec"><div class="gu-sec-h">具<span>${it.sel.length}品えらんでいます</span></div>${guChipsHtml(d, it.sel).replace('<div class="gu-head">具（タップで選ぶ）</div>', '<div class="tiny muted" style="margin:-2px 0 4px">タップで入れる・外す</div>')}</div>`;
   const gus = d.gu.filter(g => it.sel.includes(g[0]));
   if (gus.length) {
     const v = Number(c.val) || 1;
-    h += `<div class="gu-head">量（${esc(fmt(v) + d.unit.replace(/^1/, ''))}分。タップで直せます）</div><div class="gu-list">` +
-      gus.map(g => `<button class="gu-line ${c.guEdit === g[0] ? 'open' : ''}" data-gued="${g[0]}"><span>${esc(g[1])}</span><b id="gua-${g[0]}">${esc(guAmtText(g, it.ga, v))}</b><span class="gu-arrow">${c.guEdit === g[0] ? '▲' : '›'}</span></button>` +
-        (c.guEdit === g[0] ? guEditorHtml(g, it.ga, v) : '')).join('') + '</div>';
+    const line = g => `<button class="gu-line ${c.guEdit === g[0] ? 'open' : ''}" data-gued="${g[0]}"><span class="gu-name">${esc(g[1])}</span><b class="gu-amt" id="gua-${g[0]}">${esc(guAmtText(g, it.ga, v))}</b><span class="gu-arrow">${c.guEdit === g[0] ? '閉じる' : '直す'}</span></button>` +
+      (c.guEdit === g[0] ? guEditorHtml(g, it.ga, v) : '');
+    // 「肉」「魚介」などの見出しごとに分けて並べる
+    const groups = d.guGroups ? d.guGroups.map(([t, keys]) => [t, gus.filter(g => keys.includes(g[0]))]).filter(([, l]) => l.length) : [['', gus]];
+    h += `<div class="gu-sec gu-sec-amt"><div class="gu-sec-h">量<span>${esc(fmt(v) + d.unit.replace(/^1/, ''))}分・タップで直せます</span></div>` +
+      groups.map(([t, l]) => `${t ? `<div class="gu-grp">${esc(t)}</div>` : ''}<div class="gu-list">${l.map(line).join('')}</div>`).join('') + '</div>';
   }
   return h;
 }
@@ -3329,6 +3475,14 @@ document.addEventListener('click', ev => {
   if (ds.dishpick) { const d = DISHES.find(x => x.id === ds.dishpick); const it = d && dishItem(d); if (it) openItemAmount(it, null, dishDefVal(d)); return; }
   if (ds.genpick) { const g = GENERIC_ITEMS.find(x => x.id === ds.genpick); if (g) openItemAmount(g, null, (state.recent['gen:' + g.id] || {}).v || g.defVal); return; }
   if (ds.nutri) { openNutriSheet(ds.nutri); return; }
+  if (ds.web) { openWebSearch(ds.web); return; }
+  if (ds.newsx) { markNewsSeen(); render(); return; }
+  if (ds.newsgo) {
+    markNewsSeen();
+    switchTab(NEWS[0].go || 'settings');
+    const el = $('#dispCard'); if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    return;
+  }
   if (ds.regpick) { regPick(Number(ds.regpick)); return; }
   if (ds.mladj) { adjustMl(ds.mladj); return; }
   if (ds.mlnew) {
@@ -3493,6 +3647,7 @@ function switchTab(tab) {
 
 /* ---------- 起動 ---------- */
 if (!state.profile) currentTab = 'today';
+if (!state.profile && !Object.keys(state.days).length && NEWS[0]) state.newsSeen = NEWS[0].id; // はじめて使う人にはお知らせを出さない（保存は最初の操作のときでよい）
 render();
 loadFoods();
 if (state.showNutri) loadNutri();
