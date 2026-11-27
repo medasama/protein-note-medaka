@@ -410,3 +410,27 @@ details.fold[open] summary{margin-bottom:6px}
 .chips.gu .chip{padding:7px 12px}
 .gu-tag{display:inline-block;font-size:.72rem;font-weight:700;color:var(--primary);background:var(--chip-bg);border-radius:999px;padding:2px 8px;margin-left:4px;vertical-align:2px}
 .gu-sub{font-size:.75rem;color:var(--muted);margin:8px 2px 3px}
+
+/* v1.4.39 具の量の一覧・直す欄 */
+.gu-list{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:2px}
+.gu-line{display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;background:none;border:0;border-top:1px solid var(--line);font:inherit;color:inherit;text-align:left;cursor:pointer}
+.gu-list>.gu-line:first-child{border-top:0}
+.gu-line>span:first-child{flex:1}
+.gu-line b{font-weight:700;white-space:nowrap}
+.gu-line .gu-arrow{color:var(--muted);font-size:.8rem;width:1em;text-align:center}
+.gu-line.open{background:var(--chip-bg)}
+.gu-ed{padding:8px 12px 12px;background:var(--chip-bg);display:flex;flex-direction:column;gap:8px}
+.gu-cnt{display:flex;align-items:center;gap:10px}
+.gu-cnt b{font-size:1.25rem;min-width:2.2em;text-align:center}
+.gu-cnt .btn{min-width:44px;font-size:1.1rem}
+.gu-gin{display:flex;align-items:center;gap:6px;font-size:.9rem}
+.gu-gin input{width:6.5em;padding:7px 9px;font-size:1rem;border:1.5px solid var(--line);border-radius:10px;background:var(--card-soft);color:var(--ink);text-align:right}
+.gu-gin input:focus{outline:none;border-color:var(--primary)}
+
+/* v1.4.40 ほかの栄養素 */
+.ngrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.nrow{min-width:0}
+.nrow-top{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:.88rem}
+.nrow-top b{white-space:nowrap}
+.nbar{height:6px;border-radius:3px;background:var(--track);overflow:hidden;margin:3px 0 2px}
+.nbar span{display:block;height:100%;background:var(--primary);border-radius:3px}

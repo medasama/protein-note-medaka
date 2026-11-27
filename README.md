@@ -25,10 +25,12 @@
 |---|---|
 | index.html / style.css / app.js | アプリ本体 |
 | foods.json | 成分表から作った食品データ（食品番号・食品群・食品名・100gあたりたんぱく質・推定値フラグ・100mLあたりの重さ） |
+| nutri.json | ほかの栄養素（食塩・食物繊維・カルシウム・鉄・ビタミン13種のうちビオチン以外）。設定でオンにした人だけ読み込む。tools/build_nutri.py で成分表Excelから作る |
 | photos.js | 写真メモ（撮影時刻で食事に振り分け、縮小して端末内のIndexedDBに保存、タップで拡大） |
 | sw.js | オフライン用。**ファイルを更新したら `VERSION` を上げる**（上げないと古い版が表示され続けます） |
 | manifest.webmanifest / icons/ | ホーム画面用の設定とアイコン |
 | tools/build_foods.py | 成分表Excelから foods.json を作り直すスクリプト |
+| tools/build_nutri.py | 成分表Excelから nutri.json を作り直すスクリプト |
 | tools/extract_rates.py | 成分表 第1章PDFの重量変化率表から rates.json を作るスクリプト |
 
 ## 量の入れ方
@@ -72,5 +74,6 @@
 ```
 python3 tools/extract_rates.py <第1章PDF> rates.json
 python3 tools/build_foods.py <新しいExcel> foods.json rates.json
+python3 tools/build_nutri.py <新しいExcel> nutri.json
 ```
 列の位置が変わっている場合はスクリプトが止まります。そのときはスクリプトを修正してください。最後に `sw.js` の `VERSION` を上げます。
