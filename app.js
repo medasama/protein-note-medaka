@@ -1843,7 +1843,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.45</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.46</p>
   </div>`;
 }
 
@@ -2697,9 +2697,12 @@ function finishReg() {
 
 /* ---------- 市販品の登録の手助け：Webで調べる／栄養成分表示を貼り付けて読み取る ---------- */
 function webSearchUrl(name) { return 'https://www.google.com/search?q=' + encodeURIComponent(`${name} 栄養成分表示`); }
+/* 別の画面（ブラウザ）で開く。アプリの画面は Google に切り替えない
+   （v1.4.42〜45 は window.open の 'noopener' で戻り値が必ず null になり、アプリ自身が Google に移って白い画面になっていた） */
 function openWebSearch(name) {
-  const w = window.open(webSearchUrl(name), '_blank', 'noopener');
-  if (!w) location.href = webSearchUrl(name);
+  const a = document.createElement('a');
+  a.href = webSearchUrl(name); a.target = '_blank'; a.rel = 'noopener noreferrer';
+  document.body.appendChild(a); a.click(); a.remove();
 }
 /* コピーした栄養成分表示の文字から数字を読み取る。読めなかった項目は入れない
    返り値：{ basis: 'unit'|'100g', unit, grams(1単位のg), defGrams, protein, kcal, fat, carb, salt, fib, scaled } */
