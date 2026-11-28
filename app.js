@@ -2052,7 +2052,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.53</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.54</p>
   </div>`;
 }
 
@@ -3392,6 +3392,23 @@ const NUTRI_REF = {
   pant: { t: 'ai', m: [3, 4, 5, 6, 6, 7, 7, 6, 6, 6, 6, 6], f: [3, 4, 5, 6, 6, 6, 6, 5, 5, 5, 5, 5], fixed: { preg1: 5, preg2: 5, preg3: 5, lact: 6 } },
   vc: { t: 'rda', m: [35, 40, 50, 60, 70, 90, 100, 100, 100, 100, 100, 100], f: [35, 40, 50, 60, 70, 90, 100, 100, 100, 100, 100, 100], add: { preg1: 10, preg2: 10, preg3: 10, lact: 45 } },
 };
+/* 耐容上限量（食事摂取基準2025年版。年齢区分は DRI.brackets と同じ。妊婦・授乳婦は表に値がないので、その年齢の値を使う）
+   supp：通常の食品以外（サプリ・ビタミン剤）からとった分にだけ当てはめるもの（ナイアシン＝ニコチンアミド、葉酸） */
+const NUTRI_UL = {
+  ca: { m: [null, null, null, null, null, null, null, 2500, 2500, 2500, 2500, 2500], f: [null, null, null, null, null, null, null, 2500, 2500, 2500, 2500, 2500] },
+  va: { m: [600, 700, 950, 1200, 1500, 2100, 2600, 2700, 2700, 2700, 2700, 2700], f: [600, 700, 950, 1200, 1500, 2100, 2600, 2700, 2700, 2700, 2700, 2700] },
+  vd: { m: [25, 30, 40, 40, 60, 80, 90, 100, 100, 100, 100, 100], f: [25, 30, 40, 40, 60, 80, 90, 100, 100, 100, 100, 100] },
+  ve: { m: [150, 200, 300, 350, 450, 650, 750, 800, 800, 800, 800, 800], f: [150, 200, 300, 350, 450, 600, 650, 650, 700, 700, 700, 650] },
+  ne: { supp: true, m: [60, 80, 100, 150, 200, 250, 300, 300, 350, 350, 300, 300], f: [60, 80, 100, 150, 200, 250, 250, 250, 250, 250, 250, 250] },
+  b6: { m: [10, 15, 20, 25, 30, 40, 50, 55, 60, 60, 55, 50], f: [10, 15, 20, 25, 30, 40, 45, 45, 45, 45, 45, 40] },
+  fol: { supp: true, m: [200, 300, 400, 500, 700, 900, 900, 900, 1000, 1000, 900, 900], f: [200, 300, 400, 500, 700, 900, 900, 900, 1000, 1000, 900, 900] },
+};
+function nutriUL(k, p) {
+  const u = NUTRI_UL[k];
+  if (!u || !p || !p.age || p.age < 1) return null;
+  const bi = DRI.brackets.findIndex(([lo, hi]) => p.age >= lo && p.age <= hi);
+  return bi < 0 ? null : u[p.sex === 'm' ? 'm' : 'f'][bi];
+}
 const NUTRI_T_LABEL = { rda: '推奨量', ai: '目安量', dgMin: '目標量', dgMax: '目標量' };
 const showNutri = () => !!state.showNutri;
 let nutriByCode = null, nutriKeys = null, nutriLoading = false;
@@ -3447,9 +3464,12 @@ function entryNutri(e) {
 }
 /* 記録の並びの合計。unknown[i]：その栄養素がわからない記録の数 */
 function sumNutri(list) {
-  const total = NUTRI.map(() => 0), unknown = NUTRI.map(() => 0);
-  for (const e of list) entryNutri(e).forEach((x, i) => { if (x == null) unknown[i]++; else total[i] += x; });
-  return { total, unknown, n: list.length };
+  const total = NUTRI.map(() => 0), unknown = NUTRI.map(() => 0), supp = NUTRI.map(() => 0);
+  for (const e of list) {
+    const isSupp = e.kind === 'dish' && (DISHES.find(x => x.id === e.refId) || {}).src === 'supp';
+    entryNutri(e).forEach((x, i) => { if (x == null) unknown[i]++; else { total[i] += x; if (isSupp) supp[i] += x; } });
+  }
+  return { total, unknown, supp, n: list.length };
 }
 /* 基準の値（その人の年齢・性別・妊娠授乳） */
 function nutriRef(k, p) {
@@ -3476,13 +3496,15 @@ function nutriRefText(ref, unit, d) {
   return ref.t === 'dgMax' ? `${lab} ${v}未満` : ref.t === 'dgMin' ? `${lab} ${v}以上` : `${lab} ${v}${ref.mens ? `（月経ありは${nfmt(ref.mens, d)}${unit}）` : ''}`;
 }
 /* 1行：名前・量・基準・棒（基準に対する割合。食塩は目標量に対して） */
-function nutriRow(i, val, unk, p, mode) {
+function nutriRow(i, val, unk, p, mode, suppVal) {
   const [k, name, unit, d] = NUTRI[i];
   const ref = nutriRef(k, p);
   const pct = ref && val != null ? Math.min(100, (val / ref.v) * 100) : 0;
-  const over = ref && ref.t === 'dgMax' && val >= ref.v;
+  const ul = nutriUL(k, p), ulVal = NUTRI_UL[k] && NUTRI_UL[k].supp ? suppVal : val;
+  const overUL = ul != null && ulVal != null && ulVal > ul; // 耐容上限量を超えたら色だけ変える（注意書きは出さない）
+  const over = (ref && ref.t === 'dgMax' && val >= ref.v) || overUL;
   return `<button class="nrow" data-nbd="${i}" data-nbm="${mode || 'day'}">
-    <div class="nrow-top"><span>${name} <span class="nrow-go">›</span></span><b>${nfmt(val, d)}${unit}</b></div>
+    <div class="nrow-top"><span>${name} <span class="nrow-go">›</span></span><b${overUL ? ' style="color:var(--accent)"' : ''}>${nfmt(val, d)}${unit}</b></div>
     ${ref ? `<div class="nbar"><span style="width:${pct}%;${over ? 'background:var(--accent)' : ''}"></span></div>` : ''}
     <div class="tiny muted">${esc(nutriRefText(ref, unit, d))}${unk ? `${ref ? '・' : ''}不明${unk}件を除く` : ''}</div>
   </button>`;
@@ -3494,7 +3516,7 @@ function nutriTodayHtml(list) {
   const s = sumNutri(list);
   return `<div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)">
     <div class="small" style="font-weight:700;margin-bottom:4px">ほかの栄養素（目安）</div>
-    <div class="ngrid">${NUTRI.map((x, i) => x[4] === 'main' ? nutriRow(i, s.total[i], s.unknown[i], state.profile, 'day') : '').join('')}</div>
+    <div class="ngrid">${NUTRI.map((x, i) => x[4] === 'main' ? nutriRow(i, s.total[i], s.unknown[i], state.profile, 'day', s.supp[i]) : '').join('')}</div>
     <button class="btn ghost small block" data-nutri="day" style="margin-top:6px">詳細（ビタミンも見る）</button>
   </div>`;
 }
@@ -3544,18 +3566,19 @@ function openNutriSheet(mode) {
     const all = days.flatMap(d => dayEntries(d));
     s = sumNutri(all);
     s.total = s.total.map(x => days.length ? x / days.length : 0);
+    s.supp = s.supp.map(x => days.length ? x / days.length : 0);
     title = '直近7日の平均'; sub = `記録のある${days.length}日の平均です`;
   } else {
     s = sumNutri(dayEntries(viewDate));
     title = `${dateLabel(viewDate)}の栄養素`; sub = '1日の合計です';
   }
   nutriCtx = { mode };
-  const rows = kind => NUTRI.map((x, i) => x[4] === kind ? nutriRow(i, s.total[i], s.unknown[i], p, mode === 'week' ? 'week' : 'day') : '').join('');
+  const rows = kind => NUTRI.map((x, i) => x[4] === kind ? nutriRow(i, s.total[i], s.unknown[i], p, mode === 'week' ? 'week' : 'day', s.supp[i]) : '').join('');
   openSheet(esc(title), `
     <div class="small muted">${esc(sub)}。食事摂取基準（2025年版）の値と並べています</div>
     <div class="gu-head">ミネラル・食物繊維</div><div class="ngrid">${rows('main')}</div>
     <div class="gu-head">ビタミン</div><div class="ngrid">${rows('vit')}</div>
-    <div class="note">食品成分表の値から計算した目安です。ゆでる・煮るなどで減る分（水に溶けるビタミンなど）は計算に入っていないので、実際より多めに出ます。栄養素をタップすると、どの食べ物から何をとったかが見られます。</div>
+    <div class="note">食品成分表の値から計算した目安です。ゆでる・煮るなどで減る分（水に溶けるビタミンなど）は計算に入っていないので、実際より多めに出ます。数字と棒の色が変わっているのは、とりすぎの目安（耐容上限量）を超えているものです。栄養素をタップすると、どの食べ物から何をとったかが見られます。</div>
   `, null, { tall: true });
 }
 /* --- 記録の編集 --- */
