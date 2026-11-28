@@ -503,6 +503,27 @@ function genRow(it) {
    成分表にない料理を、一般的な家庭の分量（1人前など）で材料に分け、
    材料ごとに成分表の100gあたりの値から計算して合計する。
    items: [食品番号, g, 表示名]（g は材料の重さ。ごはん・めんは炊いた／ゆでた重さ） */
+/* スープ（味ごとの入り口で共通） */
+const SOUP_DASHI = [['consomme', 'コンソメ', [['17027', 3.5, '固形ブイヨン']], 'コンソメスープ'],
+      ['tonyu', '豆乳', [['04052', 100, '豆乳'], ['17027', 2, '固形ブイヨン']], '豆乳スープ'],
+      ['chuka', '中華', [['17025', 150, '中華だし'], ['17007', 3, 'しょうゆ'], ['17012', 0.5, '塩']], '中華スープ'],
+      ['tomato', 'トマト', [['06184', 80, 'トマト缶'], ['17027', 2.5, '固形ブイヨン']], 'トマトスープ'],
+      ['milk', 'ミルク（ポタージュ風）', [['13003', 100, '牛乳'], ['17027', 2, '固形ブイヨン'], ['14017', 3, 'バター']], 'ミルクスープ']];
+const SOUP_GU = [['bacon', 'ベーコン', '11183', 15], ['sausage', 'ウインナー', '11186', 20], ['tori', '鶏もも', '11221', 30], ['buta', '豚肉', '11129', 20],
+      ['tamago', '卵', '12004', 25], ['tofu', '豆腐', '04032', 30], ['asari', 'あさり', '10281', 20],
+      ['tamanegi', '玉ねぎ', '06153', 30], ['kyabetsu', 'キャベツ', '06061', 30], ['ninjin', 'にんじん', '06214', 15], ['jaga', 'じゃがいも', '02017', 30],
+      ['hourenso', 'ほうれん草', '06267', 20], ['corn', 'コーン', '06180', 20], ['tomato', 'トマト', '06182', 30], ['broccoli', 'ブロッコリー', '06263', 20],
+      ['hakusai', '白菜', '06233', 30], ['moyashi', 'もやし', '06291', 20], ['negi', 'ねぎ', '06226', 10], ['wakame', 'わかめ', '09041', 5],
+      ['shimeji', 'しめじ', '08016', 15], ['shiitake', 'しいたけ', '08039', 15], ['enoki', 'えのき', '08001', 15], ['mushroom', 'マッシュルーム', '08031', 15]];
+const SOUP_GROUPS = [['肉・卵・豆腐など', ['bacon', 'sausage', 'tori', 'buta', 'tamago', 'tofu', 'asari']],
+      ['野菜', ['tamanegi', 'kyabetsu', 'ninjin', 'jaga', 'hourenso', 'corn', 'tomato', 'broccoli', 'hakusai', 'moyashi', 'negi', 'wakame']],
+      ['きのこ', ['shimeji', 'shiitake', 'enoki', 'mushroom']]];
+/* 青菜の和え物（おひたし・ごま和え・白和えで共通。青菜はゆでた重さ） */
+const AEMONO_AE = [['ohitashi', 'おひたし', [['17007', 4, 'しょうゆ'], ['17021', 5, 'だし'], ['10091', 0.5, 'かつお節']], 'おひたし'],
+      ['goma', 'ごま和え', [['05018', 6, 'いりごま'], ['17007', 4, 'しょうゆ'], ['03003', 2, '砂糖']], 'ごま和え'],
+      ['shira', '白和え', [['04032', 40, '木綿豆腐'], ['05018', 3, 'いりごま'], ['03003', 3, '砂糖'], ['17008', 2, 'うすくちしょうゆ'], ['17012', 0.3, '塩']], '白和え']];
+const AEMONO_GR = [['hourenso', 'ほうれん草', '06268', 60], ['komatsuna', '小松菜', '06087', 60], ['shungiku', '春菊', '06100', 60], ['ingen', 'いんげん', '06011', 50],
+      ['broccoli', 'ブロッコリー', '06264', 50], ['moyashi', 'もやし', '06292', 50], ['ninjin', 'にんじん', '06215', 15], ['konnyaku', 'こんにゃく', '02003', 15]];
 const DISHES = [
   // ごはんもの
   { id: 'oyakodon', name: '親子丼', unit: '1人前', keys: 'おやこどん どんぶり 丼', items: [['01088', 250, 'ごはん'], ['11221', 70, '鶏もも'], ['12004', 50, '卵'], ['06153', 40, '玉ねぎ'], ['17007', 10, 'しょうゆ']] },
@@ -648,6 +669,43 @@ const DISHES = [
       ['shimeji', 'しめじ', '08016', 20], ['enoki', 'えのき', '08001', 20], ['horenso', 'ほうれん草', '06267', 20], ['komatsuna', '小松菜', '06086', 20],
       ['asari', 'あさり', '10281', 20], ['shijimi', 'しじみ', '10297', 30], ['buta', '豚肉', '11129', 20], ['tamago', '卵', '12004', 50]] },
   { id: 'kenchin', name: 'けんちん汁', unit: '1杯', keys: 'けんちんじる', items: [['04032', 30, '豆腐'], ['06134', 30, '大根'], ['06214', 10, 'にんじん'], ['06084', 10, 'ごぼう'], ['02010', 20, '里いも'], ['17007', 5, 'しょうゆ'], ['14006', 3, 'ごま油'], ['17021', 150, 'だし'], ['17012', 0.5, '塩']] },
+  // スープは具と味を選べる（1杯＝スープ約200mL・具込み）。味ごとに入り口を分け、どれから開いても味は変えられる
+  // dashi の4つ目＝その味のときの料理名。retail：市販のスープの素などは「Webで調べて登録」へ
+  { id: 'soup-consomme', name: 'コンソメスープ', unit: '1杯', keys: 'こんそめすーぷ コンソメ スープ すーぷ 野菜スープ 具を選ぶ', items: [], retail: true,
+    dashiDef: 'consomme', dashi: SOUP_DASHI, guDef: ['bacon', 'tamanegi', 'kyabetsu', 'ninjin'], guGroups: SOUP_GROUPS, gu: SOUP_GU },
+  { id: 'soup-tonyu', name: '豆乳スープ', unit: '1杯', keys: 'とうにゅうすーぷ 豆乳 スープ すーぷ 具を選ぶ', items: [], retail: true,
+    dashiDef: 'tonyu', dashi: SOUP_DASHI, guDef: ['tori', 'tamanegi', 'kyabetsu', 'shimeji'], guGroups: SOUP_GROUPS, gu: SOUP_GU },
+  { id: 'soup-chuka', name: '中華スープ', unit: '1杯', keys: 'ちゅうかすーぷ 中華 スープ すーぷ わかめスープ 具を選ぶ', items: [], retail: true,
+    dashiDef: 'chuka', dashi: SOUP_DASHI, guDef: ['tamago', 'negi', 'wakame'], guGroups: SOUP_GROUPS, gu: SOUP_GU },
+  { id: 'soup-tomato', name: 'トマトスープ', unit: '1杯', keys: 'とまとすーぷ トマト スープ すーぷ ミネストローネ みねすとろーね 具を選ぶ', items: [], retail: true,
+    dashiDef: 'tomato', dashi: SOUP_DASHI, guDef: ['sausage', 'tamanegi', 'ninjin', 'jaga'], guGroups: SOUP_GROUPS, gu: SOUP_GU },
+  { id: 'soup-milk', name: 'ミルクスープ', unit: '1杯', keys: 'みるくすーぷ ミルク 牛乳 スープ すーぷ ポタージュ ぽたーじゅ クラムチャウダー 具を選ぶ', items: [], retail: true,
+    dashiDef: 'milk', dashi: SOUP_DASHI, guDef: ['bacon', 'tamanegi', 'jaga', 'corn'], guGroups: SOUP_GROUPS, gu: SOUP_GU },
+  // v1.4.49 よく食べるのに無かった料理（材料は一般的な家庭の分量の目安）
+  { id: 'kasujiru', name: '粕汁', unit: '1杯', keys: 'かすじる 粕汁 酒粕 酒かす 汁物', items: [['17053', 20, '酒かす'], ['17045', 8, 'みそ'], ['17021', 150, 'だし'], ['10134', 30, '鮭'], ['06134', 30, '大根'], ['06214', 10, 'にんじん'], ['02003', 15, 'こんにゃく'], ['04040', 5, '油揚げ'], ['06226', 5, 'ねぎ']] },
+  { id: 'sumashi', name: 'すまし汁（お吸い物）', unit: '1杯', keys: 'すましじる すまし汁 澄まし汁 お吸い物 おすいもの 吸い物 汁物', items: [['17021', 150, 'だし'], ['17008', 3, 'うすくちしょうゆ'], ['17012', 0.5, '塩'], ['04033', 20, '絹ごし豆腐'], ['10379', 10, 'かまぼこ'], ['06278', 3, 'みつば']] },
+  { id: 'tenshinhan', name: '天津飯', unit: '1人前', keys: 'てんしんはん 天津飯 天津丼 かに玉 丼', items: [['01088', 200, 'ごはん'], ['12004', 100, '卵2個'], ['10376', 20, 'かに風味かまぼこ'], ['06226', 10, 'ねぎ'], ['14006', 5, '油'], ['17024', 80, '鶏がらだし（あん）'], ['17007', 5, 'しょうゆ'], ['03003', 3, '砂糖'], ['17015', 3, '酢'], ['02034', 4, 'かたくり粉']] },
+  { id: 'chukadon', name: '中華丼', unit: '1人前', keys: 'ちゅうかどん 中華丼 八宝菜丼 丼', items: [['01088', 200, 'ごはん'], ['11129', 40, '豚ばら'], ['10415', 20, 'えび'], ['06233', 60, '白菜'], ['06214', 15, 'にんじん'], ['06150', 15, 'たけのこ'], ['08007', 10, 'きくらげ'], ['12003', 20, 'うずら卵2個'], ['14006', 5, '油'], ['17024', 80, '鶏がらだし（あん）'], ['17031', 5, 'オイスターソース'], ['17007', 5, 'しょうゆ'], ['03003', 2, '砂糖'], ['02034', 5, 'かたくり粉']] },
+  { id: 'doria', name: 'ドリア（チキン）', unit: '1人前', keys: 'どりあ ドリア チキンドリア ミラノ風ドリア', items: [['01088', 150, 'ごはん'], ['11221', 40, '鶏もも'], ['06153', 30, '玉ねぎ'], ['08031', 10, 'マッシュルーム'], ['17109', 120, 'ホワイトソース'], ['13040', 15, 'チーズ'], ['14017', 5, 'バター'], ['17012', 0.5, '塩']] },
+  { id: 'rollcabbage', name: 'ロールキャベツ', unit: '1個', defVal: 2, chips: [1, 2, 3, 4], keys: 'ろーるきゃべつ ロールキャベツ', items: [['06061', 60, 'キャベツ'], ['11089', 25, '牛ひき肉'], ['11163', 25, '豚ひき肉'], ['06153', 15, '玉ねぎ'], ['01079', 3, 'パン粉'], ['12004', 5, '卵'], ['17027', 1.5, '固形ブイヨン'], ['17012', 0.3, '塩']] },
+  { id: 'hijiki', name: 'ひじき煮', unit: '1人前（小鉢）', keys: 'ひじきに ひじき煮 ひじきの煮物 ひじきの煮付け 煮物', items: [['09050', 5, 'ひじき（乾）'], ['06214', 10, 'にんじん'], ['04040', 5, '油揚げ'], ['04028', 10, '大豆（水煮）'], ['17007', 5, 'しょうゆ'], ['03003', 3, '砂糖'], ['16025', 3, 'みりん'], ['14006', 2, '油']] },
+  { id: 'chickennanban', name: 'チキン南蛮', unit: '1人前', keys: 'ちきんなんばん チキン南蛮 南蛮', items: [['11221', 120, '鶏もも'], ['01015', 6, '小麦粉'], ['12004', 10, '卵'], ['14006', 10, '揚げ油（吸油）'], ['17015', 8, '酢'], ['03003', 5, '砂糖'], ['17007', 5, 'しょうゆ'], ['17042', 15, 'マヨネーズ（タルタル）'], ['12005', 15, 'ゆで卵（タルタル）'], ['06153', 5, '玉ねぎ（タルタル）']] },
+  { id: 'takoyaki', name: 'たこ焼き', unit: '1個', defVal: 6, chips: [4, 6, 8, 10], keys: 'たこやき たこ焼き タコ焼き', items: [['01015', 5, '小麦粉'], ['12004', 2, '卵'], ['17021', 15, 'だし'], ['10362', 3, 'たこ'], ['01172', 1, '天かす'], ['06226', 1, 'ねぎ'], ['17085', 2, 'ソース'], ['17042', 1, 'マヨネーズ'], ['10091', 0.1, 'かつお節']] },
+  { id: 'soupcurry', name: 'スープカレー（ごはん別）', unit: '1人前', keys: 'すーぷかれー スープカレー カレー', items: [['11221', 100, '鶏もも'], ['02017', 50, 'じゃがいも'], ['06214', 30, 'にんじん'], ['06191', 30, 'なす'], ['06245', 15, 'ピーマン'], ['06048', 30, 'かぼちゃ'], ['06153', 30, '玉ねぎ'], ['12005', 25, 'ゆで卵1/2個'], ['17024', 250, '鶏がらだし（スープ）'], ['17061', 3, 'カレー粉'], ['14006', 6, '油'], ['17012', 1.5, '塩'], ['17007', 3, 'しょうゆ']] },
+  { id: 'scrambled', name: 'スクランブルエッグ', unit: '1人前', keys: 'すくらんぶるえっぐ スクランブルエッグ いり卵 炒り卵 たまご 卵', items: [['12004', 100, '卵2個'], ['13003', 15, '牛乳'], ['14017', 5, 'バター'], ['17012', 0.5, '塩']] },
+  { id: 'bibimbap', name: 'ビビンバ', unit: '1人前', keys: 'びびんば ビビンバ ビビンバ丼 石焼ビビンバ 丼', srcNote: 'コチュジャンは成分表にないため、みそ・砂糖・豆板醤で代わりに計算しています', items: [['01088', 200, 'ごはん'], ['11089', 40, '牛ひき肉'], ['06268', 30, 'ほうれん草（ゆで）'], ['06292', 30, 'もやし（ゆで）'], ['06215', 15, 'にんじん（ゆで）'], ['06121', 15, 'ぜんまい（ゆで）'], ['12010', 18, '卵黄'], ['14002', 5, 'ごま油'], ['17007', 5, 'しょうゆ'], ['03003', 2, '砂糖'], ['17045', 6, 'みそ（コチュジャンの代わり）'], ['17004', 2, '豆板醤'], ['05018', 2, 'いりごま']] },
+  { id: 'tacorice', name: 'タコライス', unit: '1人前', keys: 'たこらいす タコライス', items: [['01088', 200, 'ごはん'], ['11089', 60, '牛ひき肉'], ['06153', 20, '玉ねぎ'], ['06312', 20, 'レタス'], ['06182', 30, 'トマト'], ['13037', 15, 'チーズ'], ['17036', 10, 'ケチャップ'], ['17001', 5, 'ウスターソース'], ['17061', 1, 'カレー粉'], ['17012', 0.5, '塩'], ['14006', 3, '油']] },
+  { id: 'gapao', name: 'ガパオライス', unit: '1人前', keys: 'がぱお ガパオ ガパオライス ガパオご飯 タイ料理', items: [['01088', 200, 'ごはん'], ['11230', 80, '鶏ひき肉'], ['06153', 30, '玉ねぎ'], ['06247', 20, '赤ピーマン'], ['06245', 15, 'ピーマン'], ['06238', 2, 'バジル'], ['12021', 45, '目玉焼き'], ['17107', 5, 'ナンプラー'], ['17031', 5, 'オイスターソース'], ['03003', 2, '砂糖'], ['14006', 4, '油']] },
+  // ポトフは具を選べる（名前は「ポトフ」のまま。具の量はスープより大きめ）
+  { id: 'potofu', name: 'ポトフ', unit: '1人前', keys: 'ぽとふ ポトフ ポトフー 具を選ぶ', items: [['17027', 3.5, '固形ブイヨン'], ['17012', 0.5, '塩']],
+    guDef: ['sausage', 'jaga', 'ninjin', 'tamanegi', 'kyabetsu'],
+    guGroups: [['肉', ['sausage', 'bacon', 'tori']], ['野菜', ['jaga', 'ninjin', 'tamanegi', 'kyabetsu', 'kabu', 'broccoli']]],
+    gu: [['sausage', 'ウインナー', '11186', 40], ['bacon', 'ベーコン', '11183', 20], ['tori', '鶏もも', '11221', 60],
+      ['jaga', 'じゃがいも', '02017', 60], ['ninjin', 'にんじん', '06214', 30], ['tamanegi', '玉ねぎ', '06153', 40], ['kyabetsu', 'キャベツ', '06061', 60],
+      ['kabu', 'かぶ', '06038', 40], ['broccoli', 'ブロッコリー', '06263', 20]] },
+  { id: 'aemono-ohitashi', name: 'おひたし', unit: '1人前（小鉢）', keys: 'おひたし お浸し ほうれん草のおひたし 小松菜のおひたし 青菜 和え物 具を選ぶ', items: [], dashiLabel: '和え方', dashiDef: 'ohitashi', dashi: AEMONO_AE, guDef: ['hourenso'], guGroups: [['青菜・野菜（ゆで）', AEMONO_GR.map(g => g[0])]], gu: AEMONO_GR },
+  { id: 'aemono-goma', name: 'ごま和え', unit: '1人前（小鉢）', keys: 'ごまあえ ごま和え 胡麻和え ほうれん草のごま和え ほうれん草の胡麻和え いんげんのごま和え いんげんの胡麻和え 和え物 具を選ぶ', items: [], dashiLabel: '和え方', dashiDef: 'goma', dashi: AEMONO_AE, guDef: ['hourenso'], guGroups: [['青菜・野菜（ゆで）', AEMONO_GR.map(g => g[0])]], gu: AEMONO_GR },
+  { id: 'aemono-shira', name: '白和え', unit: '1人前（小鉢）', keys: 'しらあえ 白和え 和え物 具を選ぶ', items: [], dashiLabel: '和え方', dashiDef: 'shira', dashi: AEMONO_AE, guDef: ['hourenso', 'ninjin', 'konnyaku'], guGroups: [['青菜・野菜（ゆで）', AEMONO_GR.map(g => g[0])]], gu: AEMONO_GR },
   { id: 'tamagosoup', name: '卵スープ', unit: '1杯', keys: 'たまごすーぷ', items: [['12004', 25, '卵1/2個'], ['17025', 150, 'スープ'], ['17012', 0.8, '塩']] },
   { id: 'potatosalad', name: 'ポテトサラダ', unit: '1人前', keys: 'ぽてとさらだ ポテサラ', items: [['02017', 80, 'じゃがいも'], ['06065', 15, 'きゅうり'], ['06214', 10, 'にんじん'], ['11176', 10, 'ハム'], ['17042', 15, 'マヨネーズ'], ['17012', 0.3, '塩']] },
   { id: 'macaronisalad', name: 'マカロニサラダ', unit: '1人前', keys: 'まかろにさらだ', items: [['01064', 40, 'マカロニ（ゆで）'], ['06065', 10, 'きゅうり'], ['11176', 10, 'ハム'], ['17042', 12, 'マヨネーズ']] },
@@ -766,15 +824,24 @@ const FISH_DISHES = [
   ['10171', 'さわら', 'さわら 鰆 サワラ', '1切れ', 80, '10172', 79, null, null, ['shio']],
   ['10205', 'たら', 'たら 鱈 タラ', '1切れ', 100, '10206', 65, '10205', 100, ['shio', 'nituke']],
   ['10248', 'ほっけ', 'ほっけ ホッケ 𩸽', '1人前', 100, '10412', 89, null, null, ['shio']],
+  ['10134', 'さけ', 'さけ 鮭 しゃけ サケ シャケ', '1切れ', 80, '10136', 75, null, null, ['shio', 'meuniere', 'fry']],
 ];
+// ムニエル・フライを足す魚（v1.4.49）。生の重さのまま計算（たんぱく質の量は焼いても揚げても変わらない）
+const FISH_MORE = { 'あじ': ['fry'], 'いわし': ['fry'], 'かれい': ['meuniere', 'fry'], 'さわら': ['meuniere'], 'たら': ['meuniere', 'fry'] };
 const SEASON_NITUKE = [['17007', 9, 'しょうゆ'], ['03003', 4, '砂糖'], ['16025', 6, 'みりん']];
 const SEASON_TERI = [['17007', 9, 'しょうゆ'], ['16025', 9, 'みりん'], ['03003', 3, '砂糖']];
-for (const [, fish, keys, unit, raw, yaki, yr, ni, nr, kinds] of FISH_DISHES) {
+for (const [code, fish, keys, unit, raw, yaki, yr, ni, nr, kinds0] of FISH_DISHES) {
+  const kinds = kinds0.concat((FISH_MORE[fish] || []).filter(k => !kinds0.includes(k)));
+  const kw = (suf) => keys.split(' ').map(k => `${k}${suf}`).join(' '); // 「鮭のムニエル」「アジフライ」のような書き方でも探せるように
   kinds.forEach((k, i) => {
     const ord = i + 1;
-    if (k === 'shio') DISHES.push({ id: `fish-${fish}-shio`, name: `${fish}の塩焼き`, unit, fish, ord, keys: `${keys} 塩焼き しおやき 焼き魚 焼魚`, items: [[yaki, Math.round(raw * yr / 10) / 10, `${fish}（焼き）`]].concat(fish === 'ほっけ' ? [] : [['17012', Math.round(raw) / 100, '塩（魚の重さの1%）']]) });
-    if (k === 'teri') DISHES.push({ id: `fish-${fish}-teri`, name: `${fish}の照り焼き`, unit, fish, ord, keys: `${keys} 照り焼き てりやき 焼き魚`, items: [[yaki, Math.round(raw * yr / 10) / 10, `${fish}（焼き）`], ...SEASON_TERI] });
-    if (k === 'nituke') DISHES.push({ id: `fish-${fish}-nituke`, name: `${fish}の煮付け`, unit, fish, ord, keys: `${keys} 煮付け につけ 煮魚 煮つけ`, items: [[ni, Math.round(raw * nr / 10) / 10, `${fish}（煮）`], ...SEASON_NITUKE] });
+    if (k === 'meuniere') DISHES.push({ id: `fish-${fish}-meuniere`, name: `${fish}のムニエル`, unit, fish, ord, keys: `${keys} ムニエル むにえる 焼き魚 ${kw('のムニエル')}`,
+      items: [[code, raw, `${fish}（生の重さ）`], ['01015', 4, '小麦粉'], ['14017', 5, 'バター'], ['14006', 2, '油'], ['17012', Math.round(raw * 0.8) / 100, '塩']] });
+    if (k === 'fry') DISHES.push({ id: `fish-${fish}-fry`, name: `${fish}フライ`, unit, fish, ord, keys: `${keys} フライ ふらい 揚げ物 魚フライ ${kw('フライ')} ${kw('のフライ')}`,
+      items: [[code, raw, `${fish}（生の重さ）`], ['01015', 4, '小麦粉'], ['12004', 5, '卵'], ['01079', 8, 'パン粉'], ['14006', Math.round(raw / 10), '揚げ油（吸油）'], ['17012', Math.round(raw * 0.5) / 100, '塩'], ['17002', 8, '中濃ソース']] });
+    if (k === 'shio') DISHES.push({ id: `fish-${fish}-shio`, name: `${fish}の塩焼き`, unit, fish, ord, keys: `${keys} 塩焼き しおやき 焼き魚 焼魚 ${kw('の塩焼き')}`, items: [[yaki, Math.round(raw * yr / 10) / 10, `${fish}（焼き）`]].concat(fish === 'ほっけ' ? [] : [['17012', Math.round(raw) / 100, '塩（魚の重さの1%）']]) });
+    if (k === 'teri') DISHES.push({ id: `fish-${fish}-teri`, name: `${fish}の照り焼き`, unit, fish, ord, keys: `${keys} 照り焼き てりやき 焼き魚 ${kw('の照り焼き')}`, items: [[yaki, Math.round(raw * yr / 10) / 10, `${fish}（焼き）`], ...SEASON_TERI] });
+    if (k === 'nituke') DISHES.push({ id: `fish-${fish}-nituke`, name: `${fish}の煮付け`, unit, fish, ord, keys: `${keys} 煮付け につけ 煮魚 煮つけ ${kw('の煮付け')}`, items: [[ni, Math.round(raw * nr / 10) / 10, `${fish}（煮）`], ...SEASON_NITUKE] });
   });
 }
 
@@ -875,8 +942,9 @@ function guDishItem(d, sel, opt) {
   const it = dishItem(Object.assign({}, d, { gu: null, items }));
   if (!it) return null;
   const labels = gus.map(g => g[1]);
-  const head = dsh && dashi !== d.dashiDef ? dsh[1].replace(/^寄せ鍋（(.+)）$/, '$1') + '・' : ''; // 名前の中は「だし・ポン酢」のように短く
-  return Object.assign(it, { name: `${d.name}（${head}${labels.length ? labels.join('・') : '具なし'}）`, title: d.name, sel, ga: ga2, dashi, guBase: base, guItems: items });
+  const head = dsh && !dsh[3] && dashi !== d.dashiDef ? dsh[1].replace(/^寄せ鍋（(.+)）$/, '$1') + '・' : ''; // 名前の中は「だし・ポン酢」のように短く
+  const base0 = dsh && dsh[3] ? dsh[3] : d.name; // スープは味で名前が変わる（豆乳スープ など）
+  return Object.assign(it, { name: `${base0}（${head}${labels.length ? labels.join('・') : '具なし'}）`, title: base0, sel, ga: ga2, dashi, guBase: base, guItems: items });
 }
 function guOpt(e) { return { ga: e.ga, dashi: e.dashi }; }
 function dishNote(id, item) {
@@ -885,19 +953,25 @@ function dishNote(id, item) {
   if (d0.gu) {
     const it = item && item.guBase ? item : guDishItem(d0);
     const base = it.guBase.map(([, w, l]) => `${l}${w}g`).join('、');
-    return (base ? `味付け（1${d0.unit.replace(/^1/, '')}あたり）：${base}。` : '') + `具の量は上の一覧のとおりです。${d0.dashi ? 'スープ・たれは飲み切らない前提の目安です。' : ''}${d0.id === 'yakiniku' ? '肉は焼く前の重さで入れてください。' : ''}材料ごとに食品成分表から計算した目安です。`;
+    return (base ? `味付け（1${d0.unit.replace(/^1/, '')}あたり）：${base}。` : '') + `具の量は上の一覧のとおりです。${d0.id === 'nabe' ? 'スープ・たれは飲み切らない前提の目安です。' : ''}${d0.retail ? 'スープを全部飲んだ場合の目安です。' : ''}${d0.id === 'yakiniku' ? '肉は焼く前の重さで入れてください。' : ''}材料ごとに食品成分表から計算した目安です。`;
   }
   const d = d0;
   if (d.fixed != null && FROZEN_SRC.includes(d.src)) return `${DISH_SRC[d.src]}（${d.unit}${d.content ? '・内容量' + d.content : ''}）。スープまで全部食べた場合の値です。商品の改良で変わることがあるので、お手元のパッケージの表示があればそちらを優先してください。`;
   if (d.fixed != null && d.hidden && d.src === 'kfc') return `販売終了した商品です。ケンタッキーフライドチキン公式「栄養成分表」（2026/3/25現在）の値です（${d.unit}・可食部${d.g}g）。`;
   if (d.fixed != null) return `${DISH_SRC[d.src] || ''}（${d.unit}・${d.ml ? '内容量' + d.ml + 'mL' : '可食部' + d.g + 'g'}${d.srcNote ? '。' + d.srcNote : ''}）。店舗・時期により変わることがあります。`;
-  return '材料の目安：' + d.items.map(([, w, l]) => `${l}${w}g`).join('、') + '。一般的な家庭の分量で、材料ごとに食品成分表から計算した目安です。' + (d.sashimi ? '1切れの重さは一般的な目安です。' : '');
+  return '材料の目安：' + d.items.map(([, w, l]) => `${l}${w}g`).join('、') + '。一般的な家庭の分量で、材料ごとに食品成分表から計算した目安です。' + (d.sashimi ? '1切れの重さは一般的な目安です。' : '') + (d.srcNote ? d.srcNote + '。' : '');
 }
 function dishDefVal(d) { return (state.recent['dish:' + d.id] || {}).v || d.defVal || 1; }
 function dishRow(it) {
   return `<button class="food" data-dishpick="${it.id}">
     <span class="nm"><div>${esc(it.name)}</div><div class="sub">${it.brand ? (it.brand === 'kfc' ? '外食（公式発表値）' : '市販品（公式発表値）') : '料理の目安'}・${esc(it.unit)}</div></span>
     <span class="p">${fmt(it.protein)}g<small>/${esc(it.unit.replace(/^1/, ''))}</small></span></button>`;
+}
+/* 料理の種類を表す言葉：この言葉で探したときは、料理を食材より先に出す（「刺身」で 生の食材＝バナナ などが先に出ないように） */
+const DISH_FIRST = new Set(['スープ', '刺身', 'さしみ', 'お刺身', '和え物', 'あえもの'].map(norm));
+function dishHasWord(d, nq) {
+  const sd = DISHES.find(x => x.id === d.id) || d;
+  return [sd.name, sd.keys || ''].join(' ').split(/\s+/).some(w => norm(w).includes(nq));
 }
 function searchDishes(q) {
   const toks = tokenize(q);
@@ -1053,7 +1127,7 @@ const ALIASES = {
   '胸': ['むね'], 'むね肉': ['むね'], 'もも肉': ['もも'],
   'とうふ': ['豆腐'], 'なっとう': ['納豆'], 'ぎゅうにゅう': ['牛乳'], 'ミルク': ['牛乳', 'ミルク'],
   '牡蠣': ['かき'], 'カキ': ['かき'], '柿': ['がき'], '手羽先': ['手羽さき'], '手羽元': ['手羽もと'], 'てばさき': ['手羽さき'], 'てばもと': ['手羽もと'],
-  '蛤': ['はまぐり'], '浅蜊': ['あさり'], '蜆': ['しじみ'], '帆立': ['ほたて'], 'ホタテ': ['ほたて'], '餃子': ['ぎょうざ'], '焼売': ['しゅうまい'], 'シュウマイ': ['しゅうまい'],
+  '蛤': ['はまぐり'], '浅蜊': ['あさり'], '蜆': ['しじみ'], '帆立': ['ほたて'], 'ホタテ': ['ほたて'], '餃子': ['ぎょうざ'], '焼売': ['しゅうまい'], 'シュウマイ': ['しゅうまい'], 'シューマイ': ['しゅうまい'], 'パンケーキ': ['ホットケーキ'], '野菜ジュース': ['野菜ミックスジュース'],
   'パスタ': ['スパゲッティ'], 'スパゲティ': ['スパゲッティ'], 'ラーメン': ['中華めん', '中華スタイル'], 'カップラーメン': ['カップめん'], 'カップ麺': ['カップめん'], 'インスタントラーメン': ['即席中華めん'],
   '蕎麦': ['そば'], '饂飩': ['うどん'], '素麺': ['そうめん'], 'カレーライス': ['カレー'], '焼き飯': ['チャーハン'], '炒飯': ['チャーハン'], '豚汁': ['とん汁'], 'お粥': ['かゆ'], 'おかゆ': ['かゆ'], '大豆': ['だいず'], 'きなこ': ['きな粉'], 'のり': ['のり'], '海苔': ['のり'], 'ポテト': ['ポテト', 'フライドポテト'],
   '唐揚げ': ['から揚げ'], 'からあげ': ['から揚げ'], '唐揚': ['から揚げ'], 'フライドチキン': ['から揚げ', 'フライドチキン'], 'ケンタ': ['ケンタ'], 'KFC': ['ケンタ'], 'けんたっきー': ['ケンタッキー'],
@@ -1843,7 +1917,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.46</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.49</p>
   </div>`;
 }
 
@@ -1980,7 +2054,7 @@ function multiCands(term) {
     const raw = foodByCode.get(FISH_RAW[srcD(fishD[0]).fish]);
     if (raw) res = [raw].concat(res.filter(f => f !== raw));
   }
-  const dTop = res.length ? dishes.filter(d => !fishD.includes(d) && nq.length >= 3 && norm(d.name).startsWith(nq)) : dishes;
+  const dTop = res.length ? dishes.filter(d => !fishD.includes(d) && ((nq.length >= 3 && norm(d.title || d.name).startsWith(nq)) || (DISH_FIRST.has(nq) && dishHasWord(d, nq)))) : dishes; // 「スープ」「刺身」などは、その言葉を含む料理を上に（ごはん・うどんは食材を先のまま）
   const dLow = dishes.filter(d => !dTop.includes(d) && !fishD.includes(d));
   const out = [
     ...mine.map(it => ({ k: 'ml', id: it.id })),
@@ -2044,7 +2118,7 @@ function openMultiResults() {
       ${widened ? `<div class="tiny muted" style="padding:2px 4px 4px">「${esc(term)}」では見つからなかったので、${widened.map(t => '「' + esc(t) + '」').join('と')}で探しました</div>` : ''}
       ${rows || `<div class="empty small">見つかりませんでした。別の言い方で試すか、市販品ならWebで調べてマイリストに登録できます</div>`}
       ${list.length > n ? `<button class="btn ghost small block" data-mmore="${i}">もっと見る</button>` : ''}
-      <div class="mhelp"><span class="tiny muted">市販品が見つからないとき：</span><button class="linkbtn" data-web="${esc(term)}">Webで調べる</button><button class="linkbtn" data-mlnew="${esc(term)}">マイリストに登録</button></div>
+      <div class="mhelp"><span class="tiny muted">市販品が見つからないとき：</span><button class="linkbtn" data-web="${esc(term)}">Webで調べて登録</button><button class="linkbtn" data-mlnew="${esc(term)}">マイリストに登録</button></div>
     </div>`;
   }).join('');
   openSheet(`${mealLabel(c.meal)}に追加`, `
@@ -2991,6 +3065,7 @@ function openItemAmount(item, entry, defVal, mlId, opts = {}) {
     <div class="amount-box"><input id="qty" type="number" inputmode="decimal" min="0" step="any" value="${fmt(val)}"><span class="u">${is100 ? 'g' : '× ' + esc(item.unit)}</span></div>
     <div class="chips">${chips.map(q => `<button class="chip" data-q="${q}">${q}${is100 ? 'g' : ''}</button>`).join('')}</div>
     <div id="guBox">${item.sel ? guBoxHtml() : ''}</div>
+    ${!reg && !mlSave && !entry && (DISHES.find(x => x.id === item.id) || {}).retail ? `<div class="mhelp"><span class="tiny muted">市販のスープの素・カップスープなら：</span><button class="linkbtn" data-web="${esc((DISHES.find(x => x.id === item.id) || {}).name || '')}">Webで調べて登録</button></div>` : ''}
     ${item.kind === 'gen' ? `<div class="note">${esc((GENERIC_ITEMS.find(g => g.id === item.id) || {}).note || '')}</div>` : ''}
     ${item.kind === 'dish' ? `<div class="note" id="dishNote">${esc(dishNote(item.id, item))}</div>` : ''}
     <div class="result"><span>たんぱく質</span><b id="calc">0g</b></div>
@@ -3030,7 +3105,7 @@ function guBoxHtml() {
   let h = '';
   if (d.dashi) {
     const cur = d.dashi.find(x => x[0] === it.dashi);
-    h += `<div class="gu-sec"><div class="gu-sec-h">味（だし・たれ）<span>${esc(cur ? cur[1] : '')}</span></div>
+    h += `<div class="gu-sec"><div class="gu-sec-h">${esc(d.dashiLabel || '味（だし・たれ）')}<span>${esc(cur ? cur[1] : '')}</span></div>
       <div class="chips gu">${d.dashi.map(([k, l]) => `<button class="chip ${k === it.dashi ? 'on' : ''}" data-dashi="${k}">${esc(l)}</button>`).join('')}</div></div>`;
   }
   h += `<div class="gu-sec"><div class="gu-sec-h">具<span>${it.sel.length}品えらんでいます</span></div>${guChipsHtml(d, it.sel).replace('<div class="gu-head">具（タップで選ぶ）</div>', '<div class="tiny muted" style="margin:-2px 0 4px">タップで入れる・外す</div>')}</div>`;
@@ -3073,6 +3148,7 @@ function guRecalc(rerender) {
   sheetCtx.item = guDishItem(d, it.sel, { ga: it.ga, dashi: it.dashi });
   const pu = $('#perUnit'); if (pu) pu.textContent = `${sheetCtx.item.unit}あたり たんぱく質 ${fmt(sheetCtx.item.protein)}g`;
   const dn = $('#dishNote'); if (dn) dn.textContent = dishNote(d.id, sheetCtx.item);
+  const h = $('#sheet .sheet-head h3'); if (h && sheetCtx.item.title) h.textContent = sheetCtx.item.title; // 味・和え方を変えたら見出しも（ごま和え→白和え など）
   if (rerender) renderGuBox();
   if (sheetCtx.upd) sheetCtx.upd();
 }
@@ -3518,7 +3594,12 @@ document.addEventListener('click', ev => {
   if (ds.genpick) { const g = GENERIC_ITEMS.find(x => x.id === ds.genpick); if (g) openItemAmount(g, null, (state.recent['gen:' + g.id] || {}).v || g.defVal); return; }
   if (ds.nutri) { openNutriSheet(ds.nutri); return; }
   if (ds.nbd != null) { const fromSheet = !!b.closest('#sheet'); if (!fromSheet) nutriCtx = null; openNutriBreakdown(Number(ds.nbd), ds.nbm); if (fromSheet) nutriCtx.back = true; return; }
-  if (ds.web) { openWebSearch(ds.web); return; }
+  if (ds.web) { // 先に市販品の登録画面（名前＝探した言葉）を開いてから Google を開く。戻るとすぐ「貼り付け」できる
+    const fromAdd = sheetCtx && sheetCtx.meal && !sheetCtx.code && !sheetCtx.editing && !sheetCtx.reg && !sheetCtx.mlSave ? sheetCtx.meal : null;
+    openMlForm(null, { name: ds.web, meal: fromAdd, kind: 'prod' });
+    const wb = $('#mlWeb'); if (wb) wb.click(); else openWebSearch(ds.web); // 登録画面のボタンと同じ動き（下書きも保存）
+    return;
+  }
   if (ds.newsx) { markNewsSeen(); render(); return; }
   if (ds.newsgo) {
     markNewsSeen();
