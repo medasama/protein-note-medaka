@@ -1843,7 +1843,7 @@ function renderSettings() {
     <h3>カロリーの目安・BMI・体重</h3>
     <p>同 各論 1-1 エネルギー：推定エネルギー必要量（参考表2、p.78）、目標とするBMIの範囲（表1、p.58）、エネルギーの過不足は体重の変化又はBMIで評価する（p.76、参考表2の注）。たんぱく質の目標量の上限20%エネルギー：各論 1-2 たんぱく質（p.95〜96）。</p>
     </details>
-    <p class="tiny muted">たんぱく質ノート v1.4.44</p>
+    <p class="tiny muted">たんぱく質ノート v1.4.45</p>
   </div>`;
 }
 
@@ -2101,6 +2101,8 @@ function multiPick(key) {
 }
 /* ✕・背景・Esc：まとめて入力の途中で量の画面を開いていたら候補へ戻る */
 function closeOrBack() {
+  if (nutriCtx && nutriCtx.back) { const m = nutriCtx.mode; nutriCtx = null; openNutriSheet(m); return; } // 内訳 → 栄養素の詳細へ戻る
+  if (nutriCtx) nutriCtx = null;
   if (regCtx && sheetCtx && sheetCtx.reg && sheetCtx.reg !== 'search') { openMlSearch(); return; } // 登録の量の画面 → 探す画面へ
   if (regCtx && sheetCtx && sheetCtx.reg === 'search') { regCtx = null; closeSheet(); return; }
   if (multiCtx && multiCtx.returnTo && sheetCtx && !sheetCtx.multi && !sheetCtx.editing) {
@@ -3260,16 +3262,16 @@ function nutriRefText(ref, unit, d) {
   return ref.t === 'dgMax' ? `${lab} ${v}未満` : ref.t === 'dgMin' ? `${lab} ${v}以上` : `${lab} ${v}${ref.mens ? `（月経ありは${nfmt(ref.mens, d)}${unit}）` : ''}`;
 }
 /* 1行：名前・量・基準・棒（基準に対する割合。食塩は目標量に対して） */
-function nutriRow(i, val, unk, p, n) {
+function nutriRow(i, val, unk, p, mode) {
   const [k, name, unit, d] = NUTRI[i];
   const ref = nutriRef(k, p);
   const pct = ref && val != null ? Math.min(100, (val / ref.v) * 100) : 0;
   const over = ref && ref.t === 'dgMax' && val >= ref.v;
-  return `<div class="nrow">
-    <div class="nrow-top"><span>${name}</span><b>${nfmt(val, d)}${unit}</b></div>
+  return `<button class="nrow" data-nbd="${i}" data-nbm="${mode || 'day'}">
+    <div class="nrow-top"><span>${name} <span class="nrow-go">›</span></span><b>${nfmt(val, d)}${unit}</b></div>
     ${ref ? `<div class="nbar"><span style="width:${pct}%;${over ? 'background:var(--accent)' : ''}"></span></div>` : ''}
     <div class="tiny muted">${esc(nutriRefText(ref, unit, d))}${unk ? `${ref ? '・' : ''}不明${unk}件を除く` : ''}</div>
-  </div>`;
+  </button>`;
 }
 /* 今日の画面：主な4つ＋「詳細」 */
 function nutriTodayHtml(list) {
@@ -3278,10 +3280,46 @@ function nutriTodayHtml(list) {
   const s = sumNutri(list);
   return `<div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)">
     <div class="small" style="font-weight:700;margin-bottom:4px">ほかの栄養素（目安）</div>
-    <div class="ngrid">${NUTRI.map((x, i) => x[4] === 'main' ? nutriRow(i, s.total[i], s.unknown[i], state.profile) : '').join('')}</div>
+    <div class="ngrid">${NUTRI.map((x, i) => x[4] === 'main' ? nutriRow(i, s.total[i], s.unknown[i], state.profile, 'day') : '').join('')}</div>
     <button class="btn ghost small block" data-nutri="day" style="margin-top:6px">詳細（ビタミンも見る）</button>
   </div>`;
 }
+/* 栄養素ごとの内訳：どの食べ物から何をとったか（多い順）。週は同じ食べ物をまとめて7日分の合計 */
+let nutriCtx = null; // 詳細シートから開いたとき、閉じると詳細シートに戻る
+function nutriDays(mode) {
+  if (mode !== 'week') return [viewDate];
+  const days = [];
+  for (let i = 6; i >= 0; i--) { const d = addDays(todayStr(), -i); if (dayEntries(d).length) days.push(d); }
+  return days;
+}
+function openNutriBreakdown(i, mode) {
+  const [k, name, unit, dg] = NUTRI[i];
+  const days = nutriDays(mode);
+  const rows = new Map(), unknown = new Map();
+  for (const day of days) for (const e of dayEntries(day)) {
+    const v = entryNutri(e)[i];
+    const nm = dispName(e.name).name;
+    if (v == null) { unknown.set(nm, (unknown.get(nm) || 0) + 1); continue; }
+    const key = mode === 'week' ? nm : e.id;
+    const r = rows.get(key) || { name: nm, amt: mode === 'week' ? '' : entryAmountLabel(e), meal: mode === 'week' ? '' : (MEALS.find(m => m[0] === e.meal) || [])[1], v: 0, n: 0 };
+    r.v += v; r.n++;
+    rows.set(key, r);
+  }
+  const list = [...rows.values()].filter(r => r.v > 0).sort((a, b) => b.v - a.v);
+  const zero = [...rows.values()].filter(r => !(r.v > 0));
+  const total = list.reduce((a, r) => a + r.v, 0);
+  const sub = mode === 'week' ? `直近7日（記録のある${days.length}日）の合計です。多い順` : `${dateLabel(viewDate)}の記録です。多い順`;
+  openSheet(esc(`${name}の内訳`), `
+    <div class="small muted">${esc(sub)}</div>
+    ${list.length ? `<div class="nbd-list">${list.map(r => `<div class="nbd-row">
+        <div class="nbd-name"><div>${esc(r.name)}</div><div class="tiny muted">${esc([r.meal, r.amt, mode === 'week' && r.n > 1 ? r.n + '回' : ''].filter(Boolean).join('・'))}</div></div>
+        <div class="nbd-v"><b>${nfmt(r.v, dg)}${unit}</b><div class="nbd-bar"><span style="width:${Math.max(3, (r.v / list[0].v) * 100)}%"></span></div><div class="tiny muted">${total > 0 ? Math.round(r.v / total * 100) : 0}%</div></div>
+      </div>`).join('')}</div>` : `<div class="empty small">${esc(name)}をとった記録はありません</div>`}
+    ${zero.length ? `<div class="tiny muted" style="margin-top:8px">ほぼ含まない：${esc(zero.map(r => r.name).join('、'))}</div>` : ''}
+    ${unknown.size ? `<div class="tiny muted" style="margin-top:6px">値がわからない（合計に入っていない）：${esc([...unknown.entries()].map(([n, c]) => c > 1 ? `${n}（${c}回）` : n).join('、'))}</div>` : ''}
+  `, null, { tall: true });
+}
+
 /* 詳細シート：その日 or 直近7日の平均 */
 function openNutriSheet(mode) {
   const p = state.profile;
@@ -3297,12 +3335,13 @@ function openNutriSheet(mode) {
     s = sumNutri(dayEntries(viewDate));
     title = `${dateLabel(viewDate)}の栄養素`; sub = '1日の合計です';
   }
-  const rows = kind => NUTRI.map((x, i) => x[4] === kind ? nutriRow(i, s.total[i], s.unknown[i], p) : '').join('');
+  nutriCtx = { mode };
+  const rows = kind => NUTRI.map((x, i) => x[4] === kind ? nutriRow(i, s.total[i], s.unknown[i], p, mode === 'week' ? 'week' : 'day') : '').join('');
   openSheet(esc(title), `
     <div class="small muted">${esc(sub)}。食事摂取基準（2025年版）の値と並べています</div>
     <div class="gu-head">ミネラル・食物繊維</div><div class="ngrid">${rows('main')}</div>
     <div class="gu-head">ビタミン</div><div class="ngrid">${rows('vit')}</div>
-    <div class="note">食品成分表の値から計算した目安です。ゆでる・煮るなどで減る分（水に溶けるビタミンなど）は計算に入っていないので、実際より多めに出ます。公式値の市販品・外食のうち表示のない栄養素（KFCはビタミンD・E・K・B6・B12・葉酸・パントテン酸・ナイアシン、ほかの商品はすべて）、一般的な目安（プロテインなど）、マイリストで入れていない栄養素は「不明」として合計から除いています。食事摂取基準は、1日ではなく、ふだんの（習慣的な）摂取量で見るための値です。何日かの平均で見てください。ビオチンは成分表で値がない食品が多いため出していません。</div>
+    <div class="note">食品成分表の値から計算した目安です。ゆでる・煮るなどで減る分（水に溶けるビタミンなど）は計算に入っていないので、実際より多めに出ます。栄養素をタップすると、どの食べ物から何をとったかが見られます。</div>
   `, null, { tall: true });
 }
 /* --- 記録の編集 --- */
@@ -3475,6 +3514,7 @@ document.addEventListener('click', ev => {
   if (ds.dishpick) { const d = DISHES.find(x => x.id === ds.dishpick); const it = d && dishItem(d); if (it) openItemAmount(it, null, dishDefVal(d)); return; }
   if (ds.genpick) { const g = GENERIC_ITEMS.find(x => x.id === ds.genpick); if (g) openItemAmount(g, null, (state.recent['gen:' + g.id] || {}).v || g.defVal); return; }
   if (ds.nutri) { openNutriSheet(ds.nutri); return; }
+  if (ds.nbd != null) { const fromSheet = !!b.closest('#sheet'); if (!fromSheet) nutriCtx = null; openNutriBreakdown(Number(ds.nbd), ds.nbm); if (fromSheet) nutriCtx.back = true; return; }
   if (ds.web) { openWebSearch(ds.web); return; }
   if (ds.newsx) { markNewsSeen(); render(); return; }
   if (ds.newsgo) {
